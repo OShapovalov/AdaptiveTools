@@ -1,8 +1,12 @@
 #include "ParallelUtils.h"
 #include <omp.h>
 #include <fstream>
-#include <cilk/cilk.h>
+
 #include <iostream>
+#include "ParallelTechnology.h"
+#include "OmpTechnology.h"
+#include "CilkTechnology.h"
+#include "SerialTechnology.h"
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd )
 {    
@@ -21,7 +25,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
 
     for (std::size_t i=0; i<_technologies.size(); ++i)
     {
-        times[i] = _technologies[i].Run(f, iStart, iEnd);
+        times[i] = _technologies[i]->Run(f, iStart, iEnd);
         if (times[i] < minTime)
         {
             minTime = times[i];
@@ -44,14 +48,16 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
 
 ParallelUtils::ParallelUtils() :_counter(0)
 {
-    _technologies.push_back(ParalelTechnology());
-    _technologies.push_back(OmpTechnology());
-    _technologies.push_back(CilkTechnology());
+    _technologies.push_back(std::make_shared<SerialTechnology>(SerialTechnology()));
+    _technologies.push_back(std::make_shared<OmpTechnology>(OmpTechnology()));
+#ifdef CILK
+    _technologies.push_back(std::make_shared<CilkTechnology>(CilkTechnology()));
+#endif
 }
 
 void ParallelUtils::Synchronize( int index )
 {
-    _technologies[index].Synchronize();
+    _technologies[index]->Synchronize();
 }
 
 //double ParallelUtils::GetTimeForFunction( std::function<void (int)> f )
@@ -97,76 +103,6 @@ void ParallelUtils::Synchronize( int index )
 //    return -1;
 //}
 
-double CilkTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
-{
-    double timeStart = omp_get_wtime();
-
-    cilk_for(int i = iStart; i < iEnd; ++i)
-    {
-        f(i);
-    }
-    double time = (omp_get_wtime() - timeStart);
-
-    return time;
-}
-
-void CilkTechnology::RunSpawn( std::function<void (void)> f )
-{
-    cilk_spawn f();
-}
-
-void CilkTechnology::Synchronize()
-{
-    cilk_sync;
-}
-
-double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
-{
-    double timeStart = omp_get_wtime();
-    int i;
-
-#pragma omp parallel for 
-    for (i = iStart; i < iEnd; ++i)
-    {
-        f(i);
-    }
-
-    double time = (omp_get_wtime() - timeStart);
-
-    return time;
-}
-
-void OmpTechnology::RunSpawn( std::function<void (void)> f )
-{
-    #pragma omp task
-    {
-        f();
-    }
-}
-
-void OmpTechnology::Synchronize()
-{
-#pragma omp taskwait
-}
-
-double ParalelTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
-{
-    double timeStart = omp_get_wtime();
-    int i;
-
-    for (i = iStart; i < iEnd; ++i)
-    {
-        f(i);
-    }
-    double time = (omp_get_wtime() - timeStart);
-
-    return time;
-}
-
-void ParalelTechnology::RunSpawn( std::function<void (void)> f)
-{
-    f();
-}
 
 ParallelInfo::ParallelInfo( std::function<void (int)> f, int iStart, int iEnd ) :_f(f), _start(iStart), _end(iEnd)
 {

@@ -37,39 +37,39 @@ static int nInSettings = 0;
      std::fill(b,&b[N*N], 2.0);
      std::fill(res,&res[N*N], 0.0);
 
-        std::function<void (int)> f1, someMethod;
+    std::function<void (int)> f1, someMethod;
 
-        int iterStart = 0;
-        int iterEnd = 10;
+    int iterStart = 0;
+    int iterEnd = 10;
 
-        ParallelUtils pUtils;	 
+    ParallelUtils pUtils;	 
     
-        //for(int i=0;i<N;i++)
-		      //  for(int j=0;j<N;j++)
-		      //  {
-			     //   res[i*N+j]=0;
-			     //   for (int k=0;k<N;k++) 
-				    //    res[i*N+j]+=a[i*N+k]*b[k*N+j];
-		      //  }
+    //for(int i=0;i<N;i++)
+		    //  for(int j=0;j<N;j++)
+		    //  {
+			    //   res[i*N+j]=0;
+			    //   for (int k=0;k<N;k++) 
+				//    res[i*N+j]+=a[i*N+k]*b[k*N+j];
+		    //  }
 
-        /*for(int i=0;i<N;i++)*/
+    /*for(int i=0;i<N;i++)*/
 
-        pUtils.RunInParallel([&](int i)
+    pUtils.RunInParallel([&](int i)
+    {
+        for(int j=0;j<N;j++)
         {
-            for(int j=0;j<N;j++)
-            {
-                res[i*N+j]=0;
-                for (int k=0;k<N;k++) 
-                    res[i*N+j]+=a[i*N+k]*b[k*N+j];
-            }
+            res[i*N+j]=0;
+            for (int k=0;k<N;k++) 
+                res[i*N+j]+=a[i*N+k]*b[k*N+j];
         }
-        , 0, N);
+    }
+    , 0, N);
 
-        //pUtils.RunInParallel([&](int i)
-        //{
-        //    res[i] = a[i] + b[i];
-        //}
-        //, 0, N);
+    //pUtils.RunInParallel([&](int i)
+    //{
+    //    res[i] = a[i] + b[i];
+    //}
+    //, 0, N);
 
 	//...
 	//pUtils.RunInParallel(f1, iterStart, iterEnd);
@@ -131,7 +131,7 @@ static int nInSettings = 0;
  //    return answer - expected;
  //}
 
-
+ /*
 #include <stdio.h>
 #include <omp.h>
 
@@ -175,9 +175,9 @@ static int nInSettings = 0;
              f1 = f2;
          }
          return f2;
- }
+ }*/
 
- int main( int argc, char *argv[] ) {
+/* int main( int argc, char *argv[] ) {
 
      INT_TYPE n, answer, expected;
      double time1, time2;
@@ -203,4 +203,4 @@ static int nInSettings = 0;
      }
 
      return answer - expected;
- }
+ }*/

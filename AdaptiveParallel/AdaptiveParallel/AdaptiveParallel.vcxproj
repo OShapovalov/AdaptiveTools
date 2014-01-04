@@ -199,25 +199,32 @@
   <ItemGroup>
     <ClCompile Include="AbstractParallel.cpp" />
     <ClCompile Include="Adaptive.cpp" />
+    <ClCompile Include="CilkTechnology.cpp" />
     <ClCompile Include="DoubleDoubleFunctions.cpp" />
     <ClCompile Include="Interval.cpp" />
+    <ClCompile Include="OmpTechnology.cpp" />
     <ClCompile Include="OutputToGrapher.cpp" />
     <ClCompile Include="ParallelUtils.cpp" />
+    <ClCompile Include="SerialTechnology.cpp" />
     <ClCompile Include="SurfaceFunctions.cpp" />
     <ClCompile Include="Vector2D.cpp" />
     <ClCompile Include="Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractParallel.h" />
+    <ClInclude Include="CilkTechnology.h" />
     <ClInclude Include="DoubleDoubleApproximation.h" />
     <ClInclude Include="DoubleDoubleFunctions.h" />
     <ClInclude Include="forward.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="LinearApproximation.h" />
     <ClInclude Include="ObjectApproximation.h" />
+    <ClInclude Include="OmpTechnology.h" />
     <ClInclude Include="OutputToGrapher.h" />
+    <ClInclude Include="ParallelTechnology.h" />
     <ClInclude Include="ParallelUtils.h" />
     <ClInclude Include="PlaneApproximation.h" />
+    <ClInclude Include="SerialTechnology.h" />
     <ClInclude Include="Statistics.h" />
     <ClInclude Include="SurfaceFunctions.h" />
     <ClInclude Include="TDoubleDoubleObject.h" />

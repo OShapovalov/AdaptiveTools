@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\PTechnologies">
+      <UniqueIdentifier>{cc238f47-cbc5-4bb6-9eb6-8e63e81d6f36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PTechnologies">
+      <UniqueIdentifier>{6b595d01-ae03-4c65-8f1d-8c806d58211b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adaptive.cpp">
@@ -41,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="AbstractParallel.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OmpTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
+    </ClCompile>
+    <ClCompile Include="CilkTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +121,18 @@
     </ClInclude>
     <ClInclude Include="Vector3D.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CilkTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="OmpTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

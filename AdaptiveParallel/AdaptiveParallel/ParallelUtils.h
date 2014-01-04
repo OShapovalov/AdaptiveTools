@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 #include <tuple>
+#include "ParallelTechnology.h"
+#include "forward.h"
 
 struct ParallelInfo
 {
@@ -42,55 +44,9 @@ public:
 protected:
     int _counter;
 private:
-    std::vector<struct ParallelInfo> _statistics;
-    std::vector<class ParalelTechnology> _technologies;
+    std::vector<ParallelInfo> _statistics;
+    std::vector<ParallelTechnologyPtr> _technologies;
     //std::vector< ParallelTimes > _timesForFuction; 
 };
 
-class ParalelTechnology
-{
-public:
 
-    virtual double Run(std::function<void (int)> f, int iStart, int iEnd);
-
-    virtual void RunSpawn(std::function<void (void)> f); 
-
-    virtual void Synchronize(){};
-
-    virtual std::string GetName()
-    {
-        return "Serial";
-    }
-};
-
-class OmpTechnology : public ParalelTechnology
-{
-public:
-
-    virtual double Run(std::function<void (int)> f, int iStart, int iEnd) override;
-
-    virtual void RunSpawn(std::function<void (void)> f) override; 
-
-    virtual void Synchronize() override;;
-
-    virtual std::string GetName() override
-    {
-        return "OpenMP";
-    }
-};
-
-class CilkTechnology : public ParalelTechnology
-{
-public:
-
-    virtual double Run(std::function<void (int)> f, int iStart, int iEnd) override;
-
-    virtual void RunSpawn(std::function<void (void)> f) override; 
-
-    virtual void Synchronize() override;;
-
-    virtual std::string GetName() override
-    {
-        return "Cilk Plus";
-    }
-};

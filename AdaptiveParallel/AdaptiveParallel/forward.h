@@ -9,6 +9,12 @@ typedef std::shared_ptr<TDoubleDoubleApproximation> ApproximationPtr;
 class TObject;
 typedef std::shared_ptr<TObject> TObjectPtr;
 
+template< class TValue >
+class TValueDoubleObject;
+
+template< class TValue, class TParam >
+class TValueParamObject;
+
 template <typename TValue>
 struct TValueObjectPtr
 {
@@ -29,3 +35,6 @@ struct TValueParamInsertionPtr
 {
 	typedef std::shared_ptr< TValueParamInsertion<TValue, TParam> > type;
 };
+
+class ParallelTechnology;
+typedef std::shared_ptr<ParallelTechnology> ParallelTechnologyPtr;
