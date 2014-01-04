@@ -19,7 +19,7 @@ double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
 
 void OmpTechnology::RunSpawn( std::function<void (void)> f )
 {
-#pragma omp task
+//#pragma omp task
     {
         f();
     }
@@ -27,5 +27,5 @@ void OmpTechnology::RunSpawn( std::function<void (void)> f )
 
 void OmpTechnology::Synchronize()
 {
-#pragma omp taskwait
+//#pragma omp taskwait
 }

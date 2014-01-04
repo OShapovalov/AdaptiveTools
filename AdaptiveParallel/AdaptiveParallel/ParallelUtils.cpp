@@ -31,23 +31,18 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             minTime = times[i];
             index = (int)i;
         }
-        std::cout << times[i] << std::endl;
+        std::cout << _technologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
+        
+        
     }
 
-    
-    
-    //ParallelTimes pTimes(f, iEnd-iStart, times);
-    //_timesForFuction.push_back(pTimes);
-
-    
-
-    //double serialTime = RunSerial(f, iStart, iEnd);
-    //double ompTime = RunOMP(f, iStart, iEnd);
-    //_statistics.push_back(ParallelInfo(f, iStart, iEnd, ompTime, serialTime));
+    _statistics->Add(std::make_shared<ParallelInfo>(f, iStart, iEnd), times); 
 }
 
 ParallelUtils::ParallelUtils() :_counter(0)
 {
+    _statistics = std::make_shared<ParallelTimes>();
+
     _technologies.push_back(std::make_shared<SerialTechnology>(SerialTechnology()));
     _technologies.push_back(std::make_shared<OmpTechnology>(OmpTechnology()));
 #ifdef CILK

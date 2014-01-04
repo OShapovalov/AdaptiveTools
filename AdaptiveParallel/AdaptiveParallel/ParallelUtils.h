@@ -6,21 +6,32 @@
 #include "ParallelTechnology.h"
 #include "forward.h"
 
-struct ParallelInfo
+class ParallelInfo
 {
+public:
     ParallelInfo(std::function<void (int)> f, int iStart, int iEnd);
+
+private:
 
     std::function<void (int)> _f;
     int _start;
     int _end;
-
-    std::vector<double> times;
-
-    //double _ompTime;
-    //double _serialTime;
 };
 
-typedef std::tuple< std::function<void (int)>, int , std::vector<double> > ParallelTimes;    
+class ParallelTimes
+{
+public:
+    ParallelTimes(){};
+
+    void Add(ParallelInfoPtr pInfo, const std::vector<double>& times)
+    {
+        _times[pInfo] = times;
+    }
+
+private:
+
+    std::map<ParallelInfoPtr, std::vector<double>> _times;
+};
 
 class ParallelUtils
 {
@@ -44,7 +55,7 @@ public:
 protected:
     int _counter;
 private:
-    std::vector<ParallelInfo> _statistics;
+    ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;
     //std::vector< ParallelTimes > _timesForFuction; 
 };
