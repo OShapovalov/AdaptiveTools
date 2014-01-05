@@ -23,14 +23,14 @@ class ParallelTimes
 public:
     ParallelTimes(){};
 
-    void Add(ParallelInfoPtr pInfo, const std::vector<double>& times)
+    void Add(ParallelInfoPtr /*pInfo*/, const std::vector<double>& times)
     {
-        _times[pInfo] = times;
+        _times.push_back(times);
     }
 
 private:
 
-    std::map<ParallelInfoPtr, std::vector<double>> _times;
+    std::vector<std::vector<double>> _times;
 };
 
 class ParallelUtils

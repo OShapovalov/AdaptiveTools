@@ -1,7 +1,7 @@
 #pragma once
 #include "ParallelTechnology.h"
 
-class OmpTechnology : public ParallelTechnology
+class PPLTechnology : public ParallelTechnology
 {
 public:
 
@@ -13,6 +13,6 @@ public:
 
     virtual std::string GetName() override
     {
-        return "OpenMP";
+        return "PPL";
     }
 };

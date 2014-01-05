@@ -1,7 +1,10 @@
 #pragma once
+
+//#ifdef BOOST
+
 #include "ParallelTechnology.h"
 
-class OmpTechnology : public ParallelTechnology
+class BoostTechnology : public ParallelTechnology
 {
 public:
 
@@ -13,6 +16,8 @@ public:
 
     virtual std::string GetName() override
     {
-        return "OpenMP";
+        return "Boost Threads";
     }
 };
+
+//#endif

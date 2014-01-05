@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
 
+#define BOOST
+
 class ParallelTechnology
 {
 public:

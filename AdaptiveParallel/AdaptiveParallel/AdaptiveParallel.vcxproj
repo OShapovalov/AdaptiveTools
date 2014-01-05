@@ -37,33 +37,41 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <UseIntelTBB>true</UseIntelTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel_SSA|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel_SSA|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
+    <UseIntelTBB>true</UseIntelTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Intel C++ Compiler XE 13.0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -113,10 +121,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalIncludeDirectories>G:\downloads\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>G:\downloads\boost_1_55_0\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Intel_SSA|Win32'">
@@ -171,12 +182,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>G:\downloads\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>G:\downloads\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,34 +215,42 @@
   <ItemGroup>
     <ClCompile Include="AbstractParallel.cpp" />
     <ClCompile Include="Adaptive.cpp" />
+    <ClCompile Include="BoostTechnology.cpp" />
     <ClCompile Include="CilkTechnology.cpp" />
     <ClCompile Include="DoubleDoubleFunctions.cpp" />
     <ClCompile Include="Interval.cpp" />
+    <ClCompile Include="Numerical.cpp" />
     <ClCompile Include="OmpTechnology.cpp" />
     <ClCompile Include="OutputToGrapher.cpp" />
     <ClCompile Include="ParallelUtils.cpp" />
+    <ClCompile Include="PPLTechnology.cpp" />
     <ClCompile Include="SerialTechnology.cpp" />
     <ClCompile Include="SurfaceFunctions.cpp" />
+    <ClCompile Include="TBBTechnology.cpp" />
     <ClCompile Include="Vector2D.cpp" />
     <ClCompile Include="Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractParallel.h" />
+    <ClInclude Include="BoostTechnology.h" />
     <ClInclude Include="CilkTechnology.h" />
     <ClInclude Include="DoubleDoubleApproximation.h" />
     <ClInclude Include="DoubleDoubleFunctions.h" />
     <ClInclude Include="forward.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="LinearApproximation.h" />
+    <ClInclude Include="Numerical.h" />
     <ClInclude Include="ObjectApproximation.h" />
     <ClInclude Include="OmpTechnology.h" />
     <ClInclude Include="OutputToGrapher.h" />
     <ClInclude Include="ParallelTechnology.h" />
     <ClInclude Include="ParallelUtils.h" />
     <ClInclude Include="PlaneApproximation.h" />
+    <ClInclude Include="PPLTechnology.h" />
     <ClInclude Include="SerialTechnology.h" />
     <ClInclude Include="Statistics.h" />
     <ClInclude Include="SurfaceFunctions.h" />
+    <ClInclude Include="TBBTechnology.h" />
     <ClInclude Include="TDoubleDoubleObject.h" />
     <ClInclude Include="TValueDoubleApproximation.h" />
     <ClInclude Include="TValueDoubleObject.h" />

@@ -7,6 +7,9 @@
 #include "OmpTechnology.h"
 #include "CilkTechnology.h"
 #include "SerialTechnology.h"
+#include "PPLTechnology.h"
+#include "TBBTechnology.h"
+#include "BoostTechnology.h"
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd )
 {    
@@ -45,6 +48,9 @@ ParallelUtils::ParallelUtils() :_counter(0)
 
     _technologies.push_back(std::make_shared<SerialTechnology>(SerialTechnology()));
     _technologies.push_back(std::make_shared<OmpTechnology>(OmpTechnology()));
+    _technologies.push_back(std::make_shared<PPLTechnology>(PPLTechnology()));
+    _technologies.push_back(std::make_shared<TBBTechnology>(TBBTechnology()));
+    _technologies.push_back(std::make_shared<BoostTechnology>(BoostTechnology()));
 #ifdef CILK
     _technologies.push_back(std::make_shared<CilkTechnology>(CilkTechnology()));
 #endif

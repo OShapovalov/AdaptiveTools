@@ -19,30 +19,24 @@
     <Filter Include="Source Files\PTechnologies">
       <UniqueIdentifier>{6b595d01-ae03-4c65-8f1d-8c806d58211b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Adaptive">
+      <UniqueIdentifier>{86e47452-562d-48d6-aba9-3650752eca10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Adaptive">
+      <UniqueIdentifier>{facdb7f1-3524-453b-84e8-8ca74ba967f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Numerical">
+      <UniqueIdentifier>{26b3a634-cbf1-4280-bef0-0fdc6ee273cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Numerical">
+      <UniqueIdentifier>{a929b1a7-b924-4e61-bbbe-9699911d07d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adaptive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DoubleDoubleFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Interval.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputToGrapher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ParallelUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SurfaceFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AbstractParallel.cpp">
@@ -57,6 +51,36 @@
     <ClCompile Include="SerialTechnology.cpp">
       <Filter>Source Files\PTechnologies</Filter>
     </ClCompile>
+    <ClCompile Include="PPLTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
+    </ClCompile>
+    <ClCompile Include="DoubleDoubleFunctions.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="Interval.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceFunctions.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2D.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3D.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputToGrapher.cpp">
+      <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="BoostTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
+    </ClCompile>
+    <ClCompile Include="TBBTechnology.cpp">
+      <Filter>Source Files\PTechnologies</Filter>
+    </ClCompile>
+    <ClCompile Include="Numerical.cpp">
+      <Filter>Source Files\Numerical</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractParallel.h">
@@ -65,61 +89,10 @@
     <ClInclude Include="forward.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interval.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DoubleDoubleFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DoubleDoubleApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LinearApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OutputToGrapher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ParallelUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlaneApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Statistics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SurfaceFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TDoubleDoubleObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TValueDoubleApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TValueDoubleObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TValueParamApproximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TValueParamObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TVec3Vec2Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TVect3Vec2Approximation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CilkTechnology.h">
@@ -133,6 +106,69 @@
     </ClInclude>
     <ClInclude Include="OmpTechnology.h">
       <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="PPLTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleDoubleApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleDoubleFunctions.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TValueDoubleApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TValueDoubleObject.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TValueParamApproximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TValueParamObject.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TVec3Vec2Object.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TVect3Vec2Approximation.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3D.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="TDoubleDoubleObject.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceFunctions.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="Interval.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputToGrapher.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="BoostTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="TBBTechnology.h">
+      <Filter>Header Files\PTechnologies</Filter>
+    </ClInclude>
+    <ClInclude Include="Numerical.h">
+      <Filter>Header Files\Numerical</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
