@@ -1,16 +1,16 @@
 #include "SerialTechnology.h"
-#include <omp.h>
+#include "AbstractParallel.h"
 
 double SerialTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
 {
-    double timeStart = omp_get_wtime();
+    double timeStart = AbstractParallel::GetTime();
     int i;
 
     for (i = iStart; i < iEnd; ++i)
     {
         f(i);
     }
-    double time = (omp_get_wtime() - timeStart);
+    double time = (AbstractParallel::GetTime() - timeStart);
 
     return time;
 }

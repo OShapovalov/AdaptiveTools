@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <windows.h>
 
 class AbstractParallel
 {
@@ -11,3 +12,11 @@ public:
 
 	static double GetTime();
 };
+
+template <class Function>
+__int64 time_call(Function&& f)
+{
+    __int64 begin = GetTickCount();
+    f();
+    return GetTickCount() - begin;
+}

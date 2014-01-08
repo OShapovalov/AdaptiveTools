@@ -1,34 +1,30 @@
 #pragma once
 #include <functional>
 #include <vector>
-#include <map>
-#include <tuple>
 #include "ParallelTechnology.h"
 #include "forward.h"
 
-class ParallelInfo
-{
-public:
-    ParallelInfo(std::function<void (int)> f, int iStart, int iEnd);
-
-private:
-
-    std::function<void (int)> _f;
-    int _start;
-    int _end;
-};
+//class ParallelInfo
+//{
+//public:
+//    ParallelInfo(std::function<void (int)> f, int iStart, int iEnd);
+//
+//private:
+//
+//    std::function<void (int)> _f;
+//    int _start;
+//    int _end;
+//};
 
 class ParallelTimes
 {
 public:
     ParallelTimes(){};
 
-    void Add(ParallelInfoPtr /*pInfo*/, const std::vector<double>& times)
+    void Add(const std::vector<double>& times)
     {
         _times.push_back(times);
     }
-
-private:
 
     std::vector<std::vector<double>> _times;
 };
@@ -40,24 +36,30 @@ public:
 
     ParallelUtils();
 
+    ~ParallelUtils();
+
     void RunInParallel( std::function<void (int)> f, int iStart, int iEnd );  
 
     int RunInAnotherThread( std::function<void (void)> f ); 
 
-    void Synchronize(int index);;
+    void Synchronize(int index);
 
-	//double GetTimeForFunction(std::function<void (int)> f);
+    static bool FileExists(std::string fname);
 
-	//void OutputStatisticsToFile();
+    void ReadSettingsFromFile(std::string fname = "Settings.ini");
 
-    //void OutputInfoToFile(const std::ofstream& iFile, const ParallelInfo& iInfo);
-    //int FindNearest( std::function<void (int ) > f, int iSize);
+    void WriteToFile(std::string fname = "Settings.ini") const;
+
+    bool TryRead();
+
+    ParallelTechnologyPtr GetTechnologyByName(const std::string& iName);
+
 protected:
-    int _counter;
+    bool _read;
+    int _index;
 private:
     ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;
-    //std::vector< ParallelTimes > _timesForFuction; 
 };
 
 

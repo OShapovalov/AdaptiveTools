@@ -3,13 +3,14 @@
 #include "BoostTechnology.h"
 #include <boost/thread.hpp>
 #include <omp.h>
+#include "AbstractParallel.h"
 
 using namespace boost;
 using namespace boost::this_thread;
 
 double BoostTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
 {
-    double timeStart = omp_get_wtime();
+    double timeStart = AbstractParallel::GetTime();
 
     thread_group group;
     for(int j=iStart; j<iEnd; j++)
@@ -25,7 +26,7 @@ double BoostTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     } 
     group.join_all();
 
-    double time = (omp_get_wtime() - timeStart);
+    double time = (AbstractParallel::GetTime() - timeStart);
 
     return time;
 }

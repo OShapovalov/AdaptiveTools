@@ -1,8 +1,8 @@
 #pragma once
 
-#ifdef CILK
-
 #include "ParallelTechnology.h"
+
+//#ifdef CILK
 
 class CilkTechnology : public ParallelTechnology
 {
@@ -20,4 +20,4 @@ public:
     }
 };
 
-#endif
+//#endif

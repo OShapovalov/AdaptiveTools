@@ -1,18 +1,21 @@
 
-#ifdef CILK
+//#ifdef CILK
 
 #include <cilk/cilk.h>
-#include "CilkUtils.h"
+//#include "CilkUtils.h"
+#include <functional>
+#include "CilkTechnology.h"
+#include "AbstractParallel.h"
 
 double CilkTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
 {
-    double timeStart = omp_get_wtime();
+    double timeStart = AbstractParallel::GetTime();
 
     cilk_for(int i = iStart; i < iEnd; ++i)
     {
         f(i);
     }
-    double time = (omp_get_wtime() - timeStart);
+    double time = (AbstractParallel::GetTime() - timeStart);
 
     return time;
 }
@@ -27,4 +30,4 @@ void CilkTechnology::Synchronize()
     cilk_sync;
 }
 
-#endif
+//#endif

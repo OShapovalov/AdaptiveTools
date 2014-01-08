@@ -39,8 +39,8 @@ struct TValueParamInsertionPtr
 class ParallelTechnology;
 typedef std::shared_ptr<ParallelTechnology> ParallelTechnologyPtr;
 
-class ParallelInfo;
-typedef std::shared_ptr<ParallelInfo> ParallelInfoPtr;
+//class ParallelInfo;
+//typedef std::shared_ptr<ParallelInfo> ParallelInfoPtr;
 
 class ParallelTimes;
 typedef std::shared_ptr<ParallelTimes> ParallelTimesPtr;

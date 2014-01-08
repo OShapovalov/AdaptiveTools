@@ -1,9 +1,9 @@
 #include "OmpTechnology.h"
-#include <omp.h>
+#include "AbstractParallel.h"
 
 double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
 {
-    double timeStart = omp_get_wtime();
+    double timeStart = AbstractParallel::GetTime();
     int i;
 
 #pragma omp parallel for 
@@ -12,7 +12,7 @@ double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
         f(i);
     }
 
-    double time = (omp_get_wtime() - timeStart);
+    double time = (AbstractParallel::GetTime() - timeStart);
 
     return time;
 }

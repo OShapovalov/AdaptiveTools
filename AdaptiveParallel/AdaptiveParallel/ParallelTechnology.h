@@ -1,7 +1,8 @@
 #pragma once
 #include <functional>
 
-#define BOOST
+//#define BOOST
+//#define CILK
 
 class ParallelTechnology
 {

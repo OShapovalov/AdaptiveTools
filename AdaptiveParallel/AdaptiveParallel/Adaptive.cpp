@@ -122,11 +122,11 @@ static int nInSettings = 0;
 
  //    n = 41;
  //    expected = 165580141;   // 41
- //    time1 = omp_get_wtime();
+ //    time1 = AbstractParallel::GetTime();
 
  //    answer = fib_serial( n );
 
- //    time2 = omp_get_wtime() - time1;
+ //    time2 = AbstractParallel::GetTime() - time1;
 
  //    printf ("\ntime  %lf \n", time2);
 
@@ -139,80 +139,6 @@ static int nInSettings = 0;
  //    return answer - expected;
  //}
 
- /*
-#include <stdio.h>
-#include <omp.h>
-
-#define SPLITTER 16
- typedef unsigned long long INT_TYPE;
-
- INT_TYPE
-     fib_serial( const INT_TYPE n ) {
-         if( n<2 )
-             return n;
-         else
-             return fib_serial(n-1)+fib_serial(n-2);
- }
-
- INT_TYPE
-     fib( INT_TYPE n ) {
-         INT_TYPE i, j;
-         if( n < SPLITTER ) {
-             return fib_serial( n );
-         } else {
-#pragma omp task shared( i )
-             i = fib( n - 1 );
-#pragma omp task shared( j )
-             j = fib( n - 2 );
-#pragma omp taskwait
-             return i + j;
-         }
- }
-
- INT_TYPE
-     fib_iter( INT_TYPE n ) {
-         INT_TYPE f0, f1, f2, i;
-         if( n < 2 )
-             return n;
-         f0 = 0;
-         f1 = 1;
-         f2 = 1;
-         for( i = 2; i <= n; ++i ) {
-             f2 = f0 + f1;
-             f0 = f1;
-             f1 = f2;
-         }
-         return f2;
- }*/
-
-/* int main( int argc, char *argv[] ) {
-
-     INT_TYPE n, answer, expected;
-     double time1, time2;
-
-     n = 41;
-     expected =   165580141;   // 41
-     //expected = fib_iter( n );
-     time1 = omp_get_wtime();
-#pragma omp parallel
-     {
-#pragma omp single
-#pragma omp task
-         answer = fib( n );
-     }
-     time2 = omp_get_wtime() - time1;
-     //printf( "fib(%d) = %d\n", n, answer );
-     printf ("\ntime  %lf \n", time2);
-
-     if( answer != expected ) {
-         printf( "failed: answer=%llu, expected=%llu\n", answer, expected );
-     } else {
-         printf( "passed\n" );
-     }
-
-     return answer - expected;
- }*/
-
 
 // parallel-fibonacci.cpp
 // compile with: /EHsc
@@ -224,16 +150,6 @@ static int nInSettings = 0;
 //#include <tuple>
 //#include <algorithm>
 //#include <iostream>
-
-// Calls the provided work function and returns the number of milliseconds 
-// that it takes to call that function.
-template <class Function>
-__int64 time_call(Function&& f)
-{
-    __int64 begin = GetTickCount();
-    f();
-    return GetTickCount() - begin;
-}
 
 // Computes the nth Fibonacci number.
 //int fibonacci(int n)
