@@ -173,5 +173,11 @@
     <ClInclude Include="Numerical.h">
       <Filter>Header Files\Numerical</Filter>
     </ClInclude>
+    <ClInclude Include="TParamObjectPolicy.h">
+      <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

@@ -22,21 +22,7 @@ public:
 
 	void MakeApprox(double iTolerance)
 	{
-		int n;
-
-		if (GetWrite())
-		{
-			n = this->GetNumberForOMP();
-			WriteToFile(n);
-		}
-		else
-		{
-			n = GetNumberForParallelSection();
-		}	
-
-		std::cout << "N = " << n << std::endl;
-
-		return this->MakeApproxOMP(iTolerance, n);
+		return this->MakeApproxOMP(iTolerance, 1);
 	}
 
 protected:

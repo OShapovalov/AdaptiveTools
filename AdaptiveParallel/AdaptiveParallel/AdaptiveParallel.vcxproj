@@ -259,6 +259,7 @@
     <ClInclude Include="SurfaceFunctions.h" />
     <ClInclude Include="TBBTechnology.h" />
     <ClInclude Include="TDoubleDoubleObject.h" />
+    <ClInclude Include="TParamObjectPolicy.h" />
     <ClInclude Include="TValueDoubleApproximation.h" />
     <ClInclude Include="TValueDoubleObject.h" />
     <ClInclude Include="TValueParamApproximation.h" />
@@ -267,6 +268,9 @@
     <ClInclude Include="TVect3Vec2Approximation.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

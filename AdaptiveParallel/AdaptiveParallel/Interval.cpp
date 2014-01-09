@@ -12,7 +12,7 @@ Interval::Interval()
 
 void Interval::Init(double iStart, double iEnd)
 {
-	_interval.resize(2);
+	//_interval.resize(2);
 	_interval[0] = iStart;
 	_interval[1] = iEnd;
 }

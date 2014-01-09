@@ -35,6 +35,8 @@ static int nInSettings = 0;
 	 //OutputToGrapher(approx2, "Approx.txt", 1000);
 	 //OutputToGrapher(sinSurf, "Exact.txt", 10000);
 
+     //return 0;
+
 	 const int N = 500;
 
 	 double* a = new double[N*N];

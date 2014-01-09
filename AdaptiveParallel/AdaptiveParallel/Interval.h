@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 class Interval
 {
@@ -18,5 +19,5 @@ private:
 
 	void Init(double iStart, double iEnd);
 
-	std::vector<double> _interval;
+	std::array<double,2> _interval;
 };
