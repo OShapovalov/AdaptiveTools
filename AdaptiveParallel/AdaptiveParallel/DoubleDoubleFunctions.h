@@ -2,7 +2,7 @@
 
 #include "TDoubleDoubleObject.h"
 
-class Tf2 : public TObject
+class Tf2 : public TDoubleDoubleObject
 {
 public:
 
@@ -11,7 +11,7 @@ public:
 	void GetIntervals(std::vector<Interval>& oIntervals) const override;
 };
 
-class Tfsin : public TObject
+class Tfsin : public TDoubleDoubleObject
 {
 public:
 

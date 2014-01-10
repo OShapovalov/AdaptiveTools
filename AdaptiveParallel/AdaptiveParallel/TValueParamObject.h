@@ -5,8 +5,6 @@
 #include "Vector3D.h"
 #include "TParamObjectPolicy.h"
 
-
-
 template< class TValue, class TParam >
 class TValueParamObject : 
 	public std::enable_shared_from_this< TValueParamObject<TValue,TParam> >, public TParamObjectPolicy<TParam>

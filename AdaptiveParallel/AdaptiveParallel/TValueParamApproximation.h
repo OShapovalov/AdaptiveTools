@@ -7,6 +7,7 @@
 #include <vector>
 #include "TValueParamObject.h"
 #include "Statistics.h"
+#include <assert.h>
 
 template< class TValue, class TParam >
 class TValueParamApproximation : public TValueParamObject<TValue, TParam>
@@ -22,7 +23,7 @@ public:
 
 	void MakeApprox(double iTolerance)
 	{
-		return this->MakeApproxOMP(iTolerance, 1);
+		return MakeApproxOMP(iTolerance);
 	}
 
 protected:
@@ -129,7 +130,65 @@ protected:
 
 	virtual void MakeApproximation() = 0;
 
-	virtual void MakeApproxOMP(double iTolerance, int nOMP)
+    virtual void CacheValues(const std::vector<TParam>& iParams)
+    {
+        std::vector<std::pair<TParam,TValue>> newCached(iParams.size());
+
+#ifndef _DEBUG
+#pragma omp parallel for
+#endif
+        for (int i=0;i<(int)iParams.size();++i)
+        {
+            newCached[i].first = iParams[i];
+            newCached[i].second = _object->Evaluate(iParams[i]);
+        }
+
+        _cache.insert(_cache.end(), newCached.begin(), newCached.end());
+    }
+
+    const TValue& GetExactValue(const TParam& iParam) const
+    {
+        auto comp = [iParam](const std::pair<TParam, TValue>& tripleArr)
+        {
+            return (iParam == tripleArr.first);
+        };
+
+        auto it = std::find_if(_cache.begin(), _cache.end(), comp);
+
+        assert(it != _cache.end());
+        
+        return (*it).second;
+    }
+
+    //friend bool TParam::operator==(const TParam& lhs, const TParam& rhs){ return false; }
+
+    virtual void CacheParams(const std::vector<TParam>& iParams, std::vector<TValue>& oValues)
+    {
+        std::vector<TParam> params;
+        for (std::size_t i=0; i<iParams.size(); ++i)
+        {
+            TParam param = iParams[i];
+
+            auto comp = [param](const std::pair<TParam, TValue>& tripleArr)
+            {
+                return (param == tripleArr.first);
+            };
+
+            auto it = std::find_if(_cache.begin(), _cache.end(), comp);
+
+            if (it == _cache.end())
+                params.push_back(param);
+        }
+
+        CacheValues(params);
+
+        for (std::size_t i=0;i<iParams.size();++i)
+        {
+            oValues = GetExactValue(iParams[i]);
+        }
+    }
+
+	virtual void MakeApproxOMP(double iTolerance)
 	{
 		std::size_t n = 4;
 		FillParamsAndValues(n);
@@ -153,11 +212,13 @@ protected:
 
 			std::vector<bool> needToAdd(N);
 			std::vector<TValue> exactValues(N);
+            
+            CacheParams(params, exactValues);
 
 //#pragma omp parallel for shared(needToAdd, params, exactValues, iTolerance) if (N>nOMP)
 			for (i = 0; i < N; ++i )
 			{
-				needToAdd[i] = GetValue(params[i], iTolerance, exactValues[i]);
+				needToAdd[i] = CheckValue(params[i], iTolerance, exactValues[i]);
 			}		
 
 			if (std::find(needToAdd.begin(),needToAdd.end(),true)!=needToAdd.end())
@@ -181,27 +242,26 @@ protected:
 		}
 	}
 
-	virtual int GetNumberForOMP()
-	{
-		std::size_t N = 100;
-		FillParamsAndValues(N);
-		MakeApproximation();
+	//virtual int GetNumberForOMP()
+	//{
+	//	std::size_t N = 100;
+	//	FillParamsAndValues(N);
+	//	MakeApproximation();
 
-		return AbstractParallel::GetNumberOMP([this]()->bool
-		{ 			
-			TValue exactValue;
-			return GetValue(this->_params[ rand()%this->_params.size()], 0.1, exactValue); 
-		});
-	}
+	//	return AbstractParallel::GetNumberOMP([this]()->bool
+	//	{ 			
+	//		TValue exactValue;
+	//		return GetValue(this->_params[ rand()%this->_params.size()], 0.1, exactValue); 
+	//	});
+	//}
 
 	virtual TValue Evaluate(const TParam& iParam) const override
 	{
 		return _approxObject->Evaluate(iParam);
 	}
 
-	virtual bool GetValue( const TParam& iParam, double iTolerance, TValue& oExactValue )
+	virtual bool CheckValue( const TParam& iParam, double iTolerance, const TValue& oExactValue )
 	{
-		oExactValue = _object->Evaluate(iParam);
 		TValue approxValue = Evaluate(iParam);
 		double magn = std::sqrt((oExactValue - approxValue)*(oExactValue - approxValue));
 		return magn > iTolerance;
@@ -211,6 +271,8 @@ protected:
 
 	std::vector<TParam> _params;
 	std::vector<TValue> _values;
+
+    std::vector<std::pair<TParam,TValue>> _cache;
 
 	std::vector<std::size_t> _dimensions;
 

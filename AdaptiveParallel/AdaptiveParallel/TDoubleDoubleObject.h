@@ -2,7 +2,7 @@
 
 #include "TValueDoubleObject.h"
 
-class TObject: public TValueDoubleObject<double> 
+class TDoubleDoubleObject: public TValueDoubleObject<double> 
 {
 public:
 	using TValueDoubleObject<double>::operator=;

@@ -22,20 +22,20 @@ static int nInSettings = 0;
 
  int main(void)
  {	 
-	 //TObjectPtr f2 = std::make_shared<Tfsin>();
+	 TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
 	 //auto sinSurf = std::make_shared<TSomeSurface>();
 	 //auto approx = TVec3Vec2Approximation::Create(sinSurf);
-	 //auto approx2 = TDoubleDoubleApproximation::Create(f2);
+	 auto approx2 = TDoubleDoubleApproximation::Create(f2);
 
 	 //auto start = AbstractParallel::GetTime();
 	 //approx->MakeApprox(1e-2);
-	 //approx2->MakeApprox(1e-5);
+	 approx2->MakeApprox(1e-5);
 	 //std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
 
 	 //OutputToGrapher(approx2, "Approx.txt", 1000);
 	 //OutputToGrapher(sinSurf, "Exact.txt", 10000);
 
-     //return 0;
+     return 0;
 
 	 const int N = 500;
 

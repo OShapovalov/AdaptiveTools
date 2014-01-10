@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Numerical">
       <UniqueIdentifier>{a929b1a7-b924-4e61-bbbe-9699911d07d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Adaptive\Impl">
+      <UniqueIdentifier>{03cf5b35-e893-41ae-a825-06e2ad8ef885}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adaptive.cpp">
@@ -140,28 +143,10 @@
     <ClInclude Include="TValueParamObject.h">
       <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
-    <ClInclude Include="TVec3Vec2Object.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
-    <ClInclude Include="TVect3Vec2Approximation.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2D.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3D.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
     <ClInclude Include="TDoubleDoubleObject.h">
       <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
-    <ClInclude Include="SurfaceFunctions.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
     <ClInclude Include="Interval.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
-    <ClInclude Include="OutputToGrapher.h">
       <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
     <ClInclude Include="BoostTechnology.h">
@@ -175,6 +160,24 @@
     </ClInclude>
     <ClInclude Include="TParamObjectPolicy.h">
       <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3D.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="TVect3Vec2Approximation.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="TVec3Vec2Object.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceFunctions.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputToGrapher.h">
+      <Filter>Header Files\Adaptive\Impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,8 +6,8 @@
 class TDoubleDoubleApproximation;
 typedef std::shared_ptr<TDoubleDoubleApproximation> ApproximationPtr;
 
-class TObject;
-typedef std::shared_ptr<TObject> TObjectPtr;
+class TDoubleDoubleObject;
+typedef std::shared_ptr<TDoubleDoubleObject> TDoubleDoubleObjectPtr;
 
 template< class TValue >
 class TValueDoubleObject;

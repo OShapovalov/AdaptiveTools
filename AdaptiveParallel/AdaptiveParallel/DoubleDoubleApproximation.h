@@ -5,5 +5,5 @@
 class TDoubleDoubleApproximation : public TValueDoubleApproximation<double>
 {
 public:
-	using TValueDoubleApproximation<double>::operator=;
+    using TValueDoubleApproximation<double>::operator=;
 };

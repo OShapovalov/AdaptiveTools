@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Tf2">
+    <Position X="11.25" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DoubleDoubleFunctions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tfsin">
+    <Position X="13.5" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DoubleDoubleFunctions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LinearApproximation&lt;TValue&gt;">
+    <Position X="5.25" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LinearApproximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectApproximation&lt;TValue, TParam&gt;">
+    <Position X="6.25" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBAAAAAAAAAAAAAABAAAAAAAAAAKAACA=</HashCode>
+      <FileName>ObjectApproximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlaneApproximation">
+    <Position X="7.75" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>PlaneApproximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TSomeSurface">
+    <Position X="9.5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SurfaceFunctions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TDoubleDoubleObject" Collapsed="true">
+    <Position X="12.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TDoubleDoubleObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TValueDoubleApproximation&lt;TValue&gt;">
+    <Position X="0.75" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAgACAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>TValueDoubleApproximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TValueParamApproximation&lt;TValue, TParam&gt;">
+    <Position X="1.75" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAIAACAAkBAAAAggAAAAABAUgAAAAAAAKAACA=</HashCode>
+      <FileName>TValueParamApproximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TVec3Vec2Approximation">
+    <Position X="3.25" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAAAgA=</HashCode>
+      <FileName>TVect3Vec2Approximation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TValueParamObject&lt;TValue, TParam&gt;">
+    <Position X="8.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAgAAAAAAAwAAAAAAgAAAAgAAAAAAAAA=</HashCode>
+      <FileName>TValueParamObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TParamObjectPolicy&lt;TParam&gt;">
+    <Position X="8.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TParamObjectPolicy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Microsoft YaHei" Size="9" />
+</ClassDiagram>
