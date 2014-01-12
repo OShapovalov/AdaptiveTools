@@ -8,6 +8,20 @@ public:
 	Vector2D():_x(0),_y(0){};
 	Vector2D(double x, double y):_x(x),_y(y){};
 	~Vector2D(){};
+    Vector2D(const Vector2D& iVec)
+    {
+        _x = iVec._x;
+        _y = iVec._y;
+    }
+
+    Vector2D & operator = (Vector2D const & num)
+    {
+        return *this;
+    }
+    friend bool operator == (const Vector2D& rv1, const Vector2D& rv2)
+    {
+        return rv1._x == rv2._x && rv1._y == rv2._y;
+    }
 
 	const Vector2D operator+(const Vector2D& rv) const {
 		return Vector2D(_x + rv._x, _y + rv._y);

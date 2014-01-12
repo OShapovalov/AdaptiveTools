@@ -148,7 +148,7 @@ protected:
 
     const TValue& GetExactValue(const TParam& iParam) const
     {
-        auto comp = [iParam](const std::pair<TParam, TValue>& tripleArr)
+        auto comp = [iParam](const std::pair<TParam, TValue>& tripleArr) -> bool
         {
             return (iParam == tripleArr.first);
         };
@@ -169,7 +169,7 @@ protected:
         {
             TParam param = iParams[i];
 
-            auto comp = [param](const std::pair<TParam, TValue>& tripleArr)
+            auto comp = [param](const std::pair<TParam, TValue>& tripleArr) -> bool
             {
                 return (param == tripleArr.first);
             };
@@ -184,7 +184,7 @@ protected:
 
         for (std::size_t i=0;i<iParams.size();++i)
         {
-            oValues = GetExactValue(iParams[i]);
+            oValues[i] = GetExactValue(iParams[i]);
         }
     }
 
