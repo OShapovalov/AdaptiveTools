@@ -24,7 +24,7 @@ public:
 		_approxObject = std::make_shared<LinearApproximation<TValue>>(_params,_values,_dimensions,_object);
 	}
 
-	Interval GetInterval(int iDim = 0) const override
+	TplInterval GetInterval(int iDim = 0) const override
 	{
 		return std::dynamic_pointer_cast< TValueDoubleObject<TValue> >(_object)->GetInterval();
 	}

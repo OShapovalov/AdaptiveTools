@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "Interval.h"
+#include "TplInterval.h"
 #include "Vector2D.h"
 #include "Vector3D.h"
 #include "TParamObjectPolicy.h"
@@ -18,7 +18,7 @@ public:
 		std::vector<std::size_t>& oDimensions)
 	{
 		// получить интервалы и заполнить
-		std::vector<Interval> intervals;
+		std::vector<TplInterval> intervals;
 		GetIntervals(intervals);
 
 		std::size_t NDim = intervals.size();
@@ -38,11 +38,11 @@ public:
 		oDimensions.resize(NDim, linearN);
 	}
 
-	virtual void GetIntervals(std::vector<Interval>& oIntervals) const = 0;
+	virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const = 0;
 
-	virtual Interval GetInterval(int iDim = 0) const
+	virtual TplInterval GetInterval(int iDim = 0) const
 	{
-		std::vector<Interval> intervals;
+		std::vector<TplInterval> intervals;
 		GetIntervals(intervals);
 		return intervals[iDim];
 	}
@@ -53,7 +53,7 @@ protected:
 
 private:
 
-	static void GetParamsForInterval(const Interval& iInterval, std::size_t N, std::vector<double>& oParams)
+	static void GetParamsForInterval(const TplInterval& iInterval, std::size_t N, std::vector<double>& oParams)
 	{
 		double start = iInterval.GetStart();
 		double end = iInterval.GetEnd();
@@ -69,60 +69,4 @@ private:
 
 		oParams[N-1] = end;
 	}
-
-	void FillParams( int rec, const std::vector<std::vector<double>>& allParams, std::vector<TParam>& oParams, std::vector<double>& params) 
-	{
-		for (std::size_t i=0; i<allParams[rec].size(); ++i )
-		{			
-			if (rec == allParams.size()-1)
-			{
-				params.push_back(allParams[rec][i]);
-				oParams.push_back( TValue(params) );
-				params.pop_back();
-			}
-			else
-			{
-				params.push_back(allParams[rec][i]);
-				FillParams(rec+1, allParams, oParams, params);
-				params.pop_back();
-			}
-		}
-	}
-
-	void FillParams(std::vector<std::vector<double>> allParams, std::vector<double>& oParams ) 
-	{			
-		oParams.resize(allParams[0].size());
-		for (std::size_t i =0; i<allParams[0].size(); ++i)
-		{
-			oParams[i] = allParams[0][i];
-		}
-	}
-
-	void FillParams(std::vector<std::vector<double>> allParams, std::vector<Vector2D>& oParams ) 
-	{		
-		std::size_t N1 = allParams[0].size();
-		std::size_t N2 = allParams[1].size();
-		oParams.resize(N1*N2);
-		for (std::size_t i =0; i<N1; ++i)
-		for (std::size_t k =0; k<N2; ++k)
-		{
-			oParams[i*N2+k] = Vector2D(allParams[0][i],allParams[1][k]);
-		}
-	}
-
-	void FillParams(std::vector<std::vector<double>> allParams, std::vector<Vector3D>& oParams ) 
-	{		
-		std::size_t N1 = allParams[0].size();
-		std::size_t N2 = allParams[1].size();
-		std::size_t N3 = allParams[2].size();
-		oParams.resize(N1*N2*N3);
-		for (std::size_t i =0; i<N1; ++i)
-			for (std::size_t k =0; k<N2; ++k)
-				for (std::size_t l =0; l<N3; ++l)
-			{
-				oParams[i*N2*N3+k*N3+l] = Vector3D(allParams[0][i],allParams[1][k],allParams[2][l]);
-			}
-	}
-
-
 };

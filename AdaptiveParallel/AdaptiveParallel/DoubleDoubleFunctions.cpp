@@ -7,10 +7,10 @@ double Tf2::Evaluate( const double& iParam ) const
 	return iParam*iParam;
 }
 
-void Tf2::GetIntervals(std::vector<Interval>& oIntervals) const
+void Tf2::GetIntervals(std::vector<TplInterval>& oIntervals) const
 {
 	oIntervals.clear();
-	oIntervals.push_back(Interval(0,1));
+	oIntervals.push_back(TplInterval(0,1));
 }
 
 
@@ -20,8 +20,8 @@ double Tfsin::Evaluate( const double& iParam ) const
 	return std::abs(sin(31*iParam));
 }
 
-void Tfsin::GetIntervals(std::vector<Interval>& oIntervals) const
+void Tfsin::GetIntervals(std::vector<TplInterval>& oIntervals) const
 {
 	oIntervals.clear();
-	oIntervals.push_back(Interval(0,1));
+	oIntervals.push_back(TplInterval(0,1));
 }

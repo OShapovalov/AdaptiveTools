@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Windows.h>
-#include <stdlib.h>
-#include "AbstractParallel.h"
+//#include <Windows.h>
+//#include <stdlib.h>
+//#include "AbstractParallel.h"
 #include <set>
-#include <vector>
-#include "TValueParamObject.h"
-#include "Statistics.h"
+//#include <vector>
+//#include "TValueParamObject.h"
+//#include "Statistics.h"
 #include <assert.h>
 
 template< class TValue, class TParam >
@@ -21,16 +21,52 @@ public:
 		return std::make_shared<TValueParamApproximation<TValue,TParam>>(iObject);
 	}
 
-	void MakeApprox(double iTolerance)
-	{
-		return MakeApproxOMP(iTolerance);
-	}
+    virtual void MakeApprox(double iTolerance)
+    {
+        std::size_t n = 4;
+        FillParamsAndValues(n);
+
+        bool isFinished = false;
+
+        int iter = 0;
+
+        while (!isFinished && iter < 10)
+        {
+            ++iter;
+
+            MakeApproximation();
+
+            isFinished = true;
+
+            std::vector<TParam> params;
+            _object->GetCheckParams(_params, _dimensions, params);
+
+            int i, N = (int)params.size();
+
+            std::vector<bool> needToAdd(N);
+            std::vector<TValue> exactValues(N);
+
+            CacheParams(params, exactValues);
+
+            //#pragma omp parallel for shared(needToAdd, params, exactValues, iTolerance) if (N>nOMP)
+            for (i = 0; i < N; ++i )
+            {
+                needToAdd[i] = CheckValue(params[i], iTolerance, exactValues[i]);
+            }
+
+            if (std::find(needToAdd.begin(),needToAdd.end(),true)!=needToAdd.end())
+                isFinished = false;
+
+            Insert(params, needToAdd, exactValues);
+        }
+
+    }
 
 protected:
 
 	TValueParamApproximation(){};
 
-	virtual void GetIntervals(std::vector<Interval>& oIntervals) const override
+	virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const override
 	{
 		return _object->GetIntervals(oIntervals);
 	}
@@ -160,8 +196,6 @@ protected:
         return (*it).second;
     }
 
-    //friend bool TParam::operator==(const TParam& lhs, const TParam& rhs){ return false; }
-
     virtual void CacheParams(const std::vector<TParam>& iParams, std::vector<TValue>& oValues)
     {
         std::vector<TParam> params;
@@ -188,47 +222,6 @@ protected:
         }
     }
 
-	virtual void MakeApproxOMP(double iTolerance)
-	{
-		std::size_t n = 4;
-		FillParamsAndValues(n);
-
-		bool isFinished = false;
-
-		int iter = 0;
-
-		while (!isFinished && iter < 10)
-		{
-			++iter;
-
-			MakeApproximation();
-
-			isFinished = true;
-
-			std::vector<TParam> params;
-			_object->GetCheckParams(_params, _dimensions, params);
-
-			int i, N = (int)params.size();
-
-			std::vector<bool> needToAdd(N);
-			std::vector<TValue> exactValues(N);
-            
-            CacheParams(params, exactValues);
-
-//#pragma omp parallel for shared(needToAdd, params, exactValues, iTolerance) if (N>nOMP)
-			for (i = 0; i < N; ++i )
-			{
-				needToAdd[i] = CheckValue(params[i], iTolerance, exactValues[i]);
-			}		
-
-			if (std::find(needToAdd.begin(),needToAdd.end(),true)!=needToAdd.end())
-				isFinished = false;
-
-			Insert(params, needToAdd, exactValues);
-		}
-
-	}
-
 	void FillParamsAndValues(std::size_t N)
 	{
 		_object->GetParams(N, _params, _dimensions);
@@ -241,19 +234,6 @@ protected:
 			_values[i] = _object->Evaluate(_params[i]);
 		}
 	}
-
-	//virtual int GetNumberForOMP()
-	//{
-	//	std::size_t N = 100;
-	//	FillParamsAndValues(N);
-	//	MakeApproximation();
-
-	//	return AbstractParallel::GetNumberOMP([this]()->bool
-	//	{ 			
-	//		TValue exactValue;
-	//		return GetValue(this->_params[ rand()%this->_params.size()], 0.1, exactValue); 
-	//	});
-	//}
 
 	virtual TValue Evaluate(const TParam& iParam) const override
 	{

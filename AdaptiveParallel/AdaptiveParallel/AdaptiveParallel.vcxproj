@@ -224,7 +224,7 @@
     <ClCompile Include="BoostTechnology.cpp" />
     <ClCompile Include="CilkTechnology.cpp" />
     <ClCompile Include="DoubleDoubleFunctions.cpp" />
-    <ClCompile Include="Interval.cpp" />
+    <ClCompile Include="TplInterval.cpp" />
     <ClCompile Include="Numerical.cpp" />
     <ClCompile Include="OmpTechnology.cpp" />
     <ClCompile Include="OutputToGrapher.cpp" />
@@ -244,7 +244,7 @@
     <ClInclude Include="DoubleDoubleApproximation.h" />
     <ClInclude Include="DoubleDoubleFunctions.h" />
     <ClInclude Include="forward.h" />
-    <ClInclude Include="Interval.h" />
+    <ClInclude Include="TplInterval.h" />
     <ClInclude Include="LinearApproximation.h" />
     <ClInclude Include="Numerical.h" />
     <ClInclude Include="ObjectApproximation.h" />

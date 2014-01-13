@@ -60,9 +60,6 @@
     <ClCompile Include="DoubleDoubleFunctions.cpp">
       <Filter>Source Files\Adaptive</Filter>
     </ClCompile>
-    <ClCompile Include="Interval.cpp">
-      <Filter>Source Files\Adaptive</Filter>
-    </ClCompile>
     <ClCompile Include="SurfaceFunctions.cpp">
       <Filter>Source Files\Adaptive</Filter>
     </ClCompile>
@@ -86,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="Statistics.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TplInterval.cpp">
+      <Filter>Source Files\Adaptive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +146,6 @@
     <ClInclude Include="TDoubleDoubleObject.h">
       <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
-    <ClInclude Include="Interval.h">
-      <Filter>Header Files\Adaptive</Filter>
-    </ClInclude>
     <ClInclude Include="BoostTechnology.h">
       <Filter>Header Files\PTechnologies</Filter>
     </ClInclude>
@@ -178,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="OutputToGrapher.h">
       <Filter>Header Files\Adaptive\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="TplInterval.h">
+      <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@
 #include <iostream>
 #include "ParallelUtils.h"
 
-static int nInSettings = 0;
+//static int nInSettings = 0;
 
 //#include <chrono>
 

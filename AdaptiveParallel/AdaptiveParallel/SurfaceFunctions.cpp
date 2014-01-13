@@ -7,9 +7,9 @@ Vector3D TSomeSurface::Evaluate( const Vector2D& params ) const
 	return Vector3D(u,v,u*sin(2*v));
 }
 
-void TSomeSurface::GetIntervals(std::vector<Interval>& oIntervals) const
+void TSomeSurface::GetIntervals(std::vector<TplInterval>& oIntervals) const
 {
 	oIntervals.clear();
-	oIntervals.push_back(Interval(0,1));
-	oIntervals.push_back(Interval(0,1));
+	oIntervals.push_back(TplInterval(0,1));
+	oIntervals.push_back(TplInterval(0,1));
 }

@@ -10,7 +10,7 @@ public:
 	Vector3D(const Vector2D& iVec2D):_x(iVec2D[0]),_y(iVec2D[1]),_z(0){};
 	~Vector3D(){};
 
-    Vector3D & operator = (Vector3D const & num)
+    Vector3D & operator = (Vector3D const & /*num*/)
     {
         return *this;
     }

@@ -14,7 +14,7 @@ public:
         _y = iVec._y;
     }
 
-    Vector2D & operator = (Vector2D const & num)
+    Vector2D & operator = (Vector2D const & /*num*/)
     {
         return *this;
     }

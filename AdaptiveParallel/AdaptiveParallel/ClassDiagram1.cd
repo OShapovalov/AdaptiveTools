@@ -56,13 +56,6 @@
       <FileName>TValueDoubleApproximation.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TValueParamApproximation&lt;TValue, TParam&gt;">
-    <Position X="1.75" Y="6" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAEAAIAACAAkBAAAAggAAAAABAUgAAAAAAAKAACA=</HashCode>
-      <FileName>TValueParamApproximation.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="TVec3Vec2Approximation">
     <Position X="3.25" Y="11.25" Width="2.25" />
     <TypeIdentifier>
