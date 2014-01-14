@@ -28,6 +28,7 @@
 #include "VRDObject.h"
 #include "Generators/Blending/Geometry/BlendSurfaceByVariableRadiusDisk.h"
 #include "VRDapprox.h"
+#include <memory>
 
 namespace RGK
 {
@@ -38,7 +39,8 @@ namespace RGK
         {
         public:
 
-            VRD(){}
+            VRD(Common::Context* iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData):
+              _approx(std::make_shared<VRDApprox>(std::make_shared<VRDObject>(iContext,iData))){}
 
             Common::Result MakeLinkageCurves( Common::Context* iContext, 
                 const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData, 
@@ -50,8 +52,8 @@ namespace RGK
 
             Common::Context* _context;
 
-            VRDObject _object;
-            VRDApprox _approx;
+            //VRDObject _object;
+            std::shared_ptr<VRDApprox> _approx;
 
             BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
 
@@ -154,11 +156,11 @@ namespace RGK
         
             Common::Result _MakeLinkageCurves( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
 
-            Common::Result CacheMiddleTriples( const std::vector<double>& iParams, double uTolerance);
+            //Common::Result CacheMiddleTriples( const std::vector<double>& iParams, double uTolerance);
 
-            Common::Result CacheTriples( const std::vector<double>& iParams);
+            //Common::Result CacheTriples( const std::vector<double>& iParams);
 
-            const TripleArray& GetTripleArray( double param);
+            //const TripleArray& GetTripleArray( double param);
 
             Common::Result GetMaxDistance(AllPointsPtr iAllPoints, double iParam, const Math::Vector3D& pointCenter, 
                 const Math::Vector2D& pointFirst, const Math::Vector2D& pointSecond, double& oDist );
@@ -167,38 +169,30 @@ namespace RGK
 
             static Common::Result UpdateMaxDistance(Common::Context* iContext, const CurvePtr& iCurve, double iParam, const Math::Vector3D& iPoint, double& ioDist);
 
-            static RGK::Common::Result GetOffsetSide( Common::Context* iContext, const CurvePtr& curve, const Interval& interval, const SurfacePtr& iSurface, 
-                double iTolerance, bool iOrientation, const Math::Vector3D& iPlaneNormal, Curve::EquidistantOnSurfaceData::OffsetSide& offsetSide );
+            //Common::Result MakeAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
 
-            Common::Result GetEquidistantCurves( const SurfacePtr& iSurface, bool iOrientation, const RGK::Geometry::PlanePtr& plane, double iOffset, const RGK::Geometry::Surface::IntersectSurfaceReport& intersectReport, 
-                std::vector<CurvePtr>& eqcurves, std::vector<Interval>& intervals );
+            //Common::Result GetInitialParams(int& N, std::vector<double> &params );
 
-            Common::Result CreatePoints(double iParam, TripleArray& oTriples);
+            //static Common::Result GetNearestPoint( const TripleArray& triple, const Math::Vector3D& approxPoint, Math::Vector3D& centralPoint, Math::Vector3D& tangent, 
+            //    Math::Vector2D& pointFirst, Math::Vector2D& pointSecond );
 
-            Common::Result MakeAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
+            //Common::Result RefineEnds( AllPointsPtr iAllPoints, bool iStart );
 
-            Common::Result GetInitialParams(int& N, std::vector<double> &params );
+            //Common::Result SplitCurves( AllPointsPtr iAllPoints, std::vector<double>& splitParams, std::vector<AllPointsPtr>& newCurves );
 
-            static Common::Result GetNearestPoint( const TripleArray& triple, const Math::Vector3D& approxPoint, Math::Vector3D& centralPoint, Math::Vector3D& tangent, 
-                Math::Vector2D& pointFirst, Math::Vector2D& pointSecond );
+            //Common::Result GetSplitAddParams( AllPointsPtr iAllPoints, double uTolerance, std::vector<double>& splitParams, std::vector<double>& addParams );
 
-            Common::Result RefineEnds( AllPointsPtr iAllPoints, bool iStart );
-
-            Common::Result SplitCurves( AllPointsPtr iAllPoints, std::vector<double>& splitParams, std::vector<AllPointsPtr>& newCurves );
-
-            Common::Result GetSplitAddParams( AllPointsPtr iAllPoints, double uTolerance, std::vector<double>& splitParams, std::vector<double>& addParams );
-
-            Common::Result InterpolateCurves( AllPointsPtr iAllPoints, double *paramTolerances);
-
-            Common::Result ProjectPoint( const Math::Vector3D& point, const CurvePtr& iCurve, const Interval& iInterval, const SurfacePtr& iSurface, Math::Vector2D& oPointUV );
-
-            Common::Result FilterReport( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
-
-            Common::Result FindGap(const std::vector<double>& iParams, const std::vector<Math::Vector2D>& iPoints, const ParametricCurvePtr& iCurve, std::vector<double>& params );
             
-            Common::Result AddTriple(double param, AllPointsPtr iAllpoints, const Math::Vector2D& iUV1, const Math::Vector2D& iUV2, VRD::CurveTriple& oCurveTriple );
 
-            Common::Result GetTriple(double param, AllPointsPtr iAllpoints, VRD::CurveTriple& oCurveTriple) const;
+            //Common::Result ProjectPoint( const Math::Vector3D& point, const CurvePtr& iCurve, const Interval& iInterval, const SurfacePtr& iSurface, Math::Vector2D& oPointUV );
+
+            //Common::Result FilterReport( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
+
+            //Common::Result FindGap(const std::vector<double>& iParams, const std::vector<Math::Vector2D>& iPoints, const ParametricCurvePtr& iCurve, std::vector<double>& params );
+            
+            //Common::Result AddTriple(double param, AllPointsPtr iAllpoints, const Math::Vector2D& iUV1, const Math::Vector2D& iUV2, VRD::CurveTriple& oCurveTriple );
+
+            //Common::Result GetTriple(double param, AllPointsPtr iAllpoints, VRD::CurveTriple& oCurveTriple) const;
             //DOM-IGNORE-END
         };
     }

@@ -17,38 +17,27 @@
 
 #pragma once
 #include "../TValueParamApproximation.h"
-
-//#include "../TplInterval.h"
-//#include "decl.h"
-//#include "forward.h"
-//#include "Geometry/Curves/Curve.h"
-//#include "Geometry/Surfaces/Surface.h"
-//#include "Geometry/Surfaces/NURBSSurface.h"
-//#include "Generators/Law.h"
-//#include "Math/Vector2D.h"
-//#include "Geometry/Surfaces/CircularBlendingOffsetSurface.h"
+#include "Generators/Blending/Geometry/BlendSurfaceByVariableRadiusDisk.h"
 //#include "../TValueDoubleApproximation.h"
-//#include "Generators/Blending/Geometry/BlendSurfaceByVariableRadiusDisk.h"
+#include "VRDobject.h"
 
 namespace RGK
 {
     namespace Geometry
     {
         /// Генератор поверхности сглаживания через 2 закона радиус-смещения
-        class DLLLOCAL VRDApprox : TValueParamApproximation<TripleArray, double>
+        class DLLLOCAL VRDApprox : TValueParamApproximation<Triple, double>
         {
         public:
+            using TValueParamApproximation<Triple, double>::operator=;
 
-            VRDApprox(){}
+            VRDApprox(std::shared_ptr<VRDObject> iObject):TValueParamApproximation(iObject){}
 
 //DOM-IGNORE-BEGIN
    
-     private:
+            //protected:
 
-            virtual void MakeApproximation() override
-            {
-
-            }
+            virtual void MakeApproximation() override;
 
             //DOM-IGNORE-END
         };

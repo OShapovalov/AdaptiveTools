@@ -1,10 +1,10 @@
 #include "SurfaceFunctions.h"
 
-Vector3D TSomeSurface::Evaluate( const Vector2D& params ) const 
+tplVector3D TSomeSurface::Evaluate( const tplVector2D& params ) const 
 {
 	double u = params[0], v = params[1];
 	//return Vector3D(u,v,0);
-	return Vector3D(u,v,u*sin(2*v));
+	return tplVector3D(u,v,u*sin(2*v));
 }
 
 void TSomeSurface::GetIntervals(std::vector<TplInterval>& oIntervals) const

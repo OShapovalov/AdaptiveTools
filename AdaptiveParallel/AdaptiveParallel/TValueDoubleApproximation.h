@@ -14,10 +14,10 @@ public:
 
 	TValueDoubleApproximation(std::shared_ptr<TValueParamObject<TValue,double>> iObject) : TValueParamApproximation<TValue,double>(iObject){}
 
-	static std::shared_ptr<TValueDoubleApproximation<TValue>> Create(std::shared_ptr<TValueParamObject<TValue,double>> iObject)
-	{
-		return std::make_shared<TValueDoubleApproximation<TValue>>(iObject);
-	}
+	//static std::shared_ptr<TValueDoubleApproximation<TValue>> Create(std::shared_ptr<TValueParamObject<TValue,double>> iObject)
+	//{
+	//	return std::make_shared<TValueDoubleApproximation<TValue>>(iObject);
+	//}
 
 	virtual void MakeApproximation() override
 	{

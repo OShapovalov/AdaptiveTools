@@ -25,7 +25,7 @@
 	 TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
 	 //auto sinSurf = std::make_shared<TSomeSurface>();
 	 //auto approx = TVec3Vec2Approximation::Create(sinSurf);
-	 auto approx2 = TDoubleDoubleApproximation::Create(f2);
+	 auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2);
 
 	 //auto start = AbstractParallel::GetTime();
 	 //approx->MakeApprox(1e-2);

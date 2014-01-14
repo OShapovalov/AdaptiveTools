@@ -34,21 +34,21 @@ namespace RGK
     namespace Geometry
     {
         /// Генератор поверхности сглаживания через 2 закона радиус-смещения
-        class DLLLOCAL VRDObject : TValueParamObject<TripleArray, double>
+        class DLLLOCAL VRDObject : TValueParamObject<Triple, double>
         {
         public:
 
-            VRDObject(){}
+            VRDObject( Common::Context* iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData):
+                _context(iContext), _data(iData) {}
 
-            VRDObject & operator = (VRDObject const & /*num*/)
-            {
-                return *this;
-            }
+            using TValueParamObject<Triple, double>::operator=;
 
-            virtual TripleArray Evaluate(const double& iParam) const override
+            virtual Triple Evaluate(const double& iParam) const override
             {
-                TripleArray arr;
-                return arr;
+                TripleArray trArr;
+                CreatePoints(iParam, trArr);
+
+                return trArr._arr.front();
             }
 
             virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const override
@@ -57,17 +57,29 @@ namespace RGK
                 oIntervals.push_back(TplInterval(_data._controlCurveInterval[0],_data._controlCurveInterval[1]));
             }
 
+            //virtual void MakeApprox( std::vector<double>& params, const std::vector<Triple>& triples) override;
+
 //DOM-IGNORE-BEGIN
    
      private:
 
-            Common::Context* _context;
+         static RGK::Common::Result GetOffsetSide( Common::Context* iContext, const CurvePtr& curve, const Interval& interval, const SurfacePtr& iSurface, 
+             double iTolerance, bool iOrientation, const Math::Vector3D& iPlaneNormal, Curve::EquidistantOnSurfaceData::OffsetSide& offsetSide );
 
-            BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
+         Common::Result GetEquidistantCurves( const SurfacePtr& iSurface, bool iOrientation, const RGK::Geometry::PlanePtr& plane, double iOffset, const RGK::Geometry::Surface::IntersectSurfaceReport& intersectReport, 
+             std::vector<CurvePtr>& eqcurves, std::vector<Interval>& intervals ) const;
 
-            bool _extend;
+         Common::Result ProjectPoint( const Math::Vector3D& point, const CurvePtr& iCurve, const Interval& iInterval, const SurfacePtr& iSurface, Math::Vector2D& oPointUV ) const;
 
-            NURBSSurfacePtr _sourceSurfaces[2];
+         Common::Result CreatePoints(double iParam, TripleArray& oTriples) const;
+
+         Common::Context* _context;
+
+         BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
+
+         bool _extend;
+
+         NURBSSurfacePtr _sourceSurfaces[2];
             //DOM-IGNORE-END
         };
     }

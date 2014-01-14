@@ -7,7 +7,7 @@ public:
 
     virtual void GetCheckParams(const std::vector<TParam>& iParams, const std::vector<std::size_t>& iDimensions, std::vector<TParam>& oParams) = 0;
 
-    virtual void FillParams( const std::vector<std::vector<double>>& allParams, std::vector<TParam>& oParams) = 0;
+    virtual void FillParams( const std::vector<std::vector<double>>& allParams, std::vector<TParam>& oParams);
 
     //virtual void FillParams( int rec, const std::vector<std::vector<double>>& allParams, std::vector<TParam>& oParams, std::vector<double>& params) = 0
     //{
@@ -55,11 +55,11 @@ public:
 };
 
 template<>
-class TParamObjectPolicy<Vector2D>
+class TParamObjectPolicy<tplVector2D>
 {
 public:
 
-    virtual void GetCheckParams(const std::vector<Vector2D>& iParams, const std::vector<std::size_t>& iDimensions, std::vector<Vector2D>& oParams)
+    virtual void GetCheckParams(const std::vector<tplVector2D>& iParams, const std::vector<std::size_t>& iDimensions, std::vector<tplVector2D>& oParams)
     {
         std::size_t N1 = iDimensions[0];
         std::size_t N2 = iDimensions[1];
@@ -71,7 +71,7 @@ public:
             }
     }
 
-    void FillParams(const std::vector<std::vector<double>>& allParams, std::vector<Vector2D>& oParams ) 
+    void FillParams(const std::vector<std::vector<double>>& allParams, std::vector<tplVector2D>& oParams ) 
     {		
         std::size_t N1 = allParams[0].size();
         std::size_t N2 = allParams[1].size();
@@ -79,18 +79,18 @@ public:
         for (std::size_t i =0; i<N1; ++i)
             for (std::size_t k =0; k<N2; ++k)
             {
-                oParams[i*N2+k] = Vector2D(allParams[0][i],allParams[1][k]);
+                oParams[i*N2+k] = tplVector2D(allParams[0][i],allParams[1][k]);
             }
     }
 
 };
 
 template<>
-class TParamObjectPolicy<Vector3D>
+class TParamObjectPolicy<tplVector3D>
 {
 public:
 
-    void FillParams(const std::vector<std::vector<double>>& allParams, std::vector<Vector3D>& oParams ) 
+    void FillParams(const std::vector<std::vector<double>>& allParams, std::vector<tplVector3D>& oParams ) 
     {		
         std::size_t N1 = allParams[0].size();
         std::size_t N2 = allParams[1].size();
@@ -100,7 +100,7 @@ public:
             for (std::size_t k =0; k<N2; ++k)
                 for (std::size_t l =0; l<N3; ++l)
                 {
-                    oParams[i*N2*N3+k*N3+l] = Vector3D(allParams[0][i],allParams[1][k],allParams[2][l]);
+                    oParams[i*N2*N3+k*N3+l] = tplVector3D(allParams[0][i],allParams[1][k],allParams[2][l]);
                 }
     }
 };

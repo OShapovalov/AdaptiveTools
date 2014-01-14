@@ -1,6 +1,6 @@
 #include "Vector2D.h"
 
-double & Vector2D::operator[] (int index) 
+double & tplVector2D::operator[] (int index) 
 {
 	if (index == 0) 
 	{
@@ -12,7 +12,7 @@ double & Vector2D::operator[] (int index)
 	}
 }
 
-double Vector2D::operator[] (int index) const
+double tplVector2D::operator[] (int index) const
 {
 	if (index == 0) 
 	{

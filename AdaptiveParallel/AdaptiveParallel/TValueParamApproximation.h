@@ -8,6 +8,8 @@
 //#include "TValueParamObject.h"
 //#include "Statistics.h"
 #include <assert.h>
+#include "TplInterval.h"
+#include "TValueParamObject.h"
 
 template< class TValue, class TParam >
 class TValueParamApproximation : public TValueParamObject<TValue, TParam>
@@ -16,10 +18,10 @@ public:
 
 	TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : _object(iObject){};
 
-	static std::shared_ptr<TValueParamApproximation<TValue,TParam>> Create(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject)
-	{
-		return std::make_shared<TValueParamApproximation<TValue,TParam>>(iObject);
-	}
+	//static std::shared_ptr<TValueParamApproximation<TValue,TParam>> Create(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject)
+	//{
+	//	return std::make_shared<TValueParamApproximation<TValue,TParam>>(iObject);
+	//}
 
     virtual void MakeApprox(double iTolerance)
     {
@@ -249,14 +251,18 @@ protected:
 
 protected:
 
-	std::vector<TParam> _params;
-	std::vector<TValue> _values;
+
 
     std::vector<std::pair<TParam,TValue>> _cache;
 
 	std::vector<std::size_t> _dimensions;
 
 	std::shared_ptr<TValueParamObject<TValue,TParam>> _object;
+
+public:	
+    
+    std::vector<TParam> _params;
+	std::vector<TValue> _values;
 
 	std::shared_ptr<TValueParamObject<TValue,TParam>> _approxObject;
 };

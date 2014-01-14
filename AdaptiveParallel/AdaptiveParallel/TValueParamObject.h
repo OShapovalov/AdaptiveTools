@@ -33,7 +33,7 @@ public:
 		}
 
 		oParams.clear();
-		FillParams(allParams, oParams);
+		TParamObjectPolicy::FillParams(allParams, oParams);
 		oDimensions.clear();
 		oDimensions.resize(NDim, linearN);
 	}
@@ -46,6 +46,8 @@ public:
 		GetIntervals(intervals);
 		return intervals[iDim];
 	}
+
+    //virtual void MakeApprox(std::vector<TParam>& params, const std::vector<TValue>& values) = 0;
 
 protected:
 	
