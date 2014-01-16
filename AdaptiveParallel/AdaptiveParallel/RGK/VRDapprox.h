@@ -20,18 +20,22 @@
 #include "Generators/Blending/Geometry/BlendSurfaceByVariableRadiusDisk.h"
 //#include "../TValueDoubleApproximation.h"
 #include "VRDobject.h"
+#include "VRDApproximation.h"
 
 namespace RGK
 {
     namespace Geometry
     {
         /// Генератор поверхности сглаживания через 2 закона радиус-смещения
-        class DLLLOCAL VRDApprox : TValueParamApproximation<Triple, double>
+        class DLLLOCAL VRDApprox : public TValueParamApproximation<Triple, double>
         {
         public:
             using TValueParamApproximation<Triple, double>::operator=;
 
-            VRDApprox(std::shared_ptr<VRDObject> iObject):TValueParamApproximation(iObject){}
+            VRDApprox(std::shared_ptr<VRDObject> iObject) : TValueParamApproximation<Triple, double>(iObject) 
+            {
+                _approxObject = std::make_shared<VRDApproximation>();
+            }
 
 //DOM-IGNORE-BEGIN
    

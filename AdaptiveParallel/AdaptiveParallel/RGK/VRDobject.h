@@ -34,7 +34,7 @@ namespace RGK
     namespace Geometry
     {
         /// Генератор поверхности сглаживания через 2 закона радиус-смещения
-        class DLLLOCAL VRDObject : TValueParamObject<Triple, double>
+        class DLLLOCAL VRDObject : public TValueParamObject<Triple, double>
         {
         public:
 

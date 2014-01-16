@@ -39,8 +39,8 @@ namespace RGK
         {
         public:
 
-            VRD(Common::Context* iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData):
-              _approx(std::make_shared<VRDApprox>(std::make_shared<VRDObject>(iContext,iData))){}
+            //VRD(Common::Context* iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData):
+            //  _approx(std::make_shared<VRDApprox>(std::make_shared<VRDObject>(iContext,iData))){}
 
             Common::Result MakeLinkageCurves( Common::Context* iContext, 
                 const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData, 
@@ -52,7 +52,7 @@ namespace RGK
 
             Common::Context* _context;
 
-            //VRDObject _object;
+            //std::shared_ptr<VRDObject> _object;
             std::shared_ptr<VRDApprox> _approx;
 
             BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
@@ -142,17 +142,17 @@ namespace RGK
 
             std::vector<AllPointsPtr> _allCurves;
 
-            Common::Result AddPoints(double prevParam, TripleArray& iTripleArr, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
+            //Common::Result AddPoints(double prevParam, TripleArray& iTripleArr, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
 
-            Common::Result FindGap2( AllPointsPtr allPoints, int N, TripleArray &iTripleArr );
+            //Common::Result FindGap2( AllPointsPtr allPoints, int N, TripleArray &iTripleArr );
 
-            Common::Result InsertAllTriples( const TripleArray& iTripleArr, AllPointsPtr iAllPoints);
+            //Common::Result InsertAllTriples( const TripleArray& iTripleArr, AllPointsPtr iAllPoints);
 
-            Common::Result FinishAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
+            //Common::Result FinishAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
 
-            Common::Result CreateCurve(AllPointsPtr iAllPoints, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
+            //Common::Result CreateCurve(AllPointsPtr iAllPoints, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport);
 
-            bool Check(AllPointsPtr iAllPoints, const TripleArray& iTripleArr) const;
+            //bool Check(AllPointsPtr iAllPoints, const TripleArray& iTripleArr) const;
         
             Common::Result _MakeLinkageCurves( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
 
@@ -162,12 +162,12 @@ namespace RGK
 
             //const TripleArray& GetTripleArray( double param);
 
-            Common::Result GetMaxDistance(AllPointsPtr iAllPoints, double iParam, const Math::Vector3D& pointCenter, 
-                const Math::Vector2D& pointFirst, const Math::Vector2D& pointSecond, double& oDist );
+            //Common::Result GetMaxDistance(AllPointsPtr iAllPoints, double iParam, const Math::Vector3D& pointCenter, 
+            //    const Math::Vector2D& pointFirst, const Math::Vector2D& pointSecond, double& oDist );
 
-            static Common::Result GetToleranceForSurface(Common::Context *iContext, SurfacePtr iSurface, const std::vector<Math::Vector2D>& iUVPoints, double iTolerance, double& oParamTolerance);
+            //static Common::Result GetToleranceForSurface(Common::Context *iContext, SurfacePtr iSurface, const std::vector<Math::Vector2D>& iUVPoints, double iTolerance, double& oParamTolerance);
 
-            static Common::Result UpdateMaxDistance(Common::Context* iContext, const CurvePtr& iCurve, double iParam, const Math::Vector3D& iPoint, double& ioDist);
+            //static Common::Result UpdateMaxDistance(Common::Context* iContext, const CurvePtr& iCurve, double iParam, const Math::Vector3D& iPoint, double& ioDist);
 
             //Common::Result MakeAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
 

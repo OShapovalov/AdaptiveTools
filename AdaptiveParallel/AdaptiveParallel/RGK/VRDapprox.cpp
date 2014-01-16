@@ -17,7 +17,7 @@ namespace RGK
 
         void VRDApprox::MakeApproximation()
         {
-            _approxObject = std::make_shared<VRDApproximation>(_params, _values, _dimensions, _object);
+            _approxObject->MakeApprox(_params, _values); 
         }
 
 

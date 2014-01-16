@@ -47,7 +47,7 @@ public:
 		return intervals[iDim];
 	}
 
-    //virtual void MakeApprox(std::vector<TParam>& params, const std::vector<TValue>& values) = 0;
+    virtual void MakeApprox(std::vector<TParam>& params, const std::vector<TValue>& values) = 0;
 
 protected:
 	

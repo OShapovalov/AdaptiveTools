@@ -58,43 +58,43 @@ namespace RGK
 #define GAP_COUNT 5
 #define EXT_PARAM_MIN 0.01
 #define EXT_PARAM_MAX 0.5
-
-        Common::Result VRD::GetToleranceForSurface(Common::Context *iContext, SurfacePtr iSurface, const std::vector<Math::Vector2D>& iUVPoints, double iTolerance, double& oParamTolerance)
-        {
-            Common::Result result;
-         
-            if (iSurface->GetType() == RGK::Geometry::Geometry::NURBSSurfaceType)
-
-            {
-                NURBSSurfacePtr nSurf1 = iSurface->AsNURBSSurface();
-                result = NURBSUtils::ConvertTolerance(iContext,nSurf1,iTolerance,oParamTolerance);
-                if (result != Common::Success)
-                    return result;
-
-                oParamTolerance /= 2.0;
-            }
-            else
-            {
-                double maxU = 0, maxV = 0;
-                Math::Vector3D derU, derV;
-                for (std::size_t i=0; i < iUVPoints.size(); ++i )
-                {
-                    result = iSurface->Evaluate(iContext,iUVPoints[i][0],iUVPoints[i][1],1,0,derU);
-                    if (result != Common::Success)
-                        return result;
-                    result = iSurface->Evaluate(iContext,iUVPoints[i][0],iUVPoints[i][1],0,1,derV);
-                    if (result != Common::Success)
-                        return result;
-
-                    maxU = std::max(maxU,derU.Magnitude());
-                    maxV = std::max(maxV,derV.Magnitude());
-                }
-
-                oParamTolerance = iTolerance / (maxU + maxV) / 10.0;
-            }
-            return Common::Success;
-        }
-
+//
+//        Common::Result VRD::GetToleranceForSurface(Common::Context *iContext, SurfacePtr iSurface, const std::vector<Math::Vector2D>& iUVPoints, double iTolerance, double& oParamTolerance)
+//        {
+//            Common::Result result;
+//         
+//            if (iSurface->GetType() == RGK::Geometry::Geometry::NURBSSurfaceType)
+//
+//            {
+//                NURBSSurfacePtr nSurf1 = iSurface->AsNURBSSurface();
+//                result = NURBSUtils::ConvertTolerance(iContext,nSurf1,iTolerance,oParamTolerance);
+//                if (result != Common::Success)
+//                    return result;
+//
+//                oParamTolerance /= 2.0;
+//            }
+//            else
+//            {
+//                double maxU = 0, maxV = 0;
+//                Math::Vector3D derU, derV;
+//                for (std::size_t i=0; i < iUVPoints.size(); ++i )
+//                {
+//                    result = iSurface->Evaluate(iContext,iUVPoints[i][0],iUVPoints[i][1],1,0,derU);
+//                    if (result != Common::Success)
+//                        return result;
+//                    result = iSurface->Evaluate(iContext,iUVPoints[i][0],iUVPoints[i][1],0,1,derV);
+//                    if (result != Common::Success)
+//                        return result;
+//
+//                    maxU = std::max(maxU,derU.Magnitude());
+//                    maxV = std::max(maxV,derV.Magnitude());
+//                }
+//
+//                oParamTolerance = iTolerance / (maxU + maxV) / 10.0;
+//            }
+//            return Common::Success;
+//        }
+//
         Common::Result VRD::MakeLinkageCurves( Common::Context* iContext, 
             const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData, 
             BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
@@ -142,112 +142,84 @@ namespace RGK
                 }
             }
 
+            _approx = std::make_shared<VRDApprox>(std::make_shared<VRDObject>(iContext,_data));
 
-
-            //result = _MakeLinkageCurves(oReport);
+            result = _MakeLinkageCurves(oReport);
 
             return Common::Success;
         }
+//
+        Common::Result VRD::_MakeLinkageCurves( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
+        {
+            if (_data._controlCurve == nullptr || _data._surfaces[0] == nullptr || _data._surfaces[1] == nullptr)
+                return Instance::CheckResult(Common::NullPointer);
+         
+            Common::Result result;
 
-//        Common::Result VRD::_MakeLinkageCurves( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
+            {
+                const Interval& lawInterval1 = _data._offsetLaws[0]->GetInterval();
+                result = lawInterval1.IsNestedInterval(_data._controlCurveInterval, _context->GetUnitPrecision());
+                if (result != Common::Success)
+                    return result;
+
+                const Interval& lawInterval2 = _data._offsetLaws[1]->GetInterval();
+                result = lawInterval2.IsNestedInterval(_data._controlCurveInterval, _context->GetUnitPrecision());
+                if (result != Common::Success)
+                    return result;
+            }
+
+            _approx->MakeApprox(_data._tolerance);
+
+            return Common::Success;
+        }
+////
+//        Common::Result VRD::UpdateMaxDistance(Common::Context* iContext, const CurvePtr& iCurve, double iParam, const Math::Vector3D& iPoint, double& ioDist)
 //        {
-//            if (_data._controlCurve == nullptr || _data._surfaces[0] == nullptr || _data._surfaces[1] == nullptr)
-//                return Instance::CheckResult(Common::NullPointer);
-//
-//#ifdef LINKAGE_CURVE_DEBUG
-//            ExportToGrapherUtils::OutputSurfaceToFile(_context, _data._surfaces[0], 100, 100, _data._uvboxes[0], "Surf1.txt");
-//            ExportToGrapherUtils::OutputSurfaceToFile(_context, _data._surfaces[1], 100, 100, _data._uvboxes[1], "Surf2.txt");
-//#endif
-//            
 //            Common::Result result;
+//            Math::Vector3D locPoint;
 //
-//            {
-//                const Interval& lawInterval1 = _data._offsetLaws[0]->GetInterval();
-//                result = lawInterval1.IsNestedInterval(_data._controlCurveInterval, _context->GetUnitPrecision());
-//                if (result != Common::Success)
-//                    return result;
-//
-//                const Interval& lawInterval2 = _data._offsetLaws[1]->GetInterval();
-//                result = lawInterval2.IsNestedInterval(_data._controlCurveInterval, _context->GetUnitPrecision());
-//                if (result != Common::Success)
-//                    return result;
-//            }
-//
-//            result = MakeAll(oReport);
-//            if (Common::Failed(result))
+//            result = iCurve->EvaluatePoint(iContext,iParam,locPoint);
+//            if (result != Common::Success)
 //                return result;
-//
-//            result = FilterReport(oReport);
-//            if (Common::Failed(result))
-//                return result;
-//
-//#ifdef LINKAGE_CURVE_DEBUG
-//
-//            for (unsigned i=0; i < oReport.GetPartsCount(); ++i)
-//            {
-//                Common::String str = "Curve0.txt";
-//                str[5] = (wchar_t) ( (unsigned)str[5] + i );
-//                Common::String pStr1 = "p1" + str;
-//                Common::String pStr2 = "p2" + str;
-//                ExportToGrapherUtils::OutputCurveToFile(_context, oReport.GetCentralCurve(i), 1000, str);
-//                ExportToGrapherUtils::OutputCurveToFile(_context, oReport.GetLinkageCurve1(i), 1000, pStr1);
-//                ExportToGrapherUtils::OutputCurveToFile(_context, oReport.GetLinkageCurve2(i), 1000, pStr2);
-//
-//                //Common::String uvStr2 = "uv2" + str;
-//                //ExportToGrapherUtils::OutputCurveToFile(iContext, oReport.GetLinkageCurve2(i)->AsParametricCurve()->GetUVCurve(), 10000, uvStr2);
-//            }
-//#endif
+//            double dist1 = (iPoint - locPoint).Magnitude();
+//            ioDist = std::max(ioDist,dist1);
 //
 //            return Common::Success;
 //        }
 //
-        Common::Result VRD::UpdateMaxDistance(Common::Context* iContext, const CurvePtr& iCurve, double iParam, const Math::Vector3D& iPoint, double& ioDist)
-        {
-            Common::Result result;
-            Math::Vector3D locPoint;
-
-            result = iCurve->EvaluatePoint(iContext,iParam,locPoint);
-            if (result != Common::Success)
-                return result;
-            double dist1 = (iPoint - locPoint).Magnitude();
-            ioDist = std::max(ioDist,dist1);
-
-            return Common::Success;
-        }
-
-        Common::Result VRD::GetMaxDistance( AllPointsPtr iAllPoints, double iParam, 
-            const Math::Vector3D& pointCenter, const Math::Vector2D& pointFirst, const Math::Vector2D& pointSecond, double& oDist )
-        {
-            Common::Result result;
-
-            Math::Vector3D point3d1, point3d2;
-
-            result = _data._surfaces[0]->EvaluatePoint(_context, pointFirst[0], pointFirst[1], point3d1);
-            if (result != Common::Success)
-                return result;
-
-            result = _data._surfaces[1]->EvaluatePoint(_context, pointSecond[0], pointSecond[1], point3d2);
-            if (result != Common::Success)
-                return result;
-
-            oDist = 0;
-
-            result = UpdateMaxDistance(_context, iAllPoints->_centralCurve, iParam, pointCenter, oDist);
-            if (result != Common::Success)
-                return result;
-
-            result = UpdateMaxDistance(_context, iAllPoints->_pcurves[0], iParam, point3d1, oDist);
-            if (result != Common::Success)
-                return result;
-
-            result = UpdateMaxDistance(_context, iAllPoints->_pcurves[1], iParam, point3d2, oDist);
-            if (result != Common::Success)
-                return result;
-
-            return Common::Success;
-        }
-
-
+//        Common::Result VRD::GetMaxDistance( AllPointsPtr iAllPoints, double iParam, 
+//            const Math::Vector3D& pointCenter, const Math::Vector2D& pointFirst, const Math::Vector2D& pointSecond, double& oDist )
+//        {
+//            Common::Result result;
+//
+//            Math::Vector3D point3d1, point3d2;
+//
+//            result = _data._surfaces[0]->EvaluatePoint(_context, pointFirst[0], pointFirst[1], point3d1);
+//            if (result != Common::Success)
+//                return result;
+//
+//            result = _data._surfaces[1]->EvaluatePoint(_context, pointSecond[0], pointSecond[1], point3d2);
+//            if (result != Common::Success)
+//                return result;
+//
+//            oDist = 0;
+//
+//            result = UpdateMaxDistance(_context, iAllPoints->_centralCurve, iParam, pointCenter, oDist);
+//            if (result != Common::Success)
+//                return result;
+//
+//            result = UpdateMaxDistance(_context, iAllPoints->_pcurves[0], iParam, point3d1, oDist);
+//            if (result != Common::Success)
+//                return result;
+//
+//            result = UpdateMaxDistance(_context, iAllPoints->_pcurves[1], iParam, point3d2, oDist);
+//            if (result != Common::Success)
+//                return result;
+//
+//            return Common::Success;
+//        }
+//
+//
 //        Common::Result VRD::MakeAll(BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
 //        {
 //            int N = MIN_COUNT;
@@ -392,134 +364,6 @@ namespace RGK
         //    return triple.GetNearest(approxPoint, centralPoint, tangent, pointFirst, pointSecond);
         //}
 
-        Common::Result VRD::AddPoints( double prevParam, TripleArray& iTripleArr, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
-        {
-            std::vector<AllPointsPtr> allCurves;
-
-            for (std::size_t i=0; i<_allCurves.size(); ++i)
-            {
-                std::size_t index = std::lower_bound(_allCurves[i]->_params.begin(), _allCurves[i]->_params.end(), iTripleArr._param) - _allCurves[i]->_params.begin();
-                if ( ! ( (index!=0 || index!=_allCurves[i]->_params.size()) && _allCurves[i]->_created) )
-                {
-                    allCurves.push_back(_allCurves[i]);
-                }
-            }
-
-            if (iTripleArr._arr.size() >= allCurves.size())
-            {
-                for (std::size_t i=0; i<allCurves.size(); ++i)
-                {
-                    auto comp = [&] (const Triple& iTriple1, const Triple& iTriple2)
-                    {
-                        return allCurves[i]->_centralPoints.back().DistanceTo(iTriple1._pointCenter) < allCurves[i]->_centralPoints.back().DistanceTo(iTriple2._pointCenter);
-                    };
-
-                    auto index = std::min_element(iTripleArr._arr.begin(), iTripleArr._arr.end(), comp) - iTripleArr._arr.begin();
-
-                    //auto result = FindGap2(allCurves[i], GAP_COUNT, iTripleArr);
-                    //if (Common::Failed(result))
-                    //{
-                    //    allCurves[i]->_bounds[1] = iTripleArr._param;
-
-                    //    result = CreateCurve(allCurves[i], oReport);
-                    //    if (Common::Failed(result))
-                    //        return result;
-
-                    //    AllPointsPtr apPtr(new AllPoints(allCurves[i]->_params.back()));
-                    //    apPtr->AddTriple(iTripleArr._arr[index], iTripleArr._param, iTripleArr._count);
-
-                    //    _allCurves.push_back(apPtr);
-
-                    //    continue;
-                    //}
-
-                    allCurves[i]->AddTriple(_context, iTripleArr._arr[index], iTripleArr._param, iTripleArr._count);
-
-                    iTripleArr._arr.erase(iTripleArr._arr.begin()+index);
-                }
-
-                for (std::size_t i=0; i < iTripleArr._arr.size(); ++i)
-                {
-                    AllPointsPtr apPtr(new AllPoints(prevParam));
-                    apPtr->AddTriple(_context, iTripleArr[i], iTripleArr._param, iTripleArr._count);
-
-                    _allCurves.push_back(apPtr);
-                }
-            }
-            else //if (iTripleArr.size() < _allCurves.size())
-            {
-                std::vector<bool> finds(allCurves.size(), false);
-
-                for (std::size_t i=0; i<iTripleArr._arr.size(); ++i)
-                {
-                    auto comp = [&] (const AllPointsPtr& iAllP1, const AllPointsPtr& iAllP2)
-                    {
-                        return iTripleArr[i]._pointCenter.DistanceTo(iAllP1->_centralPoints.back()) < iTripleArr[i]._pointCenter.DistanceTo(iAllP2->_centralPoints.back());
-                    };
-
-                    auto index = std::min_element(allCurves.begin(), allCurves.end(), comp) - allCurves.begin();
-
-                    //auto result = FindGap2(allCurves[index], GAP_COUNT, iTripleArr);
-                    //if (Common::Failed(result))
-                    //{
-                    //    allCurves[i]->_bounds[1] = iTripleArr._param;
-
-                    //    result = CreateCurve(allCurves[index], oReport);
-                    //    if (Common::Failed(result))
-                    //        return result;
-
-                    //    AllPointsPtr apPtr(new AllPoints(allCurves[index]->_params.back()));
-                    //    apPtr->AddTriple(iTripleArr[i], iTripleArr._param, iTripleArr._count);
-
-                    //    _allCurves.push_back(apPtr);
-
-                    //    continue;
-                    //}
-
-                    allCurves[index]->AddTriple(_context, iTripleArr[i], iTripleArr._param, iTripleArr._count);
-                    finds[index] = true;
-
-                    //ExportToGrapherUtils::ExportPointsToGrapher("points.txt", allCurves[index]->_centralPoints);
-                }
-
-                for (std::size_t i=0; i<finds.size(); ++i)
-                {
-                    if (!finds[i])
-                    {
-                        // финализация кривой
-
-                        allCurves[i]->_bounds[1] = iTripleArr._param;
-
-                        Common::Result result = CreateCurve(allCurves[i], oReport);
-                        if (Common::Failed(result))
-                            return result;
-                    }
-                }
-    
-            }
-
-            return Common::Success;
-        }
-
-        Common::Result VRD::FinishAll( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
-        {
-            for (std::size_t i=0; i<_allCurves.size(); ++i)
-            {
-                if (_allCurves[i]->_created)
-                    continue;
-
-                // финализация кривой
-
-                _allCurves[i]->_bounds[1] = _data._controlCurveInterval.GetEnd();
-
-                Common::Result result = CreateCurve(_allCurves[i], oReport);
-                if (Common::Failed(result))
-                    return result;
-            }
-
-            return Common::Success;
-        }
-
         //Common::Result VRD::CreateCurve( AllPointsPtr iAllPoints, BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport )
         //{
         //    //ExportToGrapherUtils::ExportPointsToGrapher("points.txt", iAllPoints->_centralPoints);
@@ -659,47 +503,6 @@ namespace RGK
         //    return Common::Success;
         //}
 
-        Common::Result VRD::InsertAllTriples( const TripleArray& iTripleArr, AllPointsPtr iAllPoints)
-        {
-            std::vector<AllPointsPtr> allCurves;
-            std::vector<std::size_t> indicies;
-
-            for (std::size_t i=0; i<_allCurves.size(); ++i)
-            {
-                std::size_t index = std::lower_bound(_allCurves[i]->_params.begin(), _allCurves[i]->_params.end(), iTripleArr._param) - _allCurves[i]->_params.begin();
-                if ( (index!=0 && index!=_allCurves[i]->_params.size()) || iAllPoints == _allCurves[i])
-                {
-                    allCurves.push_back(_allCurves[i]);
-                    indicies.push_back(index);
-                }
-            }
-
-            for (std::size_t i=0; i<allCurves.size(); ++i)
-            {
-                auto comp = [&] (const Triple& iTriple1, const Triple& iTriple2) -> bool
-                {
-                    Math::Vector3D point = (indicies[i] > 0 && indicies[i] < allCurves[i]->_centralPoints.size()) ? 
-                        (allCurves[i]->_centralPoints[indicies[i]-1] + allCurves[i]->_centralPoints[indicies[i]])*0.5 
-                        : (indicies[i] == 0) ?
-                            allCurves[i]->_centralPoints[indicies[i]]
-                            : allCurves[i]->_centralPoints[indicies[i]-1];
-                    return point.DistanceTo(iTriple1._pointCenter) < point.DistanceTo(iTriple2._pointCenter);
-                };
-
-                auto index = std::min_element(iTripleArr._arr.begin(), iTripleArr._arr.end(), comp) - iTripleArr._arr.begin();
-
-                if (allCurves[i] == iAllPoints /*|| 
-                        ( 
-                            std::abs(allCurves[i]->_params[indicies[i]-1] - iTripleArr._param) > 1e-8 
-                                && std::abs(allCurves[i]->_params[indicies[i]] - iTripleArr._param) > 1e-8
-                        ) */
-                    )
-                    allCurves[i]->InsertTriple(indicies[i], iTripleArr._arr[index], iTripleArr._param, iTripleArr._count, _data);
-            }
-
-            return Common::Success;
-        }
-
         //Common::Result VRD::CacheMiddleTriples(const std::vector<double>& iParams, double uTolerance)
         //{
         //    std::vector<double> params;
@@ -748,42 +551,6 @@ namespace RGK
 //
 //            return Common::Success;
 //        }
-
-        bool VRD::Check( AllPointsPtr iAllPoints, const TripleArray& iTripleArr ) const
-        {
-            if (iTripleArr._count == 0)
-                return true;
-
-            std::vector<AllPointsPtr> allCurves;
-            //std::vector<std::size_t> indicies;
-            std::vector<Math::Vector3D> nearestPoints;
-
-            for (std::size_t i=0; i<_allCurves.size(); ++i)
-            {
-                std::size_t index = std::lower_bound(_allCurves[i]->_params.begin(), _allCurves[i]->_params.end(), iTripleArr._param) - _allCurves[i]->_params.begin();
-                if ( (index!=0 && index!=_allCurves[i]->_params.size()) || iAllPoints == _allCurves[i])
-                {
-                    allCurves.push_back(_allCurves[i]);
-                    //indicies.push_back(index);
-                    nearestPoints.push_back( (_allCurves[i]->_centralPoints[index-1] + _allCurves[i]->_centralPoints[index])*0.5 );
-                }
-            }
-
-            for (std::size_t i=0; i<iTripleArr._arr.size(); ++i)
-            {
-                auto comp = [&] (const Math::Vector3D& iP1, const Math::Vector3D& iP2) -> bool
-                {
-                    return iP1.DistanceTo(iTripleArr._arr[i]._pointCenter) < iP2.DistanceTo(iTripleArr._arr[i]._pointCenter);
-                };
-
-                auto index = std::min_element(nearestPoints.begin(), nearestPoints.end(), comp) - nearestPoints.begin();
-
-                if (allCurves[index] == iAllPoints)
-                    return false;
-            }
-
-            return true;
-        }
 
         //const VRD::TripleArray& VRD::GetTripleArray(double param)
         //{
