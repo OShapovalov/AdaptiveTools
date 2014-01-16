@@ -35,14 +35,17 @@ namespace RGK
 
             //VRDApprox(std::shared_ptr<VRDObject> iObject):TValueParamApproximation(iObject){}
 
-            //VRDApproximation(const std::vector<double>& iParams,
-            //    const std::vector<Triple>& iValues,
-            //    const std::vector<std::size_t>& iDimensions,
-            //    std::shared_ptr<TValueParamObject<Triple,double>> iObject) : 
-            //ObjectApproximation(iParams, iValues, iDimensions, iObject)
-            //{
-
-            //}
+            VRDApproximation(Common::Context*iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData, 
+                const std::vector<double>& iParams,
+                const std::vector<Triple>& iValues,
+                const std::vector<std::size_t>& iDimensions,
+                std::shared_ptr<TValueParamObject<Triple,double>> iObject) : 
+            ObjectApproximation(iParams, iValues, iDimensions, iObject)
+            {
+                _context = iContext;
+                _data = iData;
+                MakeApprox(_params, _values);
+            }
 
             virtual Triple Evaluate(const double& iParam) const override;
 

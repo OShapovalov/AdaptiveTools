@@ -142,7 +142,7 @@ namespace RGK
                 }
             }
 
-            _approx = std::make_shared<VRDApprox>(std::make_shared<VRDObject>(iContext,_data));
+            _approx = std::make_shared<VRDApprox>(iContext, iData, std::make_shared<VRDObject>(iContext,_data));
 
             result = _MakeLinkageCurves(oReport);
 

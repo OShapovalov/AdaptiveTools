@@ -32,9 +32,11 @@ namespace RGK
         public:
             using TValueParamApproximation<Triple, double>::operator=;
 
-            VRDApprox(std::shared_ptr<VRDObject> iObject) : TValueParamApproximation<Triple, double>(iObject) 
+            VRDApprox(Common::Context*iContext, const BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData& iData, 
+                std::shared_ptr<VRDObject> iObject) : TValueParamApproximation<Triple, double>(iObject) 
             {
-                _approxObject = std::make_shared<VRDApproximation>();
+                _context = iContext;
+                _data = iData;
             }
 
 //DOM-IGNORE-BEGIN
@@ -42,6 +44,9 @@ namespace RGK
             //protected:
 
             virtual void MakeApproximation() override;
+
+            Common::Context *_context;
+            BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
 
             //DOM-IGNORE-END
         };
