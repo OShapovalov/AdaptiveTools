@@ -29,7 +29,7 @@
 
 	 //auto start = AbstractParallel::GetTime();
 	 //approx->MakeApprox(1e-2);
-	 approx2->MakeApprox(1e-5);
+	 approx2->MakeApprox(10, 1e-5);
 	 //std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
 
 	 //OutputToGrapher(approx2, "Approx.txt", 1000);

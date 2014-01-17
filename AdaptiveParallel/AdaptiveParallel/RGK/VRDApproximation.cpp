@@ -9,12 +9,12 @@ namespace RGK
         RGK::Geometry::Triple RGK::Geometry::VRDApproximation::Evaluate( const double& iParam ) const 
         {
             Triple trArr;
-            centralCurve->EvaluatePoint(_context, iParam, trArr._pointCenter);
+            _centralCurve->EvaluatePoint(_context, iParam, trArr._pointCenter);
 
             Math::Vector3D temp[2];
 
-            pcurves[0]->EvaluatePoint(_context, iParam, temp[0]);
-            pcurves[1]->EvaluatePoint(_context, iParam, temp[1]);
+            _pcurves[0]->EvaluatePoint(_context, iParam, temp[0]);
+            _pcurves[1]->EvaluatePoint(_context, iParam, temp[1]);
 
             trArr._pointsUV[0] = Math::Vector2D(temp[0]);
             trArr._pointsUV[1] = Math::Vector2D(temp[1]);
@@ -42,13 +42,13 @@ namespace RGK
                 UVBox uvbox;
                 _data._surfaces[i]->GetUVBox(uvbox);
 
-                ProjectCurveOnSurfaceUtils::CreateByUVPointsG1(_context, _data._surfaces[i], uvbox, pointsUV[i], params, 1e-10, pcurves[i]);
+                ProjectCurveOnSurfaceUtils::CreateByUVPointsG1(_context, _data._surfaces[i], uvbox, pointsUV[i], params, 1e-10, _pcurves[i]);
             }
 
             int degree = std::min(3, (int)params.size()-1);
 
             NURBSInterpolationBuilder::CreateCurveLocalInt(_context, centralPoints, std::vector<Math::Vector3D>(), params, 
-                centralCurve, degree, false, true, NURBSInterpolationBuilder::G1Continious);
+                _centralCurve, degree, false, true, NURBSInterpolationBuilder::G1Continious);
         }
 
 

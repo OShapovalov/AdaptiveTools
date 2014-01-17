@@ -51,6 +51,21 @@ namespace RGK
 
             void MakeApprox( std::vector<double>& params, const std::vector<Triple>& triples);
 
+            CurvePtr GetCentralCurve()
+            {
+                return _centralCurve;
+            }
+
+            ParametricCurvePtr GetLinkageCurve1()
+            {
+                return _pcurves[0];
+            }
+
+            ParametricCurvePtr GetLinkageCurve2()
+            {
+                return _pcurves[1];
+            }
+
 //DOM-IGNORE-BEGIN
    
             protected:
@@ -62,8 +77,8 @@ namespace RGK
             Common::Context *_context;
             BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
 
-            ParametricCurvePtr pcurves[2];
-            NURBSCurvePtr centralCurve;
+            ParametricCurvePtr _pcurves[2];
+            NURBSCurvePtr _centralCurve;
         };
     }
 }

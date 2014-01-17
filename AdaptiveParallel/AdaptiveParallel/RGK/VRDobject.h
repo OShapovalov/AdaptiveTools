@@ -48,6 +48,9 @@ namespace RGK
                 TripleArray trArr;
                 CreatePoints(iParam, trArr);
 
+                if (trArr._arr.empty())
+                    return Triple();
+
                 return trArr._arr.front();
             }
 

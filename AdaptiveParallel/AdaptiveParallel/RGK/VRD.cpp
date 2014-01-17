@@ -168,7 +168,8 @@ namespace RGK
                     return result;
             }
 
-            _approx->MakeApprox(_data._tolerance);
+            _approx->MakeApprox(10, _data._tolerance);
+            _approx->FillReport(oReport);
 
             return Common::Success;
         }

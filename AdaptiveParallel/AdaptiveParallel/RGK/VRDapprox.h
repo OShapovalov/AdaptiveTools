@@ -44,7 +44,7 @@ namespace RGK
             //protected:
 
             virtual void MakeApproximation() override;
-
+            void FillReport( BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesReport& oReport );
             Common::Context *_context;
             BlendSurfaceByVariableRadiusDisk::MakeLinkageCurvesData _data;
 

@@ -23,9 +23,8 @@ public:
 	//	return std::make_shared<TValueParamApproximation<TValue,TParam>>(iObject);
 	//}
 
-    virtual void MakeApprox(double iTolerance)
+    virtual void MakeApprox(std::size_t n, double iTolerance)
     {
-        std::size_t n = 4;
         FillParamsAndValues(n);
 
         bool isFinished = false;
