@@ -1,20 +1,8 @@
 #pragma once
 #include <functional>
-#include <vector>
 #include "ParallelTechnology.h"
-#include "forward.h"
-
-//class ParallelInfo
-//{
-//public:
-//    ParallelInfo(std::function<void (int)> f, int iStart, int iEnd);
-//
-//private:
-//
-//    std::function<void (int)> _f;
-//    int _start;
-//    int _end;
-//};
+#include "tplForward.h"
+#include <vector>
 
 class ParallelTimes
 {
@@ -34,7 +22,27 @@ class ParallelUtils
 
 public:
 
+    enum Technology
+    {
+        Serial,
+        OpenMP,
+#ifdef TPL_PPL
+        PPL,
+#endif
+#ifdef TPL_TBB
+        TBB,
+#endif
+#ifdef TPL_CILK
+        CilkPlus,
+#endif
+#ifdef TPL_Boost
+        BoostThreads,
+#endif
+    };
+
     ParallelUtils();
+
+    ParallelUtils(const std::vector<Technology>& iTechnologies);
 
     ~ParallelUtils();
 
@@ -53,6 +61,8 @@ public:
     bool TryRead();
 
     ParallelTechnologyPtr GetTechnologyByName(const std::string& iName);
+
+    ParallelTechnologyPtr GetTechnologyByEnum(const Technology& iName);
 
 protected:
     bool _read;

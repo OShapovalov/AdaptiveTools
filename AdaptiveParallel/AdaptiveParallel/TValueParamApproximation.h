@@ -10,13 +10,21 @@
 #include <assert.h>
 #include "TplInterval.h"
 #include "TValueParamObject.h"
+#include "ParallelUtils.h"
 
 template< class TValue, class TParam >
 class TValueParamApproximation : public TValueParamObject<TValue, TParam>
 {
 public:
 
-	TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : _object(iObject){};
+	TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : 
+      _object(iObject)
+      {
+          _pUtils = std::make_shared<ParallelUtils>();
+      };
+
+    TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject,
+        std::shared_ptr<ParallelUtils> iPUtils) : _object(iObject), _pUtils(iPUtils){};
 
 	//static std::shared_ptr<TValueParamApproximation<TValue,TParam>> Create(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject)
 	//{
@@ -171,14 +179,15 @@ protected:
     {
         std::vector<std::pair<TParam,TValue>> newCached(iParams.size());
 
-#ifndef _DEBUG
-#pragma omp parallel for
-#endif
-        for (int i=0;i<(int)iParams.size();++i)
-        {
-            newCached[i].first = iParams[i];
-            newCached[i].second = _object->Evaluate(iParams[i]);
-        }
+        _pUtils->RunInParallel
+            ( 
+            [&](int i)
+            {
+                newCached[i].first = iParams[i];
+                newCached[i].second = _object->Evaluate(iParams[i]);
+            }, 0, (int)iParams.size()
+            );
+
 
         _cache.insert(_cache.end(), newCached.begin(), newCached.end());
     }
@@ -250,8 +259,6 @@ protected:
 
 protected:
 
-
-
     std::vector<std::pair<TParam,TValue>> _cache;
 
 	std::vector<std::size_t> _dimensions;
@@ -264,4 +271,6 @@ public:
 	std::vector<TValue> _values;
 
 	std::shared_ptr<TValueParamObject<TValue,TParam>> _approxObject;
+
+    std::shared_ptr<ParallelUtils> _pUtils;
 };

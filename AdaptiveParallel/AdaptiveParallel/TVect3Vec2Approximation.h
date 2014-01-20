@@ -12,12 +12,12 @@ public:
 
 	using TValueParamApproximation<tplVector3D, tplVector2D>::operator=;
 
-	TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject) : TValueParamApproximation<tplVector3D,tplVector2D>(iObject){}
+	TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject) : 
+    TValueParamApproximation<tplVector3D,tplVector2D>(iObject){}
 
-	static std::shared_ptr<TVec3Vec2Approximation> Create(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject)
-	{
-		return std::make_shared<TVec3Vec2Approximation>(iObject);
-	}
+    TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject,
+        std::shared_ptr<ParallelUtils> iPUtils) : 
+    TValueParamApproximation<tplVector3D,tplVector2D>(iObject, iPUtils){}
 
 	virtual void MakeApproximation() override
 	{

@@ -92,9 +92,6 @@
     <ClInclude Include="AbstractParallel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="forward.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ParallelUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -178,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="TplInterval.h">
       <Filter>Header Files\Adaptive</Filter>
+    </ClInclude>
+    <ClInclude Include="tplForward.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

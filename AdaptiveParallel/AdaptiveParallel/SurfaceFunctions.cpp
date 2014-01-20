@@ -1,7 +1,9 @@
 #include "SurfaceFunctions.h"
+#include <Windows.h>
 
 tplVector3D TSomeSurface::Evaluate( const tplVector2D& params ) const 
 {
+    Sleep(100);
 	double u = params[0], v = params[1];
 	//return Vector3D(u,v,0);
 	return tplVector3D(u,v,u*sin(2*v));

@@ -3,7 +3,7 @@
 #include "DoubleDoubleApproximation.h"
 #include "DoubleDoubleFunctions.h"
 #include "TValueParamObject.h"
-#include "forward.h"
+#include "tplForward.h"
 #include "SurfaceFunctions.h"
 #include "TVect3Vec2Approximation.h"
 
@@ -22,14 +22,22 @@
 
  int main(void)
  {	 
-	 TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
-	 //auto sinSurf = std::make_shared<TSomeSurface>();
-	 //auto approx = TVec3Vec2Approximation::Create(sinSurf);
-	 auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2);
+	 //TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
+	 auto sinSurf = std::make_shared<TSomeSurface>();
+
+     std::vector<ParallelUtils::Technology> techs;
+
+     techs.push_back(ParallelUtils::Serial);
+     //techs.push_back(ParallelUtils::BoostThreads);
+     //techs.push_back(ParallelUtils::CilkPlus);
+     auto pUtils1 = std::make_shared<ParallelUtils>(techs);	
+
+	 auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf/*, pUtils1*/);
+	 //auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2);
 
 	 //auto start = AbstractParallel::GetTime();
-	 //approx->MakeApprox(1e-2);
-	 approx2->MakeApprox(10, 1e-5);
+	 approx->MakeApprox(10, 1e-2);
+	 //approx2->MakeApprox(10, 1e-5);
 	 //std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
 
 	 //OutputToGrapher(approx2, "Approx.txt", 1000);
@@ -52,7 +60,13 @@
     int iterStart = 0;
     int iterEnd = 10;
 
-    ParallelUtils pUtils;	 
+    std::vector<ParallelUtils::Technology> technologies;
+
+    technologies.push_back(ParallelUtils::Serial);
+    //technologies.push_back(ParallelUtils::BoostThreads);
+    //technologies.push_back(ParallelUtils::CilkPlus);
+
+    ParallelUtils pUtils(technologies);	 
     
     //for(int i=0;i<N;i++)
 		    //  for(int j=0;j<N;j++)

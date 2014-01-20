@@ -1,26 +1,32 @@
 #include "ParallelUtils.h"
-#include <omp.h>
-#include <fstream>
 
-#include <iostream>
 #include "ParallelTechnology.h"
 #include "OmpTechnology.h"
-#include "CilkTechnology.h"
-#include "SerialTechnology.h"
-#include "PPLTechnology.h"
-#include "TBBTechnology.h"
-#include "BoostTechnology.h"
-#include <string>
-#include <iterator>
-#include "Statistics.h"
 
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <sstream>
+#ifdef TPL_CILK
+#include "CilkTechnology.h"
+#endif
+
+#include "SerialTechnology.h"
+
+#ifdef TPL_PPL
+#include "PPLTechnology.h"
+#endif
+
+#ifdef TPL_TBB
+#include "TBBTechnology.h"
+#endif
+
+#ifdef TPL_Boost
+#include "BoostTechnology.h"
+#endif
+
 #include <iterator>
+#include <fstream>
+#include <sstream>
 #include <algorithm>
+#include <string>
+#include <iostream>
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd )
 {    
@@ -52,10 +58,35 @@ ParallelUtils::ParallelUtils() :_read(false),_index(0)
 
         _technologies.push_back(std::make_shared<SerialTechnology>());
         _technologies.push_back(std::make_shared<OmpTechnology>());
+
+#ifdef TPL_PPL
         _technologies.push_back(std::make_shared<PPLTechnology>());
+#endif
+
+#ifdef TPL_TBB
         _technologies.push_back(std::make_shared<TBBTechnology>());
+#endif
+
+#ifdef TPL_Boost
         _technologies.push_back(std::make_shared<BoostTechnology>());
+#endif
+
+#ifdef TPL_CILK
         _technologies.push_back(std::make_shared<CilkTechnology>());
+#endif
+    }
+}
+
+ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies )
+{
+    if (!TryRead())
+    {
+        _statistics = std::make_shared<ParallelTimes>();
+
+        for (std::size_t i=0; i<iTechnologies.size(); ++i)
+        {
+            _technologies.push_back( GetTechnologyByEnum(iTechnologies[i]) );
+        }
     }
 }
 
@@ -63,55 +94,6 @@ void ParallelUtils::Synchronize( int index )
 {
     _technologies[index]->Synchronize();
 }
-
-//double ParallelUtils::GetTimeForFunction( std::function<void (int)> f )
-//{
-//    double timeStart = AbstractParallel::GetTime();
-//    const int N = 10;
-//    for (int i = 0; i < 10; ++i)
-//    {
-//        f(i);
-//    }
-//
-//    double time = (AbstractParallel::GetTime() - timeStart)/10.0;
-//    return time;
-//}
-
-//void ParallelUtils::OutputStatisticsToFile()
-//{
-//    std::ofstream file("Statistics.txt");
-//    for (std::size_t i=0; i < _statistics.size(); ++i)
-//    {
-//        OutputInfoToFile(file, _statistics[i]);
-//    }
-//    file.close();
-//}
-//
-//void ParallelUtils::OutputInfoToFile( const std::ofstream& iFile, const ParallelInfo& iInfo )
-//{
-//    iFile << "Function" << iInfo._f << std::endl;
-//    iFile << "" << iInfo._start << std::endl;
-//    iFile << "" << iInfo._end << std::endl;
-//    iFile << "" << iInfo._serialTime << std::endl;
-//    iFile << "" << iInfo._ompTime << std::endl;
-//}
-
-//int ParallelUtils::FindNearest( std::function<void (int ) > f, int iSize )
-//{
-//    for (std::size_t i = 0; i < _timesForFuction.size(); ++i)
-//    {
-//        if (/*std::get<0>(_timesForFuction[i]) == f && */std::abs(iSize - std::get<1>(_timesForFuction[i])) < 0.5*iSize )
-//            return (int)i;
-//    }
-//
-//    return -1;
-//}
-
-
-//ParallelInfo::ParallelInfo( std::function<void (int)> f, int iStart, int iEnd ) :_f(f), _start(iStart), _end(iEnd)
-//{
-//    
-//}
 
 bool ParallelUtils::FileExists( std::string fname )
 {
@@ -193,14 +175,27 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iNa
 {
     if (iName == "OpenMP")
         return std::make_shared<OmpTechnology>();
+
+    #ifdef TPL_PPL
     if (iName == "PPL")
         return std::make_shared<PPLTechnology>();
+#endif
+
+    #ifdef TPL_TBB
     if (iName == "TBB")
         return std::make_shared<TBBTechnology>();
+    #endif
+
+    #ifdef TPL_CILK
     if (iName == "Cilk Plus")
         return std::make_shared<CilkTechnology>();
+    #endif
+
+    #ifdef TPL_Boost
     if (iName == "Boost Threads")
         return std::make_shared<BoostTechnology>();
+    #endif
+
     if (iName == "Serial")
         return std::make_shared<SerialTechnology>();
 
@@ -209,5 +204,35 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iNa
 
 ParallelUtils::~ParallelUtils()
 {
-    WriteToFile();
+    if (!_read && !_statistics->_times.empty())
+    {
+        WriteToFile();
+    }
+}
+
+ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iName )
+{
+    if (iName == OpenMP)
+        return std::make_shared<OmpTechnology>();
+#ifdef TPL_PPL
+    if (iName == PPL)
+        return std::make_shared<PPLTechnology>();
+#endif
+
+    #ifdef TPL_TBB
+    if (iName == TBB)
+        return std::make_shared<TBBTechnology>();
+    #endif
+    #ifdef TPL_CILK
+    if (iName == CilkPlus)
+        return std::make_shared<CilkTechnology>();
+    #endif
+    #ifdef TPL_Boost
+    if (iName == BoostThreads)
+        return std::make_shared<BoostTechnology>();
+    #endif
+    if (iName == Serial)
+        return std::make_shared<SerialTechnology>();
+
+    return nullptr;
 }

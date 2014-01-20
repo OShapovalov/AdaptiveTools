@@ -14,8 +14,10 @@ public:
         _y = iVec._y;
     }
 
-    tplVector2D & operator = (tplVector2D const & /*num*/)
+    tplVector2D & operator = (tplVector2D const & iToCopy)
     {
+        _x = iToCopy[0];
+        _y = iToCopy[1];
         return *this;
     }
     friend bool operator == (const tplVector2D& rv1, const tplVector2D& rv2)

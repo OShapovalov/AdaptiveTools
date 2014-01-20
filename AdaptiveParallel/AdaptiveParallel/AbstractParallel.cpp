@@ -1,10 +1,7 @@
 #include "AbstractParallel.h"
-#include <Windows.h>
 #include "omp.h"
 #include <vector>
 #include <iostream>
-
-#pragma optimize("",off)
 
 double AbstractParallel::GetTimeForOmpOrSerial( std::function<bool (void)> f, int n, bool omp)
 {
@@ -78,7 +75,5 @@ int AbstractParallel::GetNumberOMP( std::function<bool (void)> f )
 
 double AbstractParallel::GetTime()
 {
-	return (double)GetTickCount64();
+    return omp_get_wtime();
 }
-
-#pragma optimize("",on)

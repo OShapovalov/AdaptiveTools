@@ -10,8 +10,11 @@ public:
 	tplVector3D(const tplVector2D& iVec2D):_x(iVec2D[0]),_y(iVec2D[1]),_z(0){};
 	~tplVector3D(){};
 
-    tplVector3D & operator = (tplVector3D const & /*num*/)
+    tplVector3D & operator = (tplVector3D const & iToCopy)
     {
+        _x = iToCopy[0];
+        _y = iToCopy[1];
+        _z = iToCopy[2];
         return *this;
     }
 
