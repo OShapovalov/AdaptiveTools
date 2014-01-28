@@ -1,6 +1,8 @@
 #pragma once
 #include "ParallelTechnology.h"
 
+#ifdef TPL_TBB
+
 class TBBTechnology : public ParallelTechnology
 {
 public:
@@ -16,3 +18,5 @@ public:
         return "TBB";
     }
 };
+
+#endif

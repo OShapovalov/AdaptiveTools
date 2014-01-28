@@ -2,12 +2,11 @@
 
 #include "ParallelTechnology.h"
 #include "OmpTechnology.h"
+#include "SerialTechnology.h"
 
 #ifdef TPL_CILK
 #include "CilkTechnology.h"
 #endif
-
-#include "SerialTechnology.h"
 
 #ifdef TPL_PPL
 #include "PPLTechnology.h"
@@ -17,7 +16,7 @@
 #include "TBBTechnology.h"
 #endif
 
-#ifdef TPL_Boost
+#ifdef TPL_BOOST
 #include "BoostTechnology.h"
 #endif
 
@@ -67,7 +66,7 @@ ParallelUtils::ParallelUtils() :_read(false),_index(0)
         _technologies.push_back(std::make_shared<TBBTechnology>());
 #endif
 
-#ifdef TPL_Boost
+#ifdef TPL_BOOST
         _technologies.push_back(std::make_shared<BoostTechnology>());
 #endif
 
@@ -191,7 +190,7 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iNa
         return std::make_shared<CilkTechnology>();
     #endif
 
-    #ifdef TPL_Boost
+    #ifdef TPL_BOOST
     if (iName == "Boost Threads")
         return std::make_shared<BoostTechnology>();
     #endif
@@ -227,7 +226,7 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iNam
     if (iName == CilkPlus)
         return std::make_shared<CilkTechnology>();
     #endif
-    #ifdef TPL_Boost
+    #ifdef TPL_BOOST
     if (iName == BoostThreads)
         return std::make_shared<BoostTechnology>();
     #endif
@@ -235,4 +234,9 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iNam
         return std::make_shared<SerialTechnology>();
 
     return nullptr;
+}
+
+void ParallelTimes::Add( const std::vector<double>& times )
+{
+    _times.push_back(times);
 }

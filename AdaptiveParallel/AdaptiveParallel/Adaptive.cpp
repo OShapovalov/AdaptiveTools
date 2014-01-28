@@ -1,3 +1,5 @@
+#include "TPLdefines.h"
+
 #include "TDoubleDoubleObject.h"
 #include "OutputToGrapher.h"
 #include "DoubleDoubleApproximation.h"
@@ -9,6 +11,7 @@
 
 #include <iostream>
 #include "ParallelUtils.h"
+#include "Electron.h"
 
 //static int nInSettings = 0;
 
@@ -22,6 +25,14 @@
 
  int main(void)
  {	 
+     std::vector<TPL_Point> tplPoints;
+     Electron ele(tplPoints);
+
+     for (std::size_t i=0;i<100;++i)
+     {
+         ele.MakeStep(0.1);
+     }
+
 	 //TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
 	 auto sinSurf = std::make_shared<TSomeSurface>();
 
@@ -32,7 +43,7 @@
      //techs.push_back(ParallelUtils::CilkPlus);
      auto pUtils1 = std::make_shared<ParallelUtils>(techs);	
 
-	 auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf/*, pUtils1*/);
+	 auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf, pUtils1);
 	 //auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2);
 
 	 //auto start = AbstractParallel::GetTime();

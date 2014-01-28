@@ -1,6 +1,7 @@
-//#ifdef BOOST
-
 #include "BoostTechnology.h"
+
+#ifdef TPL_BOOST
+
 #include <boost/thread.hpp>
 #include <omp.h>
 #include "AbstractParallel.h"
@@ -44,4 +45,4 @@ void BoostTechnology::Synchronize()
     //#pragma omp taskwait
 }
 
-//#endif
+#endif

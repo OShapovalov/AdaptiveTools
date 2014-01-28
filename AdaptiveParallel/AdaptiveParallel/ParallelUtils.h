@@ -1,4 +1,7 @@
 #pragma once
+
+#include "TPLdefines.h"
+
 #include <functional>
 #include "ParallelTechnology.h"
 #include "tplForward.h"
@@ -9,10 +12,7 @@ class ParallelTimes
 public:
     ParallelTimes(){};
 
-    void Add(const std::vector<double>& times)
-    {
-        _times.push_back(times);
-    }
+    void Add(const std::vector<double>& times);
 
     std::vector<std::vector<double>> _times;
 };
@@ -35,7 +35,7 @@ public:
 #ifdef TPL_CILK
         CilkPlus,
 #endif
-#ifdef TPL_Boost
+#ifdef TPL_BOOST
         BoostThreads,
 #endif
     };

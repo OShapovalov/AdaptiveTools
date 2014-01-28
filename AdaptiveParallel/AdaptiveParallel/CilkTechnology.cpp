@@ -1,10 +1,11 @@
+#include "CilkTechnology.h"
 
-//#ifdef CILK
+#ifdef TPL_CILK
 
 #include <cilk/cilk.h>
 //#include "CilkUtils.h"
 #include <functional>
-#include "CilkTechnology.h"
+
 #include "AbstractParallel.h"
 
 double CilkTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
@@ -30,4 +31,4 @@ void CilkTechnology::Synchronize()
     cilk_sync;
 }
 
-//#endif
+#endif

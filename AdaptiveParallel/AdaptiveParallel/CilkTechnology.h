@@ -1,8 +1,9 @@
 #pragma once
 
+#include "TPLdefines.h"
 #include "ParallelTechnology.h"
 
-//#ifdef CILK
+#ifdef TPL_CILK
 
 class CilkTechnology : public ParallelTechnology
 {
@@ -20,4 +21,4 @@ public:
     }
 };
 
-//#endif
+#endif

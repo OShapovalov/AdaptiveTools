@@ -1,12 +1,13 @@
 #pragma once
-#include <vector>
 
 template <class TGridPtr>
 class Numerical
 {
 public:
+    
+    virtual void MakeStep(double t)=0;
+
+protected:
     Numerical(){};
-    void GetStep(double t)=0;
-private:
     TGridPtr _grid;
 };

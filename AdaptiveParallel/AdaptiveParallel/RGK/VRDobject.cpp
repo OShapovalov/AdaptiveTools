@@ -15,6 +15,8 @@
 // Дата последнего изменения: 31.07.2012
 /////////////////////////////////////////////////////////////////////////////
 
+#include "../TPLdefines.h"
+
 #include "VRDObject.h"
 #include "Instance.h"
 #include "Geometry/Surfaces/Plane.h"

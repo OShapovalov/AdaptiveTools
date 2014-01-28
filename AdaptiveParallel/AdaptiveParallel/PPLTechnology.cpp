@@ -1,4 +1,7 @@
 #include "PPLTechnology.h"
+
+#ifdef TPL_PPL
+
 #include <ppl.h>
 #include "AbstractParallel.h"
 
@@ -25,3 +28,5 @@ void PPLTechnology::Synchronize()
 {
     //#pragma omp taskwait
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿#include "VRDApproximation.h"
+﻿#include "../TPLdefines.h"
+
+#include "VRDApproximation.h"
 #include "Math\NURBS\NURBSInterpolationBuilder.h"
 #include "Geometry\Curves\ProjectCurveOnSurfaceUtils.h"
 
@@ -50,7 +52,6 @@ namespace RGK
             NURBSInterpolationBuilder::CreateCurveLocalInt(_context, centralPoints, std::vector<Math::Vector3D>(), params, 
                 _centralCurve, degree, false, true, NURBSInterpolationBuilder::G1Continious);
         }
-
 
     }
 }
