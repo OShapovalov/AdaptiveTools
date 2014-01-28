@@ -25,12 +25,13 @@
 
  int main(void)
  {	 
+     double step = 0.000000000003;
      std::vector<TPL_Point> tplPoints;
-     Electron ele(tplPoints);
+     Electron ele(tplPoints, step);
 
      for (std::size_t i=0;i<100;++i)
      {
-         ele.MakeStep(0.1);
+         ele.MakeStep(step);
      }
 
 	 //TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
