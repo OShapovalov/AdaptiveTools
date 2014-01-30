@@ -78,14 +78,14 @@
     <ClCompile Include="TBBTechnology.cpp">
       <Filter>Source Files\PTechnologies</Filter>
     </ClCompile>
-    <ClCompile Include="Numerical.cpp">
-      <Filter>Source Files\Numerical</Filter>
-    </ClCompile>
     <ClCompile Include="Statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TplInterval.cpp">
       <Filter>Source Files\Adaptive</Filter>
+    </ClCompile>
+    <ClCompile Include="Electron.cpp">
+      <Filter>Source Files\Numerical</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,8 +188,22 @@
     <ClInclude Include="Electron.h">
       <Filter>Header Files\Numerical</Filter>
     </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Numerical</Filter>
+    </ClInclude>
+    <ClInclude Include="cuElectron.h">
+      <Filter>Header Files\Numerical</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="cuServer.cu">
+      <Filter>Source Files\Numerical</Filter>
+    </CudaCompile>
+    <CudaCompile Include="cuElectron.cu">
+      <Filter>Source Files\Numerical</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

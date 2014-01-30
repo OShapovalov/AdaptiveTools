@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Numerical.h"
+#include <vector>
 
 //typedef std::vector<TPoint> TPointArray;
 
@@ -12,31 +14,42 @@ public:
         _grid = iPoints;
     };
 
+    Gravity(const std::vector<TPoint>& iPoints, std::shared_ptr<ParallelUtils> pUtils) : Numerical(pUtils)
+    {
+        _grid = iPoints;
+    };
+
     virtual void GetAccel(TPoint& iPoint1, TPoint& iPoint2) = 0;
 
-    virtual void Transform(TPoint& iPoint, double step) = 0;
+    virtual void Transform(TPoint& iPoint, float step) = 0;
 
-    virtual void FindAcceleration(TPoint& iPoint, double step) =0;
+    virtual void FindAcceleration(TPoint& iPoint, float step) =0;
 
-    virtual void MakeStep(double t) override
+    virtual void MakeStep(float t) override
     {
-        for (std::size_t i=0; i<_grid.size(); ++i)
-        {
-            FindAcceleration(_grid[i], t);
-        }
+        _pUtils->RunInParallel(
+            [&](int i)
+            {
+                FindAcceleration(_grid[i], t);
+            }, 
+                0, (int)_grid.size() );
 
-        for (std::size_t i=0; i<_grid.size(); ++i)
+        _pUtils->RunInParallel(
+            [&](int i)
         {
             for (std::size_t k=0; k<i; ++k)
             {
                 GetAccel(_grid[i], _grid[k]);
             }
-        }
+        }, 
+            0, (int)_grid.size() );
 
-        for (std::size_t i=0;i<_grid.size();++i)
+        _pUtils->RunInParallel(
+            [&](int i)
         {
             Transform(_grid[i], t);
-        }
+        }, 
+            0, (int)_grid.size() );
     }
 protected:
     Gravity(){};

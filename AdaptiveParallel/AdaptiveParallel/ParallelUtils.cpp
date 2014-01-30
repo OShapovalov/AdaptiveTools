@@ -49,6 +49,37 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
     }
 }
 
+void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::function<double (int,int)> >& iAddImpl )
+{
+    if (!_read)
+    {
+        std::vector<double> times(_technologies.size()+iAddImpl.size(),-1.0);
+        for (std::size_t i=0; i<_technologies.size(); ++i)
+        {
+            times[i] = _technologies[i]->Run(f, iStart, iEnd);
+            std::cout << _technologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
+        }
+
+        for (std::size_t i=0;i<iAddImpl.size();++i)
+        {
+            times[_technologies.size() + i] = iAddImpl[i](iStart, iEnd);
+        }
+
+        _statistics->Add(times); 
+    }
+    else
+    {
+        const std::vector<double>& times = _statistics->_times[_index++];
+        auto best = std::min_element(times.begin(), times.end()) - times.begin();
+        auto time = ( best < (int)_technologies.size() ) ?  
+                        _technologies[best]->Run(f, iStart, iEnd) : 
+                        iAddImpl[best-_technologies.size()](iStart, iEnd);
+
+        if (best < (int)_technologies.size()) 
+        std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
+    }
+}
+
 ParallelUtils::ParallelUtils() :_read(false),_index(0)
 {
     if (!TryRead())

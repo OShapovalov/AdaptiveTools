@@ -25,7 +25,7 @@
 
  int main(void)
  {	 
-     double step = 0.000000000003;
+     float step = 0.000000000003f;
      std::vector<TPL_Point> tplPoints;
      Electron ele(tplPoints, step);
 

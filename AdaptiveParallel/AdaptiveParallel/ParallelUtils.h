@@ -46,7 +46,10 @@ public:
 
     ~ParallelUtils();
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd );  
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd );
+
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+        const std::vector< std::function<double (int,int)> >& iAddImpl);
 
     int RunInAnotherThread( std::function<void (void)> f ); 
 
