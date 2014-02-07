@@ -191,19 +191,18 @@
     <ClInclude Include="Constants.h">
       <Filter>Header Files\Numerical</Filter>
     </ClInclude>
-    <ClInclude Include="cuElectron.h">
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Numerical</Filter>
+    </ClInclude>
+    <ClInclude Include="NonGrid.h">
+      <Filter>Header Files\Numerical</Filter>
+    </ClInclude>
+    <ClInclude Include="Puasson.h">
       <Filter>Header Files\Numerical</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="cuServer.cu">
-      <Filter>Source Files\Numerical</Filter>
-    </CudaCompile>
-    <CudaCompile Include="cuElectron.cu">
-      <Filter>Source Files\Numerical</Filter>
-    </CudaCompile>
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>

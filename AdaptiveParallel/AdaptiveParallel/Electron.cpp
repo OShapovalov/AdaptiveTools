@@ -1,5 +1,5 @@
 #include "Electron.h"
-#include "cuElectron.h"
+//#include "cuElectron.h"
 
 Electron::Electron( const std::vector<TPL_Point>& iPoints, float step ) : Gravity<TPL_Point>(iPoints)
 {
@@ -92,5 +92,5 @@ void Electron::Init(float step)
     MK = (float)(M*K);//масса частицы укрупненной
 
     /*cuElectron::*/
-    cuMalloc( (void**)cuElectrons, (int)_grid.size()*(int)sizeof(TPL_Point) );
+    //cuMalloc( (void**)cuElectrons, (int)_grid.size()*(int)sizeof(TPL_Point) );
 }

@@ -63,6 +63,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
         for (std::size_t i=0;i<iAddImpl.size();++i)
         {
             times[_technologies.size() + i] = iAddImpl[i](iStart, iEnd);
+            std::cout << "AddImpl" << i << ": " << times[_technologies.size() + i] << std::endl;
         }
 
         _statistics->Add(times); 
@@ -77,10 +78,12 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
 
         if (best < (int)_technologies.size()) 
         std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
+        else
+            std::cout << "AddImpl" << best-_technologies.size() << ": " << time << std::endl;
     }
 }
 
-ParallelUtils::ParallelUtils() :_read(false),_index(0)
+ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag)
 {
     if (!TryRead())
     {
@@ -107,7 +110,7 @@ ParallelUtils::ParallelUtils() :_read(false),_index(0)
     }
 }
 
-ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies )
+ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag)
 {
     if (!TryRead())
     {
@@ -125,20 +128,20 @@ void ParallelUtils::Synchronize( int index )
     _technologies[index]->Synchronize();
 }
 
-bool ParallelUtils::FileExists( std::string fname )
+bool ParallelUtils::FileExists() const
 {
-    return std::ifstream(fname, std::ios::in | std::ios::_Nocreate) != NULL;
+    return std::ifstream(_tag, std::ios::in | std::ios::_Nocreate) != NULL;
 }
 
-void ParallelUtils::ReadSettingsFromFile( std::string fname /*= "Settings.ini"*/ )
+void ParallelUtils::ReadSettingsFromFile()
 {
-    if (!FileExists(fname))
+    if (!FileExists())
     {
         _read = false;
         return;
     }
 
-    std::ifstream input(fname);
+    std::ifstream input(_tag);
 
     bool endTech = false;
     _statistics = std::make_shared<ParallelTimes>();
@@ -172,9 +175,9 @@ void ParallelUtils::ReadSettingsFromFile( std::string fname /*= "Settings.ini"*/
     }
 }
 
-void ParallelUtils::WriteToFile( std::string fname /*= "Settings.ini"*/ ) const
+void ParallelUtils::WriteToFile() const
 {
-    std::ofstream output(fname, std::ios_base::app);
+    std::ofstream output(_tag, std::ios_base::app);
 
     for (std::size_t i=0; i<_technologies.size(); ++i)
     {

@@ -40,9 +40,9 @@ public:
 #endif
     };
 
-    ParallelUtils();
+    ParallelUtils(std::string iTag = "Settings.ini");
 
-    ParallelUtils(const std::vector<Technology>& iTechnologies);
+    ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag = "Settings.ini");
 
     ~ParallelUtils();
 
@@ -55,11 +55,11 @@ public:
 
     void Synchronize(int index);
 
-    static bool FileExists(std::string fname);
+    bool FileExists() const;
 
-    void ReadSettingsFromFile(std::string fname = "Settings.ini");
+    void ReadSettingsFromFile();
 
-    void WriteToFile(std::string fname = "Settings.ini") const;
+    void WriteToFile() const;
 
     bool TryRead();
 
@@ -73,6 +73,8 @@ protected:
 private:
     ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;
+
+    std::string _tag;
 };
 
 

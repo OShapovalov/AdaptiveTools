@@ -1,5 +1,6 @@
 #pragma once
 #include "ParallelTechnology.h"
+#include "TPLdefines.h"
 
 #ifdef TPL_TBB
 

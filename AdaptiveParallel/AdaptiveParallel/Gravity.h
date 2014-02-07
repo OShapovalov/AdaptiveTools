@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Numerical.h"
 #include <vector>
+#include "NonGrid.h"
 
 //typedef std::vector<TPoint> TPointArray;
 
 template <class TPoint>
-class Gravity : public Numerical< std::vector<TPoint> >
+class Gravity : public TNonGrid< std::vector<TPoint> >
 {
 public:
     Gravity(const std::vector<TPoint>& iPoints)
@@ -14,7 +14,7 @@ public:
         _grid = iPoints;
     };
 
-    Gravity(const std::vector<TPoint>& iPoints, std::shared_ptr<ParallelUtils> pUtils) : Numerical(pUtils)
+    Gravity(const std::vector<TPoint>& iPoints, std::shared_ptr<ParallelUtils> pUtils) : TNonGrid<std::vector<TPoint>>(pUtils)
     {
         _grid = iPoints;
     };

@@ -147,15 +147,18 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>G:\downloads\boost_1_55_0;C:\Program Files %28x86%29\Intel\Composer XE 2013\compiler\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;G:\downloads\boost_1_55_0;C:\Program Files %28x86%29\Intel\Composer XE 2013\compiler\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>G:\downloads\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CudaToolkitLibDir);G:\downloads\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cudart.lib;cublas.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Intel_SSA|x64'">
     <ClCompile>
@@ -238,11 +241,13 @@
     <ClInclude Include="BoostTechnology.h" />
     <ClInclude Include="CilkTechnology.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="cuElectron.h" />
     <ClInclude Include="DoubleDoubleApproximation.h" />
     <ClInclude Include="DoubleDoubleFunctions.h" />
     <ClInclude Include="Electron.h" />
     <ClInclude Include="Gravity.h" />
+    <ClInclude Include="Grid.h" />
+    <ClInclude Include="NonGrid.h" />
+    <ClInclude Include="Puasson.h" />
     <ClInclude Include="TPLdefines.h" />
     <ClInclude Include="tplForward.h" />
     <ClInclude Include="TplInterval.h" />
@@ -272,13 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-    <CudaCompile Include="cuServer.cu">
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </CudaCompile>
-    <CudaCompile Include="cuElectron.cu">
-      <FileType>Document</FileType>
-    </CudaCompile>
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
