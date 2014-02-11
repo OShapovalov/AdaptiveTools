@@ -37,11 +37,11 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             times[i] = _technologies[i]->Run(f, iStart, iEnd);
             std::cout << _technologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
         }
-        _statistics->Add(times); 
+        _statistics->Add(iEnd - iStart, times); 
     }
     else
     {
-        const std::vector<double>& times = _statistics->_times[_index++];
+        const std::vector<double>& times = _statistics->_times[_index++].second;
         auto best = std::min_element(times.begin(), times.end()) - times.begin();
         auto time = _technologies[best]->Run(f, iStart, iEnd);
 
@@ -66,11 +66,11 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             std::cout << "AddImpl" << i << ": " << times[_technologies.size() + i] << std::endl;
         }
 
-        _statistics->Add(times); 
+        _statistics->Add(iEnd-iStart, times); 
     }
     else
     {
-        const std::vector<double>& times = _statistics->_times[_index++];
+        const std::vector<double>& times = _statistics->_times[_index++].second;
         auto best = std::min_element(times.begin(), times.end()) - times.begin();
         auto time = ( best < (int)_technologies.size() ) ?  
                         _technologies[best]->Run(f, iStart, iEnd) : 
@@ -164,11 +164,18 @@ void ParallelUtils::ReadSettingsFromFile()
 
         if (endTech)
         {
+            int N;
+            std::istringstream ( s ) >> N;
+
+            std::getline(input,s);
+            if (s.empty())
+                break;
+
             std::vector<double> times;
 
             std::istringstream istr(s);
             std::copy(std::istream_iterator<double>(istr), std::istream_iterator<double>(), back_inserter(times));
-            _statistics->Add(times);
+            _statistics->Add(N, times);
 
             _read = true;
         }
@@ -186,7 +193,9 @@ void ParallelUtils::WriteToFile() const
 
     for (std::size_t i=0;i<_statistics->_times.size();++i)
     {
-        const std::vector<double>& times = _statistics->_times[i];
+        output << _statistics->_times[i].first << std::endl;
+
+        const std::vector<double>& times = _statistics->_times[i].second;
 
         for (std::size_t k=0; k<times.size(); ++k)
         {
@@ -270,7 +279,7 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iNam
     return nullptr;
 }
 
-void ParallelTimes::Add( const std::vector<double>& times )
+void ParallelTimes::Add(int N, const std::vector<double>& times )
 {
-    _times.push_back(times);
+    _times.push_back(std::make_pair(N,times));
 }

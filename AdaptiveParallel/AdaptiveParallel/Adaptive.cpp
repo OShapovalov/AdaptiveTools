@@ -46,203 +46,45 @@ void inline checkError(cublasStatus_t status, const char *msg)
     }
 }
 
-int matrixMultiply(float *h_A, float *h_B, float *h_C, sMatrixSize &matrix_size)
+// умножение матриц на видеокарте
+void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 {
-    cudaError_t error;
-
-    // use a larger block size for Fermi and above
-    int block_size = 32;
-
-    // allocate host memory for matrices A and B
-    unsigned int size_A = matrix_size.uiWA * matrix_size.uiHA;
+    unsigned int size_A = N * N;
     unsigned int mem_size_A = sizeof(float) * size_A;
-    unsigned int size_B = matrix_size.uiWB * matrix_size.uiHB;
+    unsigned int size_B = N * N;
     unsigned int mem_size_B = sizeof(float) * size_B;
 
-    // allocate device memory
+    // выдел€ем пам€ть на графическом устройстве
     float *d_A, *d_B, *d_C;
-    unsigned int size_C = matrix_size.uiWC * matrix_size.uiHC;
+    unsigned int size_C = N * N;
     unsigned int mem_size_C = sizeof(float) * size_C;
 
-    error = cudaMalloc((void **) &d_A, mem_size_A);
+    cudaMalloc((void **) &d_A, mem_size_A);
+    cudaMalloc((void **) &d_B, mem_size_B);
+    cudaMalloc((void **) &d_C, mem_size_C);
 
-    if (error != cudaSuccess)
-    {
-        printf("cudaMalloc d_A returned error code %d, line(%d)\n", error, __LINE__);
-        exit(EXIT_FAILURE);
-    }
+    // копируем матрицы A и B в графическую пам€ть
+    cudaMemcpy(d_A, h_A, mem_size_A, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, mem_size_B, cudaMemcpyHostToDevice);
 
-    error = cudaMalloc((void **) &d_B, mem_size_B);
+    cublasHandle_t handle;
+    cublasCreate(&handle);
 
-    if (error != cudaSuccess)
-    {
-        printf("cudaMalloc d_B returned error code %d, line(%d)\n", error, __LINE__);
-        exit(EXIT_FAILURE);
-    }
+    // запускаем расчет на графическом ускорителе
+    const float alpha = 1.0f;
+    const float beta  = 0.0f;
+    cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, N, N, N, &alpha, d_B, N, d_A, N, &beta, d_C, N);
 
-    // copy host memory to device
-    error = cudaMemcpy(d_A, h_A, mem_size_A, cudaMemcpyHostToDevice);
+    // копируем матрицу результата C из графической пам€ти в оперативную
+    cudaMemcpy(h_C, d_C, mem_size_C, cudaMemcpyDeviceToHost);
 
-    if (error != cudaSuccess)
-    {
-        printf("cudaMemcpy d_A h_A returned error code %d, line(%d)\n", error, __LINE__);
-        exit(EXIT_FAILURE);
-    }
-
-    error = cudaMemcpy(d_B, h_B, mem_size_B, cudaMemcpyHostToDevice);
-
-    if (error != cudaSuccess)
-    {
-        printf("cudaMemcpy d_B h_B returned error code %d, line(%d)\n", error, __LINE__);
-        exit(EXIT_FAILURE);
-    }
-
-    error = cudaMalloc((void **) &d_C, mem_size_C);
-
-    if (error != cudaSuccess)
-    {
-        printf("cudaMalloc d_C returned error code %d, line(%d)\n", error, __LINE__);
-        exit(EXIT_FAILURE);
-    }
-
-    // setup execution parameters
-    dim3 threads(block_size, block_size);
-    dim3 grid(matrix_size.uiWC / threads.x, matrix_size.uiHC / threads.y);
-
-    // create and start timer
-    //printf("Computing result using CUBLAS...");
-
-    // execute the kernel
-    int nIter = 30;
-
-    // CUBLAS version 2.0
-    {
-        cublasHandle_t handle;
-
-        cublasStatus_t ret;
-
-        ret = cublasCreate(&handle);
-
-        if (ret != CUBLAS_STATUS_SUCCESS)
-        {
-            printf("cublasCreate returned error code %d, line(%d)\n", ret, __LINE__);
-            exit(EXIT_FAILURE);
-        }
-
-        const float alpha = 1.0f;
-        const float beta  = 0.0f;
-        //Perform warmup operation with cublas
-        ret = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWA);
-
-        if (ret != CUBLAS_STATUS_SUCCESS)
-        {
-            printf("cublasSgemm returned error code %d, line(%d)\n", ret, __LINE__);
-            exit(EXIT_FAILURE);
-        }
-
-        // Allocate CUDA events that we'll use for timing
-        cudaEvent_t start;
-        error = cudaEventCreate(&start);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to create start event (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        cudaEvent_t stop;
-        error = cudaEventCreate(&stop);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to create stop event (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        // Record the start event
-        error = cudaEventRecord(start, NULL);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to record start event (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        //for (int j = 0; j < nIter; j++)
-        {
-            //note cublas is column primary!
-            //need to transpose the order
-            ret = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWA);
-
-            if (ret != CUBLAS_STATUS_SUCCESS)
-            {
-                printf("cublasSgemm returned error code %d, line(%d)\n", ret, __LINE__);
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        //printf("done.\n");
-
-        // Record the stop event
-        error = cudaEventRecord(stop, NULL);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to record stop event (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        // Wait for the stop event to complete
-        error = cudaEventSynchronize(stop);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to synchronize on the stop event (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        float msecTotal = 0.0f;
-        error = cudaEventElapsedTime(&msecTotal, start, stop);
-
-        if (error != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to get time elapsed between events (error code %s)!\n", cudaGetErrorString(error));
-            exit(EXIT_FAILURE);
-        }
-
-        // Compute and print the performance
-        //float msecPerMatrixMul = msecTotal / nIter;
-        //double flopsPerMatrixMul = 2.0 * (double)matrix_size.uiWA * (double)matrix_size.uiHA * (double)matrix_size.uiWB;
-        //double gigaFlops = (flopsPerMatrixMul * 1.0e-9f) / (msecPerMatrixMul / 1000.0f);
-        //printf(
-        //    "Performance= %.2f GFlop/s, Time= %.3f msec, Size= %.0f Ops\n",
-        //    gigaFlops,
-        //    msecPerMatrixMul,
-        //    flopsPerMatrixMul);
-
-        // copy result from device to host
-        error = cudaMemcpy(h_C, d_C, mem_size_C, cudaMemcpyDeviceToHost);
-
-        if (error != cudaSuccess)
-        {
-            printf("cudaMemcpy h_CUBLAS d_C returned error code %d, line(%d)\n", error, __LINE__);
-            exit(EXIT_FAILURE);
-        }
-
-        checkError(cublasDestroy(handle), "cublasDestroy() error!\n");
-    }
-
-    // clean up memory
-
+    // освобождаем пам€ть на графической карте 
     cudaFree(d_A);
     cudaFree(d_B);
     cudaFree(d_C);
 
     cudaDeviceReset();
-    return 0;
 }
-
-//static int nInSettings = 0;
 
 //#include <chrono>
 
@@ -263,28 +105,28 @@ int matrixMultiply(float *h_A, float *h_B, float *h_C, sMatrixSize &matrix_size)
   //       ele.MakeStep(step);
   //   }
 
-	 ////TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
+	 TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
 	 //auto sinSurf = std::make_shared<TSomeSurface>();
 
-  //   std::vector<ParallelUtils::Technology> techs;
+     std::vector<ParallelUtils::Technology> techs;
 
-  //   techs.push_back(ParallelUtils::Serial);
-  //   //techs.push_back(ParallelUtils::BoostThreads);
-  //   //techs.push_back(ParallelUtils::CilkPlus);
-  //   auto pUtils1 = std::make_shared<ParallelUtils>(techs);	
+     techs.push_back(ParallelUtils::Serial);
+     techs.push_back(ParallelUtils::BoostThreads);
+     //techs.push_back(ParallelUtils::CilkPlus);
+     auto pUtils1 = std::make_shared<ParallelUtils>(techs, "SurfApprox.ini");	
 
 	 //auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf, pUtils1);
-	 ////auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2);
+	 auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2, pUtils1);
 
 	 ////auto start = AbstractParallel::GetTime();
 	 //approx->MakeApprox(10, 1e-2);
-	 ////approx2->MakeApprox(10, 1e-5);
+	 approx2->MakeApprox(10, 1e-3);
 	 ////std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
 
 	 ////OutputToGrapher(approx2, "Approx.txt", 1000);
 	 ////OutputToGrapher(sinSurf, "Exact.txt", 10000);
 
-  //   return 0;
+     return 0;
 
 	 const int N = 512;
 
@@ -292,27 +134,17 @@ int matrixMultiply(float *h_A, float *h_B, float *h_C, sMatrixSize &matrix_size)
 	 float* b = new float[N*N];
 	 float* res = new float[N*N];
 
-     std::fill(a,&a[N*N], 1.0);
-     std::fill(b,&b[N*N], 2.0);
-     std::fill(res,&res[N*N], 0.0);
+     std::fill(a,&a[N*N], 1.0f);
+     std::fill(b,&b[N*N], 2.0f);
+     std::fill(res,&res[N*N], 0.0f);
 
-     // use a larger block size for Fermi and above
-     //int block_size = 32;
-
-     auto labmda = [a,b,res](int start, int end) -> double
+     // создаем обертку (л€мбда-функцию) дл€ умножени€ матриц
+     // на графическом ускорителе с замером времени
+     auto labmdaMul = [a,b,res](int start, int end) -> double
      {
-        double timeStart = AbstractParallel::GetTime();
+         double timeStart = AbstractParallel::GetTime();
 
-         sMatrixSize matrix_size;
-
-         matrix_size.uiWA = 512;
-         matrix_size.uiHA = 512;
-         matrix_size.uiWB = 512;
-         matrix_size.uiHB = 512;
-         matrix_size.uiWC = 512;
-         matrix_size.uiHC = 512;
-
-         matrixMultiply(a,b,res,matrix_size);
+         matrixMultiply(a,b,res,end);
 
          return AbstractParallel::GetTime() - timeStart;
      };
@@ -320,29 +152,25 @@ int matrixMultiply(float *h_A, float *h_B, float *h_C, sMatrixSize &matrix_size)
     std::function<void (int)> f1, someMethod;
 
     int iterStart = 0;
-    int iterEnd = 10;
-
-    std::vector<ParallelUtils::Technology> technologies;
-
-    technologies.push_back(ParallelUtils::Serial);
-    //technologies.push_back(ParallelUtils::BoostThreads);
-    technologies.push_back(ParallelUtils::PPL);
-
-    ParallelUtils pUtils(technologies);	 
+    int iterEnd = 10;    
     
-    //for(int i=0;i<N;i++)
-		    //  for(int j=0;j<N;j++)
-		    //  {
-			    //   res[i*N+j]=0;
-			    //   for (int k=0;k<N;k++) 
-				//    res[i*N+j]+=a[i*N+k]*b[k*N+j];
-		    //  }
+    //technologies.push_back(ParallelUtils::BoostThreads);
 
-    /*for(int i=0;i<N;i++)*/
-
+    // перечисл€ем технологии, которые будут использоватьс€ 
+    // дл€ запуска на центральном процессоре
+    std::vector<ParallelUtils::Technology> technologies;
+    technologies.push_back(ParallelUtils::Serial);
+    technologies.push_back(ParallelUtils::PPL);
+ 
+    // перечисл€ем набор реализаций дл€ сопроцессоров
+    // в данном случае - умножение матриц на видеокарте
     std::vector<std::function<double (int,int)>> addImpls;
-    addImpls.push_back(labmda);
+    addImpls.push_back(labmdaMul);
+    
+    // создаем класс, управл€ющий параллелизмом в проекте
+    ParallelUtils pUtils(technologies, "MatrixMul.ini");
 
+    // запускаем умножение матриц с выбранными  параметрами распаралеливани€
     pUtils.RunInParallel([&](int i)
     {
         for(int j=0;j<N;j++)
@@ -354,32 +182,9 @@ int matrixMultiply(float *h_A, float *h_B, float *h_C, sMatrixSize &matrix_size)
     }
     , 0, N, addImpls);
 
-    //pUtils.RunInParallel([&](int i)
-    //{
-    //    res[i] = a[i] + b[i];
-    //}
-    //, 0, N);
-
-	//...
-	//pUtils.RunInParallel(f1, iterStart, iterEnd);
-	//...
-
-	//...
-	//double time = pUtils.GetTimeForFunction(someMethod);
-	//...
-
-
-	//...
-	//ParallelUtils::OutputStatisticsToFile();
-	//...
-
-
-
 	delete[] a;
 	delete[] b;
 	delete[] res;
-
-	//system ("pause");
  }
 
 //#include <stdio.h>

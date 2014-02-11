@@ -12,9 +12,9 @@ class ParallelTimes
 public:
     ParallelTimes(){};
 
-    void Add(const std::vector<double>& times);
+    void Add(int N, const std::vector<double>& times);
 
-    std::vector<std::vector<double>> _times;
+    std::vector<std::pair<int,std::vector<double>>> _times;
 };
 
 class ParallelUtils
@@ -40,9 +40,9 @@ public:
 #endif
     };
 
-    ParallelUtils(std::string iTag = "Settings.ini");
+    ParallelUtils(std::string iTag /*= "Settings.ini"*/);
 
-    ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag = "Settings.ini");
+    ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/);
 
     ~ParallelUtils();
 
