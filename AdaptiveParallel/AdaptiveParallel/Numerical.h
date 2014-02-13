@@ -14,11 +14,11 @@ protected:
         _pUtils = std::make_shared<ParallelUtils>("Numerical.ini");
     };
 
-    Numerical(std::shared_ptr<ParallelUtils> pUtils) : _pUtils(pUtils)
+    Numerical(ParallelUtilsPtr pUtils) : _pUtils(pUtils)
     {
     };
 
     TGridPtr _grid;
 
-    std::shared_ptr<ParallelUtils> _pUtils; 
+    ParallelUtilsPtr _pUtils; 
 };

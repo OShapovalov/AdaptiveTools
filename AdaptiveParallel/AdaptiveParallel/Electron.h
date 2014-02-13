@@ -20,7 +20,7 @@ class Electron : public Gravity<TPL_Point>
 public:
     Electron(const std::vector<TPL_Point>& iPoints, float step);
 
-    Electron(const std::vector<TPL_Point>& iPoints, float step, std::shared_ptr<ParallelUtils> pUtils);
+    Electron(const std::vector<TPL_Point>& iPoints, float step, ParallelUtilsPtr pUtils);
 
     void pole(TPL_Point& iPoint);
 

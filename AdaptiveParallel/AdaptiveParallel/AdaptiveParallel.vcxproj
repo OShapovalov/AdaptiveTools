@@ -254,6 +254,7 @@
     <ClInclude Include="Gravity.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="NonGrid.h" />
+    <ClInclude Include="ParallelUtilsBase.h" />
     <ClInclude Include="Puasson.h" />
     <ClInclude Include="TPLdefines.h" />
     <ClInclude Include="tplForward.h" />

@@ -11,6 +11,6 @@ public:
     TValueDoubleApproximation<double>(iObject){}
 
     TDoubleDoubleApproximation(std::shared_ptr<TValueParamObject<double,double>> iObject,
-        std::shared_ptr<ParallelUtils> iPUtils) : 
+        ParallelUtilsPtr iPUtils) : 
     TValueDoubleApproximation<double>(iObject, iPUtils){}
 };

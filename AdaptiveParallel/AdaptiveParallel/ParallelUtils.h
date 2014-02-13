@@ -49,7 +49,7 @@ public:
     void RunInParallel( std::function<void (int)> f, int iStart, int iEnd );
 
     void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector< std::function<double (int,int)> >& iAddImpl);
+        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl);
 
     int RunInAnotherThread( std::function<void (void)> f ); 
 
@@ -67,7 +67,19 @@ public:
 
     ParallelTechnologyPtr GetTechnologyByEnum(const Technology& iName);
 
+    const std::string& GetName()
+    {
+        return _tag;
+    }
+
 protected:
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+        const std::vector<ParallelTechnologyPtr>& iTechnologies);
+
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
+                                        const std::vector<ParallelTechnologyPtr>& iTechnologies);
+
     bool _read;
     int _index;
 private:

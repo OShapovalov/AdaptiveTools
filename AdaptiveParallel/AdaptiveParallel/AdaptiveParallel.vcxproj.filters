@@ -200,6 +200,9 @@
     <ClInclude Include="TPLdefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParallelUtilsBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

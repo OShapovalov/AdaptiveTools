@@ -6,7 +6,7 @@ Electron::Electron( const std::vector<TPL_Point>& iPoints, float step ) : Gravit
     Init(step);
 }
 
-Electron::Electron( const std::vector<TPL_Point>& iPoints, float step, std::shared_ptr<ParallelUtils> pUtils ) : 
+Electron::Electron( const std::vector<TPL_Point>& iPoints, float step, ParallelUtilsPtr pUtils ) : 
                         Gravity<TPL_Point>(iPoints, pUtils)
 {
     Init(step);

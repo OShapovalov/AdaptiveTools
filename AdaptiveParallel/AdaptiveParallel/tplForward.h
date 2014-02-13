@@ -44,3 +44,6 @@ typedef std::shared_ptr<ParallelTechnology> ParallelTechnologyPtr;
 
 class ParallelTimes;
 typedef std::shared_ptr<ParallelTimes> ParallelTimesPtr;
+
+class ParallelUtils;
+typedef std::shared_ptr<ParallelUtils> ParallelUtilsPtr;

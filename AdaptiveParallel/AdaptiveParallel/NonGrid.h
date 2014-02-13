@@ -8,7 +8,7 @@ class TNonGrid : public Numerical<TGridPtr>
         {
         };
 
-        TNonGrid(std::shared_ptr<ParallelUtils> pUtils) : Numerical<TGridPtr>(pUtils)
+        TNonGrid(ParallelUtilsPtr pUtils) : Numerical<TGridPtr>(pUtils)
         {
         };
 

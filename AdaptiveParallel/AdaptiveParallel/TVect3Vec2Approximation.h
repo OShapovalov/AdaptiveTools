@@ -16,7 +16,7 @@ public:
     TValueParamApproximation<tplVector3D,tplVector2D>(iObject){}
 
     TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject,
-        std::shared_ptr<ParallelUtils> iPUtils) : 
+        ParallelUtilsPtr iPUtils) : 
     TValueParamApproximation<tplVector3D,tplVector2D>(iObject, iPUtils){}
 
 	virtual void MakeApproximation() override

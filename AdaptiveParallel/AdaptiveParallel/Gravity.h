@@ -14,7 +14,7 @@ public:
         _grid = iPoints;
     };
 
-    Gravity(const std::vector<TPoint>& iPoints, std::shared_ptr<ParallelUtils> pUtils) : TNonGrid<std::vector<TPoint>>(pUtils)
+    Gravity(const std::vector<TPoint>& iPoints, ParallelUtilsPtr pUtils) : TNonGrid<std::vector<TPoint>>(pUtils)
     {
         _grid = iPoints;
     };

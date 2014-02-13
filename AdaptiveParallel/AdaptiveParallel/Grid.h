@@ -11,7 +11,7 @@ class TGrid : public Numerical<TGridPtr>
 //        _pUtils = std::make_shared<ParallelUtils>();
 //    };
 //
-//    Numerical(std::shared_ptr<ParallelUtils> pUtils) : _pUtils(pUtils)
+//    Numerical(ParallelUtilsPtr pUtils) : _pUtils(pUtils)
 //    {
 //    };
 

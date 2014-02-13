@@ -16,7 +16,7 @@ void Tf2::GetIntervals(std::vector<TplInterval>& oIntervals) const
 
 double Tfsin::Evaluate( const double& iParam ) const
 {
-    int N = 300;
+    int N = 170;
     float* a = new float[N*N];
     float* b = new float[N*N];
     float* res = new float[N*N];

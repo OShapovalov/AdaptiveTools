@@ -24,7 +24,7 @@ public:
       };
 
     TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject,
-        std::shared_ptr<ParallelUtils> iPUtils) : _object(iObject), _pUtils(iPUtils){};
+        ParallelUtilsPtr iPUtils) : _object(iObject), _pUtils(iPUtils){};
 
 	//static std::shared_ptr<TValueParamApproximation<TValue,TParam>> Create(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject)
 	//{
@@ -272,5 +272,5 @@ public:
 
 	std::shared_ptr<TValueParamObject<TValue,TParam>> _approxObject;
 
-    std::shared_ptr<ParallelUtils> _pUtils;
+    ParallelUtilsPtr _pUtils;
 };

@@ -15,7 +15,7 @@ class Puasson : public TGrid<MyGrid>
     //        _pUtils = std::make_shared<ParallelUtils>();
     //    };
     //
-    //    Numerical(std::shared_ptr<ParallelUtils> pUtils) : _pUtils(pUtils)
+    //    Numerical(ParallelUtilsPtr pUtils) : _pUtils(pUtils)
     //    {
     //    };
 
