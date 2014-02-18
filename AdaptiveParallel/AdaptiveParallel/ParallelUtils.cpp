@@ -29,80 +29,17 @@
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd )
 {    
-    if (!_read)
-    {
-        std::vector<double> times(_technologies.size(),-1.0);
-        for (std::size_t i=0; i<_technologies.size(); ++i)
-        {
-            times[i] = _technologies[i]->Run(f, iStart, iEnd);
-            std::cout << _technologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
-        }
-        _statistics->Add(iEnd - iStart, times); 
-    }
-    else
-    {
-        const std::vector<double>& times = _statistics->_times[_index++].second;
-        auto best = std::min_element(times.begin(), times.end()) - times.begin();
-        auto time = _technologies[best]->Run(f, iStart, iEnd);
-
-        std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
-    }
+    return RunInParallel(f, iStart, iEnd, _technologies);
 }
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair< std::function<double (int,int)>, bool > >& iAddImpl )
 {
-    if (!_read)
-    {
-        std::vector<double> times(_technologies.size()+iAddImpl.size(),-1.0);
-        for (std::size_t i=0; i<_technologies.size(); ++i)
-        {
-            times[i] = _technologies[i]->Run(f, iStart, iEnd);
-            std::cout << _technologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
-        }
-
-        for (std::size_t i=0;i<iAddImpl.size();++i)
-        {
-            times[_technologies.size() + i] = iAddImpl[i].first(iStart, iEnd);
-            std::cout << "AddImpl" << i << ": " << times[_technologies.size() + i] << std::endl;
-        }
-
-        _statistics->Add(iEnd-iStart, times); 
-    }
-    else
-    {
-        const std::vector<double>& times = _statistics->_times[_index++].second;
-        auto best = std::min_element(times.begin(), times.end()) - times.begin();
-        auto time = ( best < (int)_technologies.size() ) ?  
-                        _technologies[best]->Run(f, iStart, iEnd) : 
-                        iAddImpl[best-_technologies.size()].first(iStart, iEnd);
-
-        if (best < (int)_technologies.size()) 
-        std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
-        else
-            std::cout << "AddImpl" << best-_technologies.size() << ": " << time << std::endl;
-    }
+    return RunInParallel(f, iStart, iEnd, iAddImpl, _technologies);
 }
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector<ParallelTechnologyPtr>& iTechnologies )
 {
-    if (!_read)
-    {
-        std::vector<double> times(iTechnologies.size(),-1.0);
-        for (std::size_t i=0; i<iTechnologies.size(); ++i)
-        {
-            times[i] = iTechnologies[i]->Run(f, iStart, iEnd);
-            std::cout << iTechnologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
-        }
-        _statistics->Add(iEnd - iStart, times); 
-    }
-    else
-    {
-        const std::vector<double>& times = _statistics->_times[_index++].second;
-        auto best = std::min_element(times.begin(), times.end()) - times.begin();
-        auto time = _technologies[best]->Run(f, iStart, iEnd);
-
-        std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
-    }
+    return RunInParallel(f, iStart, iEnd, std::vector<std::pair<std::function<double (int,int)> , bool>>(), iTechnologies);
 }
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::vector<ParallelTechnologyPtr>& iTechnologies )
@@ -124,22 +61,54 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
 
         _statistics->Add(iEnd-iStart, times); 
     }
-    else
+    else if (!_readButNew && _index<_statistics->_times.size() && (iEnd-iStart ==  _statistics->_times[_index].first) )
     {
         const std::vector<double>& times = _statistics->_times[_index++].second;
         auto best = std::min_element(times.begin(), times.end()) - times.begin();
-        auto time = ( best < (int)_technologies.size() ) ?  
-            _technologies[best]->Run(f, iStart, iEnd) : 
-        iAddImpl[best-_technologies.size()].first(iStart, iEnd);
+        auto time = ( best < (int)iTechnologies.size() ) ?  
+            iTechnologies[best]->Run(f, iStart, iEnd) : 
+        iAddImpl[best-iTechnologies.size()].first(iStart, iEnd);
 
-        if (best < (int)_technologies.size()) 
-            std::cout << _technologies[best]->GetName().c_str() << ": " << time << std::endl;
+        if (best < (int)iTechnologies.size()) 
+            std::cout << iTechnologies[best]->GetName().c_str() << ": " << time << std::endl;
         else
             std::cout << "AddImpl" << best-_technologies.size() << ": " << time << std::endl;
     }
+
+    if (!_readButNew)
+    {
+        if ( _index>=_statistics->_times.size() || (iEnd-iStart !=  _statistics->_times[_index].first) )
+            _readButNew = true;
+    }
+
+    if (_readButNew)
+    {
+        auto index = std::lower_bound(_sortedTimes.begin(),_sortedTimes.end(), iEnd - iStart,
+            [](const std::pair<int,std::vector<double>>& p1, int p2)
+        { return p1.first < p2; }
+        ) - _sortedTimes.begin();
+
+        double percent = (iEnd-iStart - _sortedTimes[index-1].first) / (_sortedTimes[index].first - _sortedTimes[index-1].first);
+
+        std::vector<double> times(_technologies.size());
+        for (std::size_t i=0;i<times.size();++i)
+        {
+            times[i] = _sortedTimes[index-1].second[i]*(1 - percent) + _sortedTimes[index].second[i]*percent;
+        }
+
+        auto best = std::min_element(times.begin(), times.end()) - times.begin();
+        auto time = ( best < (int)iTechnologies.size() ) ?  
+            iTechnologies[best]->Run(f, iStart, iEnd) : 
+        iAddImpl[best-iTechnologies.size()].first(iStart, iEnd);
+
+        if (best < (int)iTechnologies.size()) 
+            std::cout << iTechnologies[best]->GetName().c_str() << ": " << time << std::endl;
+        else
+            std::cout << "AddImpl" << best-iTechnologies.size() << ": " << time << std::endl;
+    }
 }
 
-ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag)
+ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag),_readButNew(false)
 {
     if (!TryRead())
     {
@@ -166,7 +135,8 @@ ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false
     }
 }
 
-ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag)
+ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/) :
+                                _read(false),_index(0),_tag(iTag),_readButNew(false)
 {
     if (!TryRead())
     {
@@ -234,6 +204,25 @@ void ParallelUtils::ReadSettingsFromFile()
             _statistics->Add(N, times);
 
             _read = true;
+        }
+    }
+
+    _sortedTimes = _statistics->_times;
+    std::sort(_sortedTimes.begin(), _sortedTimes.end(),
+        [](std::pair<int,std::vector<double>>& p1, std::pair<int,std::vector<double>>& p2)
+            {return p1.first < p2.first;}
+        );
+
+    for (std::size_t i=1; i<_sortedTimes.size();++i)
+    {
+        if (_sortedTimes[i].first == _sortedTimes[i-1].first)
+        {
+            for (std::size_t k=0;k<_sortedTimes[i-1].second.size();++k)
+            {
+                _sortedTimes[i-1].second[k] = (_sortedTimes[i-1].second[k]+_sortedTimes[i].second[k])*0.5;
+            }
+            _sortedTimes.erase(_sortedTimes.begin()+i);
+            --i;
         }
     }
 }

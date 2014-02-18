@@ -82,11 +82,15 @@ protected:
 
     bool _read;
     int _index;
+
+    bool _readButNew;
 private:
     ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;
 
     std::string _tag;
+
+    std::vector<std::pair<int,std::vector<double>>> _sortedTimes;
 };
 
 
