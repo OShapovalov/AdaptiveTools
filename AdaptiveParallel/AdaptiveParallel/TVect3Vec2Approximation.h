@@ -12,8 +12,8 @@ public:
 
 	using TValueParamApproximation<tplVector3D, tplVector2D>::operator=;
 
-	TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject) : 
-    TValueParamApproximation<tplVector3D,tplVector2D>(iObject){}
+	//TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject) : 
+ //   TValueParamApproximation<tplVector3D,tplVector2D>(iObject){}
 
     TVec3Vec2Approximation(std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject,
         ParallelUtilsPtr iPUtils) : 

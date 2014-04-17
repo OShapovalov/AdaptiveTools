@@ -15,4 +15,9 @@ public:
     {
         return "OpenMP";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return OpenMP;
+    }
 };

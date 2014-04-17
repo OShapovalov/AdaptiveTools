@@ -18,4 +18,9 @@ public:
     {
         return "Serial";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return Serial;
+    }
 };

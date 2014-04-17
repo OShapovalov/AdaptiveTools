@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "ParallelUtils.h"
 
 //#define BOOST
 //#define CILK
@@ -15,4 +16,6 @@ public:
     virtual void Synchronize() =0;
 
     virtual std::string GetName() =0;
+
+    virtual enum Technology GetEnum() =0;
 };

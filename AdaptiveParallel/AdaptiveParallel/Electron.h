@@ -34,7 +34,7 @@ private:
 
     void Init(float step);
 
-    Electron(){};
+    //Electron(){};
 
     float K;
     float QK;//заряд частицы укрупненной

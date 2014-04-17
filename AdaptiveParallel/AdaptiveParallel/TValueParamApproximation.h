@@ -17,11 +17,11 @@ class TValueParamApproximation : public TValueParamObject<TValue, TParam>
 {
 public:
 
-	TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : 
-      _object(iObject)
-      {
-          _pUtils = std::make_shared<ParallelUtils>("TValueParamApprox.ini");
-      };
+	//TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : 
+ //     _object(iObject)
+ //     {
+ //         _pUtils = std::make_shared<ParallelUtils>("TValueParamApprox.ini");
+ //     };
 
     TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject,
         ParallelUtilsPtr iPUtils) : _object(iObject), _pUtils(iPUtils){};

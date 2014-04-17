@@ -213,7 +213,7 @@
       <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMP>GenerateParallelCode</OpenMP>
       <Cpp0xSupport>true</Cpp0xSupport>
-      <AdditionalIncludeDirectories>F:\Program Files (x86)\Intel\Composer XE 2013\compiler\include;G:\downloads\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;F:\Program Files (x86)\Intel\Composer XE 2013\compiler\include;G:\downloads\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableIntelLangExtensions>false</DisableIntelLangExtensions>
     </ClCompile>
     <Link>
@@ -221,8 +221,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>F:\Program Files (x86)\Intel\Composer XE 2013\compiler\lib\intel64;G:\downloads\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CudaToolkitLibDir);F:\Program Files (x86)\Intel\Composer XE 2013\compiler\lib\intel64;G:\downloads\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cudart.lib;cublas.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AbstractParallel.cpp" />
@@ -230,6 +234,8 @@
     <ClCompile Include="BoostTechnology.cpp" />
     <ClCompile Include="CilkTechnology.cpp" />
     <ClCompile Include="DoubleDoubleFunctions.cpp" />
+    <ClCompile Include="ParallelUtilsBase.cpp" />
+    <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="TplInterval.cpp" />
     <ClCompile Include="Electron.cpp" />
     <ClCompile Include="OmpTechnology.cpp" />
@@ -256,6 +262,8 @@
     <ClInclude Include="NonGrid.h" />
     <ClInclude Include="ParallelUtilsBase.h" />
     <ClInclude Include="Puasson.h" />
+    <ClInclude Include="pugiconfig.hpp" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="TPLdefines.h" />
     <ClInclude Include="tplForward.h" />
     <ClInclude Include="TplInterval.h" />

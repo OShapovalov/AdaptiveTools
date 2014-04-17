@@ -9,10 +9,10 @@ public:
     virtual void MakeStep(float t)=0;
 
 protected:
-    Numerical()
-    {
-        _pUtils = std::make_shared<ParallelUtils>("Numerical.ini");
-    };
+    //Numerical()
+    //{
+    //    _pUtils = std::make_shared<ParallelUtils>("Numerical.ini");
+    //};
 
     Numerical(ParallelUtilsPtr pUtils) : _pUtils(pUtils)
     {

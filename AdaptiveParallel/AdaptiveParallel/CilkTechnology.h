@@ -19,6 +19,11 @@ public:
     {
         return "Cilk Plus";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return CilkPlus;
+    }
 };
 
 #endif

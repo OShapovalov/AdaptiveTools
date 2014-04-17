@@ -21,6 +21,7 @@
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 #include "AbstractParallel.h"
+#include "ParallelUtilsBase.h"
 
 // CUDA and CUBLAS functions
 //#include <helper_functions.h>
@@ -96,6 +97,8 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 
  int main(void)
  {	 
+     ParallelUtilsBase baseParallel;
+
   //   float step = 0.000000000003f;
   //   std::vector<TPL_Point> tplPoints;
   //   Electron ele(tplPoints, step);
@@ -105,30 +108,30 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
   //       ele.MakeStep(step);
   //   }
 
-	 TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
-	 //auto sinSurf = std::make_shared<TSomeSurface>();
+	 //TDoubleDoubleObjectPtr f2 = std::make_shared<Tfsin>();
+	 ////auto sinSurf = std::make_shared<TSomeSurface>();
 
-     std::vector<ParallelUtils::Technology> techs;
+  //   std::vector<Technology> techs;
 
-     techs.push_back(ParallelUtils::Serial);
-     techs.push_back(ParallelUtils::BoostThreads);
-     techs.push_back(ParallelUtils::CilkPlus);
-     auto pUtils1 = std::make_shared<ParallelUtils>(techs, "SurfApprox.ini");	
+  //   techs.push_back(Technology::Serial);
+  //   techs.push_back(Technology::BoostThreads);
+  //   techs.push_back(Technology::CilkPlus);
+  //   auto pUtils1 = std::make_shared<ParallelUtils>(techs, "SurfApprox.ini");	
 
-	 //auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf, pUtils1);
-	 auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2, pUtils1);
+	 ////auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf, pUtils1);
+	 //auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2, pUtils1);
 
-	 ////auto start = AbstractParallel::GetTime();
-	 //approx->MakeApprox(10, 1e-2);
-	 approx2->MakeApprox(10, 1e-3);
-	 ////std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
+	 //////auto start = AbstractParallel::GetTime();
+	 ////approx->MakeApprox(10, 1e-2);
+	 //approx2->MakeApprox(10, 1e-3);
+	 //////std::cout << "Time: " << (AbstractParallel::GetTime() - start) << std::endl; 
 
-	 ////OutputToGrapher(approx2, "Approx.txt", 1000);
-	 ////OutputToGrapher(sinSurf, "Exact.txt", 10000);
+	 //////OutputToGrapher(approx2, "Approx.txt", 1000);
+	 //////OutputToGrapher(sinSurf, "Exact.txt", 10000);
 
-     return 0;
+  //   return 0;
 
-	 const int N = 512;
+	 const int N = 256;
 
 	 float* a = new float[N*N];
 	 float* b = new float[N*N];
@@ -158,9 +161,9 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 
     // перечисляем технологии, которые будут использоваться 
     // для запуска на центральном процессоре
-    std::vector<ParallelUtils::Technology> technologies;
-    technologies.push_back(ParallelUtils::Serial);
-    technologies.push_back(ParallelUtils::PPL);
+    std::vector<Technology> technologies;
+    technologies.push_back(Technology::Serial);
+    technologies.push_back(Technology::PPL);
  
     // перечисляем набор реализаций для сопроцессоров
     // в данном случае - умножение матриц на видеокарте
@@ -168,10 +171,10 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     addImpls.push_back(std::make_pair(labmdaMul,true));
     
     // создаем класс, управляющий параллелизмом в проекте
-    ParallelUtils pUtils(technologies, "MatrixMul.ini");
+    auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.ini");
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
-    pUtils.RunInParallel([&](int i)
+    pUtils->RunInParallel([&](int i)
     {
         for(int j=0;j<N;j++)
         {

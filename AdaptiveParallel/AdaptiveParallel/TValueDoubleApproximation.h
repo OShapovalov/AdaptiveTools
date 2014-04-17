@@ -12,7 +12,7 @@ public:
 
 	using TValueParamApproximation<TValue, double>::operator=;
 
-	TValueDoubleApproximation(std::shared_ptr<TValueParamObject<TValue,double>> iObject) : TValueParamApproximation<TValue,double>(iObject){}
+	//TValueDoubleApproximation(std::shared_ptr<TValueParamObject<TValue,double>> iObject) : TValueParamApproximation<TValue,double>(iObject){}
 
     TValueDoubleApproximation(std::shared_ptr<TValueParamObject<TValue,double>> iObject,
         ParallelUtilsPtr iPUtils) : 

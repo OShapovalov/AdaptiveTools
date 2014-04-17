@@ -9,10 +9,10 @@ template <class TPoint>
 class Gravity : public TNonGrid< std::vector<TPoint> >
 {
 public:
-    Gravity(const std::vector<TPoint>& iPoints)
-    {
-        _grid = iPoints;
-    };
+    //Gravity(const std::vector<TPoint>& iPoints)
+    //{
+    //    _grid = iPoints;
+    //};
 
     Gravity(const std::vector<TPoint>& iPoints, ParallelUtilsPtr pUtils) : TNonGrid<std::vector<TPoint>>(pUtils)
     {
@@ -52,6 +52,6 @@ public:
             0, (int)_grid.size() );
     }
 protected:
-    Gravity(){};
+    //Gravity(){};
     //TGridPtr _grid;
 };

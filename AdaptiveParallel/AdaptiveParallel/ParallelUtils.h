@@ -6,6 +6,27 @@
 #include "ParallelTechnology.h"
 #include "tplForward.h"
 #include <vector>
+//#include "ParallelUtilsBase.h"
+
+class ParallelUtilsBase;
+
+enum Technology
+{
+    Serial,
+    OpenMP,
+#ifdef TPL_PPL
+    PPL,
+#endif
+#ifdef TPL_TBB
+    TBB,
+#endif
+#ifdef TPL_CILK
+    CilkPlus,
+#endif
+#ifdef TPL_BOOST
+    BoostThreads,
+#endif
+};
 
 class ParallelTimes
 {
@@ -17,28 +38,11 @@ public:
     std::vector<std::pair<int,std::vector<double>>> _times;
 };
 
+
 class ParallelUtils
 {
 
 public:
-
-    enum Technology
-    {
-        Serial,
-        OpenMP,
-#ifdef TPL_PPL
-        PPL,
-#endif
-#ifdef TPL_TBB
-        TBB,
-#endif
-#ifdef TPL_CILK
-        CilkPlus,
-#endif
-#ifdef TPL_BOOST
-        BoostThreads,
-#endif
-    };
 
     ParallelUtils(std::string iTag /*= "Settings.ini"*/);
 
@@ -50,6 +54,16 @@ public:
 
     void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
         const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl);
+
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+        const std::vector<Technology>& iTechnologies);
+
+    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
+        const std::vector<Technology>& iTechnologies);
+
+    // для сравнения двух алгоритмов
+    void CompareRealizations( const std::vector< std::function<void (void)> >& iFunctions);
 
     int RunInAnotherThread( std::function<void (void)> f ); 
 
@@ -73,12 +87,12 @@ public:
     }
 
 protected:
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector<ParallelTechnologyPtr>& iTechnologies);
 
     void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
         const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
-                                        const std::vector<ParallelTechnologyPtr>& iTechnologies);
+        const std::vector<ParallelTechnologyPtr>& iTechnologies );
+
+    void SynchronizeTechnologies();
 
     bool _read;
     int _index;
@@ -87,10 +101,16 @@ protected:
 private:
     ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;
+    std::vector<Technology> _technologiesName;
 
     std::string _tag;
 
     std::vector<std::pair<int,std::vector<double>>> _sortedTimes;
+
+    //std::weak_ptr<ParallelUtilsBase> _baseUtils;
+    ParallelUtilsBase* _baseUtils;
+
+    friend class ParallelUtilsBase;
 };
 
 

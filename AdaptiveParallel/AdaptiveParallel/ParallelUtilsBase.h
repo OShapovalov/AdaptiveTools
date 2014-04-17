@@ -1,59 +1,110 @@
 #pragma once
 #include "ParallelUtils.h"
 #include <algorithm>
+#include <memory>
+#include <map>
 
-class ParallelUtilsBase
+enum Strategy
 {
-    void SetTechnology(ParallelUtils::Technology iTechnology)
+    SerialStrategy,
+    BestTechnologyStrategy,
+    OnlyBestStrategy
+};
+
+class ParallelUtilsBase : std::enable_shared_from_this<ParallelUtilsBase>
+{
+public:
+
+    ParallelUtilsBase(Strategy iStrategy = OnlyBestStrategy):_strategy(iStrategy),_learning(false),_setTechnology(false){};
+
+    void SetStrategy(Strategy iStrategy);
+
+    Strategy GetStrategy() const;
+
+    void SetTechnology(Technology iTechnology);
+
+    void SetTechnologies(const std::vector<Technology>& iTechnologies);
+
+    void TurnOffParallel();
+
+    void SetLearning(bool learning);
+
+    const ParallelUtilsPtr& AddNewParUtils(std::string iTag /*= "Settings.ini"*/);
+
+    const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/);
+
+    //void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::string& iName);
+
+    //void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+    //    const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::string& iName);
+
+    ParallelUtilsPtr GetParUtilsByName(const std::string& iName);
+
+    bool IsTechnologySetted()
     {
-        _pTechnologies.clear();
-        _pTechnologies.push_back(iTechnology);
+        return _setTechnology;
     }
 
-    void SetTechnologies(const std::vector<ParallelUtils::Technology>& iTechnologies)
+    const std::vector<Technology>& GetTechnologies()
     {
-        _pTechnologies = iTechnologies;
+        return _pTechnologies;
     }
 
-    void TurnOffParallel()
+    const ParallelTechnologyPtr& GetBestTechnology()
     {
-        SetTechnology(ParallelUtils::Serial);
-    }
-
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::string& iName)
-    {
-        auto utils = GetParUtilsByName(iName);
-        if (!utils)
-            return;
-        utils->RunInParallel(f,iStart,iEnd);
-    }
-
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::string& iName)
-    {
-        auto utils = GetParUtilsByName(iName);
-        if (!utils)
-            return;
-        utils->RunInParallel(f,iStart,iEnd,iAddImpl);
-    }
-
-    ParallelUtilsPtr GetParUtilsByName(const std::string& iName)
-    {
-        auto lambda = [iName](const ParallelUtilsPtr& pUtils)
+        if (!_best) // ищем лучшую по общему времени технологию, общую для всех утилз 
         {
-            return pUtils->GetName().compare(iName) == 0;
-        };
+            std::map<ParallelTechnologyPtr, double> times;
+            std::map<ParallelTechnologyPtr, int> counts;
 
-        auto it = std::find(_allUtils.begin(), _allUtils.end(), lambda);
-        if (it == _allUtils.end())
-            return nullptr;
-        else
-            return *it;
+            for (std::size_t i=0; i<_allUtils.size(); ++i)
+            for (std::size_t k=0;k<_allUtils[i]->_technologies.size();++k)
+            {
+                times[_allUtils[i]->_technologies[k]] = 0.0;
+                counts[_allUtils[i]->_technologies[k]] = 0;
+            }
+
+            std::size_t maxCount = 0;
+
+            for (std::size_t i=0; i<_allUtils.size(); ++i)
+            {
+                maxCount += _allUtils[i]->_sortedTimes.size();
+
+                for (std::size_t k=0;k<_allUtils[i]->_sortedTimes.size();++k)
+                {
+                    for (std::size_t l=0;l<_allUtils[i]->_sortedTimes[k].second.size();++l)
+                    {
+                        times[_allUtils[i]->_technologies[l]] += _allUtils[i]->_sortedTimes[k].second[l];
+                        counts[_allUtils[i]->_technologies[l]] ++;
+                    }
+                }
+            }
+            double minTime = 1e23;
+            for (auto it=times.begin();it!=times.end();++it)
+            {
+                if (counts[(*it).first] != maxCount)
+                    continue;
+                if ((*it).second < minTime)
+                {
+                    minTime = (*it).second;
+                    _best = (*it).first;
+                }
+            }
+        }
+        return _best;
     }
 
 private:
 
-    std::vector<ParallelUtils::Technology> _pTechnologies;
+    std::vector<Technology> _pTechnologies;
+
+    bool _setTechnology;
 
     std::vector<ParallelUtilsPtr> _allUtils;
+
+    Strategy _strategy;
+
+    ParallelTechnologyPtr _best;
+
+    bool _learning;
 };

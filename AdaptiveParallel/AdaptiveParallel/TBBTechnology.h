@@ -18,6 +18,11 @@ public:
     {
         return "TBB";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return ParallelUtils::TBB;
+    }
 };
 
 #endif

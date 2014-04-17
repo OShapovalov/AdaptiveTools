@@ -1,10 +1,10 @@
 #include "Electron.h"
 //#include "cuElectron.h"
 
-Electron::Electron( const std::vector<TPL_Point>& iPoints, float step ) : Gravity<TPL_Point>(iPoints)
-{
-    Init(step);
-}
+//Electron::Electron( const std::vector<TPL_Point>& iPoints, float step ) : Gravity<TPL_Point>(iPoints)
+//{
+//    Init(step);
+//}
 
 Electron::Electron( const std::vector<TPL_Point>& iPoints, float step, ParallelUtilsPtr pUtils ) : 
                         Gravity<TPL_Point>(iPoints, pUtils)

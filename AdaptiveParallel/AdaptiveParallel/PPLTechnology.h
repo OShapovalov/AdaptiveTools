@@ -18,6 +18,11 @@ public:
     {
         return "PPL";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return PPL;
+    }
 };
 
 #endif

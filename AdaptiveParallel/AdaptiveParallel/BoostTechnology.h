@@ -19,6 +19,11 @@ public:
     {
         return "Boost Threads";
     }
+
+    virtual enum Technology GetEnum() override
+    {
+        return BoostThreads;
+    }
 };
 
 #endif
