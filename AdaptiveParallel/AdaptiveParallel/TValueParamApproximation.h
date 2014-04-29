@@ -20,7 +20,7 @@ public:
 	//TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject) : 
  //     _object(iObject)
  //     {
- //         _pUtils = std::make_shared<ParallelUtils>("TValueParamApprox.ini");
+ //         _pUtils = std::make_shared<ParallelUtils>("TValueParamApprox.xml");
  //     };
 
     TValueParamApproximation(std::shared_ptr<TValueParamObject<TValue,TParam>> iObject,

@@ -192,7 +192,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
     }
 }
 
-ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false),_index(0),_tag(iTag),_readButNew(false)
+ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.xml"*/) :_read(false),_index(0),_tag(iTag),_readButNew(false)
 {
     if (!TryRead())
     {
@@ -219,7 +219,7 @@ ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.ini"*/) :_read(false
     }
 }
 
-ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/) :
+ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/) :
                                 _read(false),_index(0),_tag(iTag),_readButNew(false)
 {
     if (!TryRead())
@@ -251,13 +251,11 @@ void ParallelUtils::ReadSettingsFromFile()
         return;
     }
 
-    std::ifstream input(_tag);
-
     bool endTech = false;
     _statistics = std::make_shared<ParallelTimes>();
 
     pugi::xml_document doc;
-    pugi::xml_parse_result result = doc.load_file("test.xml");
+    pugi::xml_parse_result result = doc.load_file(_tag.c_str());
     if (result)
         std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
     else
@@ -293,47 +291,6 @@ void ParallelUtils::ReadSettingsFromFile()
         }
 
         _statistics->Add(iterations, times);
-    }
-
-    while (! input.eof())
-    {
-        std::string s;
-        std::getline(input,s);
-        if (s.empty())
-            break;
-
-        if (!endTech)
-        {
-            auto tech = GetTechnologyByName(s);        
-            if (tech == nullptr)
-            {
-                endTech = true;                
-                //if (s.length()>7)
-                //{
-                //    if ()
-                //}
-            }
-            else
-                _technologies.push_back(tech);
-        }
-
-        if (endTech)
-        {
-            int N;
-            std::istringstream ( s ) >> N;
-
-            std::getline(input,s);
-            if (s.empty())
-                break;
-
-            std::vector<double> times;
-
-            std::istringstream istr(s);
-            std::copy(std::istream_iterator<double>(istr), std::istream_iterator<double>(), back_inserter(times));
-            _statistics->Add(N, times);
-
-            _read = true;
-        }
     }
 
     _sortedTimes = _statistics->_times;
@@ -402,38 +359,7 @@ void ParallelUtils::WriteToFile() const
             descrTime.append_child(pugi::node_pcdata).set_value(str.c_str());
         }
     }
-    doc.save_file("test.xml");
-    //std::ofstream output0("test.xml", std::ios_base::trunc);
-    //doc.print(output0);  
-    //output0.close();
-
-    std::ofstream output(_tag, std::ios_base::trunc);
-
-    for (std::size_t i=0; i<_technologies.size(); ++i)
-    {
-        output << _technologies[i]->GetName().c_str() << std::endl;
-    }
-
-    //if (!_statistics->_times.empty())
-    //for (std::size_t i=0;i+_technologies.size()<_statistics->_times[0].second.size();++i)
-    //{
-    //    output << "AddImpl" << i << std::endl;
-    //}
-
-    for (std::size_t i=0;i<_statistics->_times.size();++i)
-    {
-        output << _statistics->_times[i].first << std::endl;
-
-        const std::vector<double>& times = _statistics->_times[i].second;
-
-        for (std::size_t k=0; k<times.size(); ++k)
-        {
-            output << times[k] << " ";
-        }
-        output << std::endl;
-    }
-
-    output.close();
+    doc.save_file(_tag.c_str());
 }
 
 bool ParallelUtils::TryRead()

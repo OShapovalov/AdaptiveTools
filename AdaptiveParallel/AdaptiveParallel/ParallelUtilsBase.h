@@ -29,9 +29,9 @@ public:
 
     void SetLearning(bool learning);
 
-    const ParallelUtilsPtr& AddNewParUtils(std::string iTag /*= "Settings.ini"*/);
+    const ParallelUtilsPtr& AddNewParUtils(std::string iTag /*= "Settings.xml"*/);
 
-    const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/);
+    const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 
     //void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::string& iName);
 

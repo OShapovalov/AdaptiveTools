@@ -35,14 +35,14 @@ void ParallelUtilsBase::SetLearning( bool learning )
     _learning = learning;
 }
 
-const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( std::string iTag /*= "Settings.ini"*/ )
+const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( std::string iTag /*= "Settings.xml"*/ )
 {
     _allUtils.push_back(std::make_shared<ParallelUtils>(iTag));
     _allUtils.back()->_baseUtils = this;//shared_from_this();
     return _allUtils.back();
 }
 
-const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/ )
+const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/ )
 {
     _allUtils.push_back(std::make_shared<ParallelUtils>(iTechnologies,iTag));
     //auto q = std::make_shared<ParallelUtilsBase>();

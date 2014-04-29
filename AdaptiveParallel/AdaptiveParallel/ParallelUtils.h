@@ -44,9 +44,9 @@ class ParallelUtils
 
 public:
 
-    ParallelUtils(std::string iTag /*= "Settings.ini"*/);
+    ParallelUtils(std::string iTag /*= "Settings.xml"*/);
 
-    ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.ini"*/);
+    ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 
     ~ParallelUtils();
 

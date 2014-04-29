@@ -116,7 +116,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
   //   techs.push_back(Technology::Serial);
   //   techs.push_back(Technology::BoostThreads);
   //   techs.push_back(Technology::CilkPlus);
-  //   auto pUtils1 = std::make_shared<ParallelUtils>(techs, "SurfApprox.ini");	
+  //   auto pUtils1 = std::make_shared<ParallelUtils>(techs, "SurfApprox.xml");	
 
 	 ////auto approx = std::make_shared<TVec3Vec2Approximation>(sinSurf, pUtils1);
 	 //auto approx2 = std::make_shared<TDoubleDoubleApproximation>(f2, pUtils1);
@@ -171,7 +171,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     addImpls.push_back(std::make_pair(labmdaMul,true));
     
     // создаем класс, управляющий параллелизмом в проекте
-    auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.ini");
+    auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.xml");
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
     pUtils->RunInParallel([&](int i)

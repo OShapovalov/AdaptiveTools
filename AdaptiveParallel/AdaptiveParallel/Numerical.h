@@ -11,7 +11,7 @@ public:
 protected:
     //Numerical()
     //{
-    //    _pUtils = std::make_shared<ParallelUtils>("Numerical.ini");
+    //    _pUtils = std::make_shared<ParallelUtils>("Numerical.xml");
     //};
 
     Numerical(ParallelUtilsPtr pUtils) : _pUtils(pUtils)
