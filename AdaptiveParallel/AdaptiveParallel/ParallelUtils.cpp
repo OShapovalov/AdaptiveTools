@@ -95,8 +95,71 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
 
 void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::vector<ParallelTechnologyPtr>& iTechnologies )
 {
+    if (_autoLearning)
+    {
+        std::vector<double> mPi(iAddImpl.size()+iTechnologies.size(),1);
+        
+        if (_singleStatistics.size() != mPi.size())
+            _singleStatistics.clear();
+
+        if (_singleStatistics.empty())
+            _singleStatistics.resize(mPi.size());
+
+        int iterations = iEnd - iStart;
+
+        for (std::size_t i=0;i<_singleStatistics.size();++i)
+        {
+            // получаем ближайшее значение статистики
+            auto vec = _singleStatistics[i];
+            if (vec.empty())
+                mPi[i] = 10.0;
+            else
+            {
+                auto it = std::min_element(vec.begin(),vec.end(), 
+                    [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
+                    {
+                        return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
+                    }
+                    );
+                mPi[i] = 1.0/std::abs((*it).first-iterations)/(*it).second;
+            } 
+        }
+
+        double sum = 0.0;
+        for (std::size_t i=0;i<mPi.size();++i)
+        {
+            sum+=mPi[i];
+        }
+
+        for (std::size_t i=0;i<mPi.size();++i)
+        {
+            mPi[i]/=sum;
+        }
+
+        // строим частичные суммы
+        for (std::size_t i=1;i<mPi.size();++i)
+        {
+            mPi[i]+=mPi[i-1];
+        }
+
+        // обеспечить выбор технологии согласно высчитанным вероятностям
+        double randX = (double)rand()/RAND_MAX;
+        auto index = std::upper_bound(mPi.begin(), mPi.end(), randX) - mPi.begin();
+
+        auto time = ( index < (int)iTechnologies.size() ) ?  
+            iTechnologies[index]->Run(f, iStart, iEnd) : 
+        iAddImpl[index-iTechnologies.size()].first(iStart, iEnd);
+     
+        //auto pr = std::make_pair(iEnd-iStart, time);
+        //_singleStatistics[index].push_back(5);
+
+        return;
+    }
+
+    // если нет прочитанной статистики
     if (!_read)
     {
+        //запускаем с каждой технологией
         std::vector<double> times(iTechnologies.size()+iAddImpl.size(),-1.0);
         for (std::size_t i=0; i<iTechnologies.size(); ++i)
         {
@@ -104,19 +167,25 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             std::cout << iTechnologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
         }
 
+        //...в том числе и с реализациями для сопроцессоров
         for (std::size_t i=0;i<iAddImpl.size();++i)
         {
             times[iTechnologies.size() + i] = iAddImpl[i].first(iStart, iEnd);
             std::cout << "AddImpl" << i << ": " << times[iTechnologies.size() + i] << std::endl;
         }
 
+        // записываем статистику
         _statistics->Add(iEnd-iStart, times); 
+
+        return;
     }
-    else if (!_readButNew && 
+    else // если есть записанная статистика для данного числа итераций 
+        if (!_readButNew && 
                 _index<_statistics->_times.size() && 
                 (iEnd-iStart ==  _statistics->_times[_index].first) 
                 && iTechnologies.size()+iAddImpl.size() == _statistics->_times.front().second.size())
     {
+        // выбираем технологию в зависимости от стратегии выполнения
         switch (_baseUtils->GetStrategy())
         {
         case SerialStrategy:
@@ -217,6 +286,8 @@ ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.xml"*/) :_read(false
         _technologies.push_back(std::make_shared<CilkTechnology>());
 #endif
     }
+
+    //_singleStatistics.resize(_technologies.size());
 }
 
 ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/) :
@@ -311,6 +382,27 @@ void ParallelUtils::ReadSettingsFromFile()
             --i;
         }
     }
+
+    fjfjfjf
+    //auto singleStatistics = doc.child("singleStatistics");
+    //for (pugi::xml_node tool = singleStatistics.first_child(); tool; tool = tool.next_sibling())
+    //{
+    //    auto iter = tool.first_child();
+    //    auto pr = iter.first_child();
+    //    int iterations = atoi(iter.value());
+
+    //    std::vector<double> times;
+
+    //    auto times_txt = iter.next_sibling();
+    //    for (pugi::xml_node toolInner = times_txt.first_child(); toolInner; toolInner = toolInner.next_sibling())
+    //    {
+    //        auto val = toolInner.first_child().value();
+    //        //std::cout << val << std::endl;
+    //        times.push_back(atof(val));
+    //    }
+
+    //    _statistics->Add(iterations, times);
+    //}
 }
 
 void ParallelUtils::WriteToFile() const

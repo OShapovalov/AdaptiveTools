@@ -98,6 +98,13 @@ protected:
     int _index;
 
     bool _readButNew;
+
+    // режим самообучения по мотивам метода отжига
+    bool _autoLearning;
+
+    // технология -> (количество итераций-время)
+    std::vector< std::vector< std::pair<int, double> > > _singleStatistics;
+
 private:
     ParallelTimesPtr _statistics;
     std::vector<ParallelTechnologyPtr> _technologies;

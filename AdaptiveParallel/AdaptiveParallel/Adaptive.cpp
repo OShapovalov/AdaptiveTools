@@ -97,7 +97,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 
  int main(void)
  {	 
-     ParallelUtilsBase baseParallel;
+     //ParallelUtilsBase baseParallel;
 
   //   float step = 0.000000000003f;
   //   std::vector<TPL_Point> tplPoints;
@@ -159,8 +159,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     
     //technologies.push_back(ParallelUtils::BoostThreads);
 
-    // перечисляем технологии, которые будут использоваться 
-    // для запуска на центральном процессоре
+    // перечисляем технологии для ЦП
     std::vector<Technology> technologies;
     technologies.push_back(Technology::Serial);
     technologies.push_back(Technology::PPL);
@@ -169,8 +168,10 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     // в данном случае - умножение матриц на видеокарте
     std::vector<std::pair<std::function<double (int,int)>,bool>> addImpls;
     addImpls.push_back(std::make_pair(labmdaMul,true));
-    
+
     // создаем класс, управляющий параллелизмом в проекте
+    ParallelUtilsBase baseParallel; 
+    // добавляем обработку нового цикла
     auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.xml");
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
@@ -182,8 +183,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
             for (int k=0;k<N;k++) 
                 res[i*N+j]+=a[i*N+k]*b[k*N+j];
         }
-    }
-    , 0, N, addImpls);
+    } , 0, N, addImpls);
 
 	delete[] a;
 	delete[] b;
