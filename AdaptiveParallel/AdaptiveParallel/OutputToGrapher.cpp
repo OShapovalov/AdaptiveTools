@@ -17,15 +17,15 @@ void OutputToGrapher(std::shared_ptr<TValueParamObject<double, double>> iObject,
 	f.close();
 }
 
-void OutputToGrapher(std::shared_ptr<TValueParamObject<tplVector3D, tplVector2D>> iObject, std::string iPath, std::size_t N/* = 100*/)
+void OutputToGrapher(std::shared_ptr<TValueParamObject<ptlVector3D, PTLVector2D>> iObject, std::string iPath, std::size_t N/* = 100*/)
 {
-	std::vector<tplVector2D> params;
+	std::vector<PTLVector2D> params;
 	std::vector<std::size_t> dimensions;
 	iObject->GetParams(N, params, dimensions);
 
 	std::ofstream f(iPath);
 
-	tplVector3D vector;
+	ptlVector3D vector;
 
 	for (std::size_t i = 0; i < params.size(); ++i)
 	{

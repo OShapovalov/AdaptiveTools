@@ -3,20 +3,20 @@
 #include "ObjectApproximation.h"
 #include "Vector3D.h"
 
-class PlaneApproximation : public ObjectApproximation<tplVector3D,tplVector2D>
+class PlaneApproximation : public ObjectApproximation<ptlVector3D,PTLVector2D>
 {
 public:
 
-	PlaneApproximation(const std::vector<tplVector2D>& iParams,
-		const std::vector<tplVector3D>& iValues,
+	PlaneApproximation(const std::vector<PTLVector2D>& iParams,
+		const std::vector<ptlVector3D>& iValues,
 		const std::vector<std::size_t>& iDimensions,
-		std::shared_ptr<TValueParamObject<tplVector3D,tplVector2D>> iObject) :
-	ObjectApproximation<tplVector3D, tplVector2D>(iParams, iValues, iDimensions, iObject)
+		std::shared_ptr<TValueParamObject<ptlVector3D,PTLVector2D>> iObject) :
+	ObjectApproximation<ptlVector3D, PTLVector2D>(iParams, iValues, iDimensions, iObject)
 	{
 
 	}
 
-	virtual tplVector3D Evaluate(const tplVector2D& iParams) const override
+	virtual ptlVector3D Evaluate(const PTLVector2D& iParams) const override
 	{
 		std::size_t i=0, k=0;
 		std::size_t N1 = _dimensions[0];
@@ -30,7 +30,7 @@ public:
 		if (i == 0 && k == 0)
 			return _values.front();
 
-		tplVector3D deltaU, deltaV, deltaU1, deltaV1;
+		ptlVector3D deltaU, deltaV, deltaU1, deltaV1;
 		double percentU, percentV;
 
 		if (i>0)
@@ -51,9 +51,9 @@ public:
 			//deltaV = (deltaV+deltaV1)/2.0;
 		}
 
-		tplVector3D retValue = _values[predI*N2+predK] + deltaU + deltaV;
+		ptlVector3D retValue = _values[predI*N2+predK] + deltaU + deltaV;
 
-		tplVector3D retValue1 = _values[i*N2+k] - deltaU1 - deltaV1;
+		ptlVector3D retValue1 = _values[i*N2+k] - deltaU1 - deltaV1;
 
 		retValue = (retValue+retValue1)/2.0;
 

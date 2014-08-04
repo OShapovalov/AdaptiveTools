@@ -4,19 +4,19 @@
 #include "OmpTechnology.h"
 #include "SerialTechnology.h"
 
-#ifdef TPL_CILK
+#ifdef PTL_CILK
 #include "CilkTechnology.h"
 #endif
 
-#ifdef TPL_PPL
+#ifdef PTL_PPL
 #include "PPLTechnology.h"
 #endif
 
-#ifdef TPL_TBB
+#ifdef PTL_TBB
 #include "TBBTechnology.h"
 #endif
 
-#ifdef TPL_BOOST
+#ifdef PTL_BOOST
 #include "BoostTechnology.h"
 #endif
 
@@ -270,19 +270,19 @@ ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.xml"*/) :_read(false
         _technologies.push_back(std::make_shared<SerialTechnology>());
         _technologies.push_back(std::make_shared<OmpTechnology>());
 
-#ifdef TPL_PPL
+#ifdef PTL_PPL
         _technologies.push_back(std::make_shared<PPLTechnology>());
 #endif
 
-#ifdef TPL_TBB
+#ifdef PTL_TBB
         _technologies.push_back(std::make_shared<TBBTechnology>());
 #endif
 
-#ifdef TPL_BOOST
+#ifdef PTL_BOOST
         _technologies.push_back(std::make_shared<BoostTechnology>());
 #endif
 
-#ifdef TPL_CILK
+#ifdef PTL_CILK
         _technologies.push_back(std::make_shared<CilkTechnology>());
 #endif
     }
@@ -465,22 +465,22 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iNa
     if (iName == "OpenMP")
         return std::make_shared<OmpTechnology>();
 
-    #ifdef TPL_PPL
+    #ifdef PTL_PPL
     if (iName == "PPL")
         return std::make_shared<PPLTechnology>();
 #endif
 
-    #ifdef TPL_TBB
+    #ifdef PTL_TBB
     if (iName == "TBB")
         return std::make_shared<TBBTechnology>();
     #endif
 
-    #ifdef TPL_CILK
+    #ifdef PTL_CILK
     if (iName == "Cilk Plus")
         return std::make_shared<CilkTechnology>();
     #endif
 
-    #ifdef TPL_BOOST
+    #ifdef PTL_BOOST
     if (iName == "Boost Threads")
         return std::make_shared<BoostTechnology>();
     #endif
@@ -503,20 +503,20 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iNam
 {
     if (iName == OpenMP)
         return std::make_shared<OmpTechnology>();
-#ifdef TPL_PPL
+#ifdef PTL_PPL
     if (iName == PPL)
         return std::make_shared<PPLTechnology>();
 #endif
 
-    #ifdef TPL_TBB
+    #ifdef PTL_TBB
     if (iName == TBB)
         return std::make_shared<TBBTechnology>();
     #endif
-    #ifdef TPL_CILK
+    #ifdef PTL_CILK
     if (iName == CilkPlus)
         return std::make_shared<CilkTechnology>();
     #endif
-    #ifdef TPL_BOOST
+    #ifdef PTL_BOOST
     if (iName == BoostThreads)
         return std::make_shared<BoostTechnology>();
     #endif

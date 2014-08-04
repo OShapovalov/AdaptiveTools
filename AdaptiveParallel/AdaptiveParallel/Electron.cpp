@@ -1,18 +1,18 @@
 #include "Electron.h"
 //#include "cuElectron.h"
 
-//Electron::Electron( const std::vector<TPL_Point>& iPoints, float step ) : Gravity<TPL_Point>(iPoints)
+//Electron::Electron( const std::vector<PTL_Point>& iPoints, float step ) : Gravity<PTL_Point>(iPoints)
 //{
 //    Init(step);
 //}
 
-Electron::Electron( const std::vector<TPL_Point>& iPoints, float step, ParallelUtilsPtr pUtils ) : 
-                        Gravity<TPL_Point>(iPoints, pUtils)
+Electron::Electron( const std::vector<PTL_Point>& iPoints, float step, ParallelUtilsPtr pUtils ) : 
+                        Gravity<PTL_Point>(iPoints, pUtils)
 {
     Init(step);
 }
 
-void Electron::pole( TPL_Point& iPoint )
+void Electron::pole( PTL_Point& iPoint )
 {
     float v;
 
@@ -40,12 +40,12 @@ void Electron::pole( TPL_Point& iPoint )
     }
 }
 
-void Electron::FindAcceleration( TPL_Point& iPoint, float step )
+void Electron::FindAcceleration( PTL_Point& iPoint, float step )
 {
     pole(iPoint);
 }
 
-void Electron::GetAccel( TPL_Point& iPoint1, TPL_Point& iPoint2 )
+void Electron::GetAccel( PTL_Point& iPoint1, PTL_Point& iPoint2 )
 {
     std::array<float, 3> delta = { 
         iPoint1.x - iPoint2.x,
@@ -70,7 +70,7 @@ void Electron::GetAccel( TPL_Point& iPoint1, TPL_Point& iPoint2 )
     iPoint2.az +=  - F * delta[2] / r;
 }
 
-void Electron::Transform( TPL_Point& iPoint, float step )
+void Electron::Transform( PTL_Point& iPoint, float step )
 {
     iPoint.x += iPoint.vx * step + iPoint.ax * 0.5f * step * step;
     iPoint.vx += iPoint.ax * step;
@@ -92,5 +92,5 @@ void Electron::Init(float step)
     MK = (float)(M*K);//масса частицы укрупненной
 
     /*cuElectron::*/
-    //cuMalloc( (void**)cuElectrons, (int)_grid.size()*(int)sizeof(TPL_Point) );
+    //cuMalloc( (void**)cuElectrons, (int)_grid.size()*(int)sizeof(PTL_Point) );
 }

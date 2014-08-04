@@ -1,9 +1,9 @@
 #pragma once
 
-#include "TPLdefines.h"
+#include "PTLdefines.h"
 #include "ParallelTechnology.h"
 
-#ifdef TPL_CILK
+#ifdef PTL_CILK
 
 class CilkTechnology : public ParallelTechnology
 {

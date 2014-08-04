@@ -1,9 +1,9 @@
 #pragma once
 
-#include "TPLdefines.h"
+#include "PTLdefines.h"
 #include "ParallelTechnology.h"
 
-#ifdef TPL_BOOST
+#ifdef PTL_BOOST
 
 class BoostTechnology : public ParallelTechnology
 {

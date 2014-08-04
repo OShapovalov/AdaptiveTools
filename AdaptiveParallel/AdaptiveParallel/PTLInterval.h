@@ -3,13 +3,13 @@
 #include <vector>
 #include <array>
 
-class TplInterval
+class PTLInterval
 {
 
 public:
-	TplInterval(double iStart, double iEnd);
+	PTLInterval(double iStart, double iEnd);
 
-	TplInterval();
+	PTLInterval();
 
 	inline double GetStart() const {return _interval[0];};
 

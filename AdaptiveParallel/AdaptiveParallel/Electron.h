@@ -5,7 +5,7 @@
 
 #include <array>
 
-struct TPL_Point
+struct PTL_Point
 {
     float x, y, z,
             vx, vy, vz, 
@@ -15,20 +15,20 @@ struct TPL_Point
     //std::array<float,3> _accel;
 };
 
-class Electron : public Gravity<TPL_Point>
+class Electron : public Gravity<PTL_Point>
 {
 public:
-    Electron(const std::vector<TPL_Point>& iPoints, float step);
+    Electron(const std::vector<PTL_Point>& iPoints, float step);
 
-    Electron(const std::vector<TPL_Point>& iPoints, float step, ParallelUtilsPtr pUtils);
+    Electron(const std::vector<PTL_Point>& iPoints, float step, ParallelUtilsPtr pUtils);
 
-    void pole(TPL_Point& iPoint);
+    void pole(PTL_Point& iPoint);
 
-    virtual void FindAcceleration(TPL_Point& iPoint, float step) override;
+    virtual void FindAcceleration(PTL_Point& iPoint, float step) override;
 
-    virtual void GetAccel(TPL_Point& iPoint1, TPL_Point& iPoint2) override;
+    virtual void GetAccel(PTL_Point& iPoint1, PTL_Point& iPoint2) override;
 
-    virtual void Transform(TPL_Point& iPoint, float step) override;
+    virtual void Transform(PTL_Point& iPoint, float step) override;
 
 private:
 
@@ -40,5 +40,5 @@ private:
     float QK;//заряд частицы укрупненной
     float MK;//масса частицы укрупненной
 
-    TPL_Point *cuElectrons;
+    PTL_Point *cuElectrons;
 };

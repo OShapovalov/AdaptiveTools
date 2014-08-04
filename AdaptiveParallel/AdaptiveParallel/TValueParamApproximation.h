@@ -8,7 +8,7 @@
 //#include "TValueParamObject.h"
 //#include "Statistics.h"
 #include <assert.h>
-#include "TplInterval.h"
+#include "PTLInterval.h"
 #include "TValueParamObject.h"
 #include "ParallelUtils.h"
 
@@ -74,7 +74,7 @@ protected:
 
 	TValueParamApproximation(){};
 
-	virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const override
+	virtual void GetIntervals(std::vector<PTLInterval>& oIntervals) const override
 	{
 		return _object->GetIntervals(oIntervals);
 	}

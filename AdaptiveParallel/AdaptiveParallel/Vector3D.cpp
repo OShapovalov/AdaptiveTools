@@ -1,7 +1,7 @@
 #include "Vector3D.h"
 #include <cmath>
 
-double & tplVector3D::operator[] (int index) 
+double & ptlVector3D::operator[] (int index) 
 {
 	if (index == 0) 
 	{
@@ -16,7 +16,7 @@ double & tplVector3D::operator[] (int index)
 	}
 }
 
-double tplVector3D::operator[] (int index) const
+double ptlVector3D::operator[] (int index) const
 {
 	if (index == 0) 
 	{
@@ -31,7 +31,7 @@ double tplVector3D::operator[] (int index) const
 	}
 }
 
-bool tplVector3D::IsEqual( const tplVector3D& iVec3D, double iTolerance )
+bool ptlVector3D::IsEqual( const ptlVector3D& iVec3D, double iTolerance )
 {
 	return ( std::abs(_x - iVec3D[0]) < iTolerance ) &&
 		( std::abs(_y - iVec3D[1]) < iTolerance ) &&

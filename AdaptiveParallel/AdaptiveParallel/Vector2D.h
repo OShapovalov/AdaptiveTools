@@ -1,52 +1,52 @@
 #pragma once
 #include <math.h>
 
-class tplVector2D
+class PTLVector2D
 {
 public:
 
-	tplVector2D():_x(0),_y(0){};
-	tplVector2D(double x, double y):_x(x),_y(y){};
-	~tplVector2D(){};
-    tplVector2D(const tplVector2D& iVec)
+	PTLVector2D():_x(0),_y(0){};
+	PTLVector2D(double x, double y):_x(x),_y(y){};
+	~PTLVector2D(){};
+    PTLVector2D(const PTLVector2D& iVec)
     {
         _x = iVec._x;
         _y = iVec._y;
     }
 
-    tplVector2D & operator = (tplVector2D const & iToCopy)
+    PTLVector2D & operator = (PTLVector2D const & iToCopy)
     {
         _x = iToCopy[0];
         _y = iToCopy[1];
         return *this;
     }
-    friend bool operator == (const tplVector2D& rv1, const tplVector2D& rv2)
+    friend bool operator == (const PTLVector2D& rv1, const PTLVector2D& rv2)
     {
         return rv1._x == rv2._x && rv1._y == rv2._y;
     }
 
-	const tplVector2D operator+(const tplVector2D& rv) const {
-		return tplVector2D(_x + rv._x, _y + rv._y);
+	const PTLVector2D operator+(const PTLVector2D& rv) const {
+		return PTLVector2D(_x + rv._x, _y + rv._y);
 	}
 
-	const tplVector2D operator-(const tplVector2D& rv) const {
-		return tplVector2D(_x - rv._x, _y - rv._y);
+	const PTLVector2D operator-(const PTLVector2D& rv) const {
+		return PTLVector2D(_x - rv._x, _y - rv._y);
 	}
 
-	const tplVector2D operator/(double rv) const {
-		return tplVector2D(_x / rv, _y / rv);
+	const PTLVector2D operator/(double rv) const {
+		return PTLVector2D(_x / rv, _y / rv);
 	}
 
 	//унарный +
-	friend const tplVector2D& operator+(const tplVector2D& i)
+	friend const PTLVector2D& operator+(const PTLVector2D& i)
 	{
 		return i;
 	}
 
 	//унарный -
-	friend const tplVector2D operator-(const tplVector2D& i)
+	friend const PTLVector2D operator-(const PTLVector2D& i)
 	{
-		return tplVector2D(-i._x,-i._y);
+		return PTLVector2D(-i._x,-i._y);
 	}
 
 	double &operator[] (int index);

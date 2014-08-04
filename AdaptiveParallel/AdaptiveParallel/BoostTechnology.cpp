@@ -1,6 +1,6 @@
 #include "BoostTechnology.h"
 
-#ifdef TPL_BOOST
+#ifdef PTL_BOOST
 
 #include <boost/thread.hpp>
 #include <omp.h>

@@ -1,7 +1,7 @@
 
 #include "PPLTechnology.h"
 
-#ifdef TPL_PPL
+#ifdef PTL_PPL
 
 #include <ppl.h>
 #include "AbstractParallel.h"

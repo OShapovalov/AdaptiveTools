@@ -4,10 +4,10 @@
 #include "Vector3D.h"
 #include "Vector2D.h"
 
-class TVec3Vec2Object : public TValueParamObject<tplVector3D, tplVector2D> 
+class TVec3Vec2Object : public TValueParamObject<ptlVector3D, PTLVector2D> 
 {
 
 public:
 
-	using TValueParamObject<tplVector3D, tplVector2D>::operator=;
+	using TValueParamObject<ptlVector3D, PTLVector2D>::operator=;
 };

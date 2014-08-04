@@ -15,7 +15,7 @@ public:
     {
     }
 
-	virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const override
+	virtual void GetIntervals(std::vector<PTLInterval>& oIntervals) const override
 	{
 		return _object->GetIntervals(oIntervals);
 	}

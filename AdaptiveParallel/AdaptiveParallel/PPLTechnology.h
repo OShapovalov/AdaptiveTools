@@ -1,8 +1,8 @@
 #pragma once
 #include "ParallelTechnology.h"
-#include "TPLdefines.h"
+#include "PTLdefines.h"
 
-#ifdef TPL_PPL
+#ifdef PTL_PPL
 
 class PPLTechnology : public ParallelTechnology
 {

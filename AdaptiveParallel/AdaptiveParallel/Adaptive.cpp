@@ -1,11 +1,11 @@
-#include "TPLdefines.h"
+#include "PTLdefines.h"
 
 #include "TDoubleDoubleObject.h"
 #include "OutputToGrapher.h"
 #include "DoubleDoubleApproximation.h"
 #include "DoubleDoubleFunctions.h"
 #include "TValueParamObject.h"
-#include "tplForward.h"
+#include "PTLForward.h"
 #include "SurfaceFunctions.h"
 #include "TVect3Vec2Approximation.h"
 
@@ -100,8 +100,8 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
      //ParallelUtilsBase baseParallel;
 
   //   float step = 0.000000000003f;
-  //   std::vector<TPL_Point> tplPoints;
-  //   Electron ele(tplPoints, step);
+  //   std::vector<PTL_Point> PTLPoints;
+  //   Electron ele(PTLPoints, step);
 
   //   for (std::size_t i=0;i<100;++i)
   //   {

@@ -1,6 +1,6 @@
 #include "TBBTechnology.h"
 
-#ifdef TPL_TBB
+#ifdef PTL_TBB
 
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"

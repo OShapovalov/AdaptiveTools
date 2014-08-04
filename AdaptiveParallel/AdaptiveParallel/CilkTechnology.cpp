@@ -1,6 +1,6 @@
 #include "CilkTechnology.h"
 
-#ifdef TPL_CILK
+#ifdef PTL_CILK
 
 #include <cilk/cilk.h>
 //#include "CilkUtils.h"

@@ -30,7 +30,7 @@
     <ProjectGuid>{99A8664D-6FFC-42C5-AEE2-F110392880AE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AdaptiveParallel</RootNamespace>
-    <ProjectName>TPL</ProjectName>
+    <ProjectName>PTL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -236,7 +236,7 @@
     <ClCompile Include="DoubleDoubleFunctions.cpp" />
     <ClCompile Include="ParallelUtilsBase.cpp" />
     <ClCompile Include="pugixml.cpp" />
-    <ClCompile Include="TplInterval.cpp" />
+    <ClCompile Include="PTLInterval.cpp" />
     <ClCompile Include="Electron.cpp" />
     <ClCompile Include="OmpTechnology.cpp" />
     <ClCompile Include="OutputToGrapher.cpp" />
@@ -264,9 +264,9 @@
     <ClInclude Include="Puasson.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
-    <ClInclude Include="TPLdefines.h" />
-    <ClInclude Include="tplForward.h" />
-    <ClInclude Include="TplInterval.h" />
+    <ClInclude Include="PTLdefines.h" />
+    <ClInclude Include="PTLForward.h" />
+    <ClInclude Include="PTLInterval.h" />
     <ClInclude Include="LinearApproximation.h" />
     <ClInclude Include="Numerical.h" />
     <ClInclude Include="ObjectApproximation.h" />

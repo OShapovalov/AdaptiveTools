@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "TplInterval.h"
+#include "PTLInterval.h"
 #include "Vector2D.h"
 #include "Vector3D.h"
 #include "TParamObjectPolicy.h"
@@ -18,7 +18,7 @@ public:
 		std::vector<std::size_t>& oDimensions)
 	{
 		// получить интервалы и заполнить
-		std::vector<TplInterval> intervals;
+		std::vector<PTLInterval> intervals;
 		GetIntervals(intervals);
 
 		std::size_t NDim = intervals.size();
@@ -38,11 +38,11 @@ public:
 		oDimensions.resize(NDim, linearN);
 	}
 
-	virtual void GetIntervals(std::vector<TplInterval>& oIntervals) const = 0;
+	virtual void GetIntervals(std::vector<PTLInterval>& oIntervals) const = 0;
 
-	virtual TplInterval GetInterval(int iDim = 0) const
+	virtual PTLInterval GetInterval(int iDim = 0) const
 	{
-		std::vector<TplInterval> intervals;
+		std::vector<PTLInterval> intervals;
 		GetIntervals(intervals);
 		return intervals[iDim];
 	}
@@ -55,7 +55,7 @@ protected:
 
 private:
 
-	static void GetParamsForInterval(const TplInterval& iInterval, std::size_t N, std::vector<double>& oParams)
+	static void GetParamsForInterval(const PTLInterval& iInterval, std::size_t N, std::vector<double>& oParams)
 	{
 		double start = iInterval.GetStart();
 		double end = iInterval.GetEnd();

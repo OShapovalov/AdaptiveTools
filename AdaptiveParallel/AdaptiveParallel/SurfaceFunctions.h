@@ -2,15 +2,15 @@
 
 #include "Vector3D.h"
 #include "Vector2D.h"
-#include "TplInterval.h"
+#include "PTLInterval.h"
 #include "TValueParamObject.h"
 
-class TSomeSurface : public TValueParamObject<tplVector3D, tplVector2D>
+class TSomeSurface : public TValueParamObject<ptlVector3D, PTLVector2D>
 {
 public:
 
-	tplVector3D Evaluate(const tplVector2D& params) const override;
+	ptlVector3D Evaluate(const PTLVector2D& params) const override;
 
-	void GetIntervals(std::vector<TplInterval>& oIntervals) const override;
+	void GetIntervals(std::vector<PTLInterval>& oIntervals) const override;
 
 };

@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <memory>
 
-tplVector3D TSomeSurface::Evaluate( const tplVector2D& params ) const 
+ptlVector3D TSomeSurface::Evaluate( const PTLVector2D& params ) const 
 {
     int N = 300;
     float* a = new float[N*N];
@@ -26,12 +26,12 @@ tplVector3D TSomeSurface::Evaluate( const tplVector2D& params ) const
     //Sleep(100);
 	double u = params[0], v = params[1];
 	//return Vector3D(u,v,0);
-	return tplVector3D(u,v,u*sin(2*v));
+	return ptlVector3D(u,v,u*sin(2*v));
 }
 
-void TSomeSurface::GetIntervals(std::vector<TplInterval>& oIntervals) const
+void TSomeSurface::GetIntervals(std::vector<PTLInterval>& oIntervals) const
 {
 	oIntervals.clear();
-	oIntervals.push_back(TplInterval(0,1));
-	oIntervals.push_back(TplInterval(0,1));
+	oIntervals.push_back(PTLInterval(0,1));
+	oIntervals.push_back(PTLInterval(0,1));
 }

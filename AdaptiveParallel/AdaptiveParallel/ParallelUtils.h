@@ -1,10 +1,10 @@
 #pragma once
 
-#include "TPLdefines.h"
+#include "PTLdefines.h"
 
 #include <functional>
 #include "ParallelTechnology.h"
-#include "tplForward.h"
+#include "PTLForward.h"
 #include <vector>
 //#include "ParallelUtilsBase.h"
 
@@ -14,16 +14,16 @@ enum Technology
 {
     Serial,
     OpenMP,
-#ifdef TPL_PPL
+#ifdef PTL_PPL
     PPL,
 #endif
-#ifdef TPL_TBB
+#ifdef PTL_TBB
     TBB,
 #endif
-#ifdef TPL_CILK
+#ifdef PTL_CILK
     CilkPlus,
 #endif
-#ifdef TPL_BOOST
+#ifdef PTL_BOOST
     BoostThreads,
 #endif
 };
