@@ -172,7 +172,8 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     // создаем класс, управляющий параллелизмом в проекте
     ParallelUtilsBase baseParallel; 
     // добавляем обработку нового цикла
-    auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.xml");
+    //auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.xml");
+    auto pUtils = baseParallel.AddNewParUtils(technologies, "test.xml");
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
     pUtils->RunInParallel([&](int i)

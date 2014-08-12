@@ -94,6 +94,14 @@ protected:
 
     void SynchronizeTechnologies();
 
+    void ReadCommonStatistics();
+
+    void ReadSingleStatistics();
+
+    void WriteCommonStatistics() const;
+
+    void WriteSingleStatistics() const;
+
     bool _read;
     int _index;
 

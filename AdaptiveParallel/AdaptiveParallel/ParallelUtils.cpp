@@ -311,17 +311,12 @@ void ParallelUtils::Synchronize( int index )
 
 bool ParallelUtils::FileExists() const
 {
-    return std::ifstream(_tag, std::ios::in | std::ios::_Nocreate) != NULL;
+    return ! ( std::ifstream(_tag, std::ios::in | std::ios::_Nocreate) == NULL 
+            && std::ifstream( "single_" + _tag, std::ios::in | std::ios::_Nocreate) == NULL);
 }
 
-void ParallelUtils::ReadSettingsFromFile()
+void ParallelUtils::ReadCommonStatistics()
 {
-    if (!FileExists())
-    {
-        _read = false;
-        return;
-    }
-
     bool endTech = false;
     _statistics = std::make_shared<ParallelTimes>();
 
@@ -367,8 +362,8 @@ void ParallelUtils::ReadSettingsFromFile()
     _sortedTimes = _statistics->_times;
     std::sort(_sortedTimes.begin(), _sortedTimes.end(),
         [](std::pair<int,std::vector<double>>& p1, std::pair<int,std::vector<double>>& p2)
-            {return p1.first < p2.first;}
-        );
+    {return p1.first < p2.first;}
+    );
 
     for (std::size_t i=1; i<_sortedTimes.size();++i)
     {
@@ -382,34 +377,63 @@ void ParallelUtils::ReadSettingsFromFile()
             --i;
         }
     }
-
-    fjfjfjf
-    //auto singleStatistics = doc.child("singleStatistics");
-    //for (pugi::xml_node tool = singleStatistics.first_child(); tool; tool = tool.next_sibling())
-    //{
-    //    auto iter = tool.first_child();
-    //    auto pr = iter.first_child();
-    //    int iterations = atoi(iter.value());
-
-    //    std::vector<double> times;
-
-    //    auto times_txt = iter.next_sibling();
-    //    for (pugi::xml_node toolInner = times_txt.first_child(); toolInner; toolInner = toolInner.next_sibling())
-    //    {
-    //        auto val = toolInner.first_child().value();
-    //        //std::cout << val << std::endl;
-    //        times.push_back(atof(val));
-    //    }
-
-    //    _statistics->Add(iterations, times);
-    //}
 }
 
-void ParallelUtils::WriteToFile() const
+void ParallelUtils::ReadSingleStatistics()
+{
+    std::string singleName = "single_" + _tag;
+
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(singleName.c_str());
+    if (result)
+        std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
+    else
+    {
+        std::cout << "XML parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
+        std::cout << "Error description: " << result.description() << "\n";
+        std::cout << "Error offset: " << result.offset << " (error at [..." << (result.offset) << "]\n\n";
+    }
+
+    auto techs = doc.child("technologies");
+    for (pugi::xml_node tool = techs.first_child(); tool; tool = tool.next_sibling())
+    {
+        auto name = tool.child("name");
+        auto cycles = tool.child("cycles");
+
+        auto techno = GetTechnologyByName(std::string(name.first_child().value()));
+        //_technologies.push_back(techno);
+        _singleStatistics.push_back( std::vector< std::pair<int,double> >() );
+
+        for (pugi::xml_node tool2 = cycles.first_child(); tool2; tool2 = tool2.next_sibling())
+        {
+            auto iter = tool2.child("iterations");
+            auto time = tool2.child("time");
+
+            int iterations = atoi(iter.first_child().value());
+            auto val = atof(time.first_child().value());
+
+            _singleStatistics.back().push_back( std::make_pair(iterations, val) );
+        }
+    }
+}
+
+void ParallelUtils::ReadSettingsFromFile()
+{
+    if (!FileExists())
+    {
+        _read = false;
+        return;
+    }
+
+    ReadCommonStatistics();
+
+    ReadSingleStatistics();
+}
+
+void ParallelUtils::WriteCommonStatistics() const
 {
     pugi::xml_document doc;
 
-    //[code_modify_add
     // add node with some name
     pugi::xml_node node = doc.append_child();
     node.set_name("technologies");
@@ -430,7 +454,7 @@ void ParallelUtils::WriteToFile() const
 
         pugi::xml_node descr = descr0.append_child();
         descr.set_name("iterations");
-    
+
         descr.append_child(pugi::node_pcdata).set_value(
             std::to_string((unsigned long long)_statistics->_times[i].first).c_str());
 
@@ -452,6 +476,58 @@ void ParallelUtils::WriteToFile() const
         }
     }
     doc.save_file(_tag.c_str());
+}
+
+void ParallelUtils::WriteSingleStatistics() const
+{
+    pugi::xml_document doc;
+
+    // add node with some name
+    pugi::xml_node node = doc.append_child();
+    node.set_name("technologies");
+
+    for (std::size_t i=0;i<_technologies.size();++i)
+    {
+        // add description node with text child
+        pugi::xml_node descr = node.append_child();
+        descr.set_name("technology");
+
+        pugi::xml_node name = descr.append_child();
+        name.set_name("name");
+        name.append_child(pugi::node_pcdata).set_value(_technologies[i]->GetName().c_str());
+
+        pugi::xml_node cycles = descr.append_child();
+        cycles.set_name("cycles");
+
+        for (std::size_t k=0; k<_singleStatistics[i].size(); ++k)
+        {
+            pugi::xml_node cycle = cycles.append_child();
+            cycle.set_name("cycle");
+
+            pugi::xml_node iter = cycle.append_child();
+            iter.set_name("iterations");
+            iter.append_child(pugi::node_pcdata).set_value(std::to_string((unsigned long long)_singleStatistics[i][k].first).c_str());
+
+            pugi::xml_node time = cycle.append_child();
+            time.set_name("time");
+
+            std::ostringstream strs;
+            strs << _singleStatistics[i][k].second;
+            std::string str = strs.str();
+
+            time.append_child(pugi::node_pcdata).set_value(str.c_str());
+        }
+    }
+
+    doc.save_file(("single_"+_tag).c_str());
+    //doc.save_file("mytest.xml");
+}
+
+void ParallelUtils::WriteToFile() const
+{
+    WriteCommonStatistics();
+
+    WriteSingleStatistics();
 }
 
 bool ParallelUtils::TryRead()
