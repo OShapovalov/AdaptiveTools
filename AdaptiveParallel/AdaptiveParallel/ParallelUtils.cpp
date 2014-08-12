@@ -523,9 +523,11 @@ void ParallelUtils::WriteSingleStatistics() const
     //doc.save_file("mytest.xml");
 }
 
-void ParallelUtils::WriteToFile() const
+void ParallelUtils::WriteToFile()
 {
     WriteCommonStatistics();
+
+    ConvertCommonStatisticsToSingle();
 
     WriteSingleStatistics();
 }
@@ -618,4 +620,22 @@ void ParallelUtils::CompareRealizations( const std::vector< std::function<void (
 void ParallelTimes::Add(int N, const std::vector<double>& times )
 {
     _times.push_back(std::make_pair(N,times));
+}
+
+void ParallelUtils::ConvertCommonStatisticsToSingle()
+{
+    for (std::size_t i=0; i<_statistics->_times.size(); ++i)
+    {
+        for (std::size_t k=0; k<_statistics->_times[i].second.size(); ++k)
+        {
+            auto par = std::make_pair(_statistics->_times[i].first, _statistics->_times[i].second[i]);
+            if ( std::find_if( _singleStatistics[i].begin(), _singleStatistics[i].end(),
+                [&par](const std::pair<int, double>& checkPair)
+                    {
+                        return checkPair.first == par.first && checkPair.second == par.second;
+                    }
+                ) == _singleStatistics[i].end() )
+                    _singleStatistics[i].push_back( par );
+        }
+    }
 }

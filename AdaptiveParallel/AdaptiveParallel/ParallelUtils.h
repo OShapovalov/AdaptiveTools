@@ -73,7 +73,7 @@ public:
 
     void ReadSettingsFromFile();
 
-    void WriteToFile() const;
+    void WriteToFile();
 
     bool TryRead();
 
@@ -101,6 +101,8 @@ protected:
     void WriteCommonStatistics() const;
 
     void WriteSingleStatistics() const;
+
+    void ConvertCommonStatisticsToSingle();
 
     bool _read;
     int _index;
