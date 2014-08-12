@@ -29,7 +29,7 @@ public:
 
     void SetLearning(bool learning);
 
-    const ParallelUtilsPtr& AddNewParUtils(std::string iTag /*= "Settings.xml"*/);
+    //const ParallelUtilsPtr& AddNewParUtils(std::string iTag /*= "Settings.xml"*/);
 
     const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 

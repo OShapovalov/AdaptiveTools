@@ -44,7 +44,7 @@ class ParallelUtils
 
 public:
 
-    ParallelUtils(std::string iTag /*= "Settings.xml"*/);
+    //ParallelUtils(std::string iTag /*= "Settings.xml"*/);
 
     ParallelUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 
@@ -69,13 +69,11 @@ public:
 
     void Synchronize(int index);
 
-    bool FileExists() const;
+    static bool FileExists(const std::string& iName);
 
     void ReadSettingsFromFile();
 
     void WriteToFile();
-
-    bool TryRead();
 
     ParallelTechnologyPtr GetTechnologyByName(const std::string& iName);
 
@@ -104,10 +102,10 @@ protected:
 
     void ConvertCommonStatisticsToSingle();
 
-    bool _read;
-    int _index;
+    bool _learning;
+    //int _index;
 
-    bool _readButNew;
+    //bool _readButNew;
 
     // режим самообучения по мотивам метода отжига
     bool _autoLearning;

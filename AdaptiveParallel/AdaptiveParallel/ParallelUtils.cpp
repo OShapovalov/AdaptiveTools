@@ -121,7 +121,10 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
                         return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
                     }
                     );
-                mPi[i] = 1.0/std::abs((*it).first-iterations)/(*it).second;
+                if ( (*it).first == iterations )
+                    mPi[i] = 1.0/iterations/(*it).second/vec.size();
+                else
+                    mPi[i] = 1.0/( (double)std::abs((*it).first-iterations) / iterations)/(*it).second/vec.size();
             } 
         }
 
@@ -150,14 +153,32 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             iTechnologies[index]->Run(f, iStart, iEnd) : 
         iAddImpl[index-iTechnologies.size()].first(iStart, iEnd);
      
-        //auto pr = std::make_pair(iEnd-iStart, time);
-        //_singleStatistics[index].push_back(5);
+        auto pr = std::make_pair(iEnd-iStart, time);
+
+        auto vec = _singleStatistics[index];
+        auto it = std::min_element(vec.begin(),vec.end(), 
+            [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
+        {
+            return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
+        }
+        );
+        if (it->first != iEnd-iStart)
+            _singleStatistics[index].push_back(pr);
+        else
+            it->second  = (it->second + time) * 0.5;
 
         return;
     }
 
+    auto it = std::min_element( _statistics->_times.begin(), _statistics->_times.end(), 
+        [iEnd, iStart](const std::pair<int, std::vector<double>>& stat1, const std::pair<int, std::vector<double>>& stat2) 
+        {
+        return std::abs(stat1.first - (iEnd-iStart)) < std::abs(stat2.first - (iEnd-iStart));
+        }
+        );
+
     // если нет прочитанной статистики
-    if (!_read)
+    if (_learning)
     {
         //запускаем с каждой технологией
         std::vector<double> times(iTechnologies.size()+iAddImpl.size(),-1.0);
@@ -180,10 +201,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
         return;
     }
     else // если есть записанная статистика для данного числа итераций 
-        if (!_readButNew && 
-                _index<_statistics->_times.size() && 
-                (iEnd-iStart ==  _statistics->_times[_index].first) 
-                && iTechnologies.size()+iAddImpl.size() == _statistics->_times.front().second.size())
+        if ( it != _statistics->_times.end() )
     {
         // выбираем технологию в зависимости от стратегии выполнения
         switch (_baseUtils->GetStrategy())
@@ -198,7 +216,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             _baseUtils->GetBestTechnology()->Run(f, iStart, iEnd);
             break;
         case OnlyBestStrategy:      
-            const std::vector<double>& times = _statistics->_times[_index++].second;
+            const std::vector<double>& times = it->second;
             auto best = std::min_element(times.begin(), times.end()) - times.begin();
             auto time = ( best < (int)iTechnologies.size() ) ?  
                 iTechnologies[best]->Run(f, iStart, iEnd) : 
@@ -212,95 +230,52 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
         }
 
     }
-
-    if (!_readButNew)
-    {
-        if ( _index>=_statistics->_times.size() || (iEnd-iStart !=  _statistics->_times[_index].first) )
-            _readButNew = true;
-    }
-
-    if (_readButNew)
-    {
-        std::vector<double> times(iTechnologies.size()+iAddImpl.size(),-1.0);
-        for (std::size_t i=0; i<iTechnologies.size(); ++i)
-        {
-            times[i] = iTechnologies[i]->Run(f, iStart, iEnd);
-            std::cout << iTechnologies[i]->GetName().c_str() << ": " << times[i] << std::endl;
-        }
-
-        for (std::size_t i=0;i<iAddImpl.size();++i)
-        {
-            times[iTechnologies.size() + i] = iAddImpl[i].first(iStart, iEnd);
-            std::cout << "AddImpl" << i << ": " << times[iTechnologies.size() + i] << std::endl;
-        }
-
-        _statistics->Add(iEnd-iStart, times); 
-
-        //auto index = std::lower_bound(_sortedTimes.begin(),_sortedTimes.end(), iEnd - iStart,
-        //    [](const std::pair<int,std::vector<double>>& p1, int p2)
-        //{ return p1.first < p2; }
-        //) - _sortedTimes.begin();
-
-        //double percent = (iEnd-iStart - _sortedTimes[index-1].first) / (_sortedTimes[index].first - _sortedTimes[index-1].first);
-
-        //std::vector<double> times(_technologies.size());
-        //for (std::size_t i=0;i<times.size();++i)
-        //{
-        //    times[i] = _sortedTimes[index-1].second[i]*(1 - percent) + _sortedTimes[index].second[i]*percent;
-        //}
-
-        //auto best = std::min_element(times.begin(), times.end()) - times.begin();
-        //auto time = ( best < (int)iTechnologies.size() ) ?  
-        //    iTechnologies[best]->Run(f, iStart, iEnd) : 
-        //iAddImpl[best-iTechnologies.size()].first(iStart, iEnd);
-
-        //if (best < (int)iTechnologies.size()) 
-        //    std::cout << iTechnologies[best]->GetName().c_str() << ": " << time << std::endl;
-        //else
-        //    std::cout << "AddImpl" << best-iTechnologies.size() << ": " << time << std::endl;
-    }
 }
 
-ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.xml"*/) :_read(false),_index(0),_tag(iTag),_readButNew(false)
-{
-    if (!TryRead())
-    {
-        _statistics = std::make_shared<ParallelTimes>();
-
-        _technologies.push_back(std::make_shared<SerialTechnology>());
-        _technologies.push_back(std::make_shared<OmpTechnology>());
-
-#ifdef PTL_PPL
-        _technologies.push_back(std::make_shared<PPLTechnology>());
-#endif
-
-#ifdef PTL_TBB
-        _technologies.push_back(std::make_shared<TBBTechnology>());
-#endif
-
-#ifdef PTL_BOOST
-        _technologies.push_back(std::make_shared<BoostTechnology>());
-#endif
-
-#ifdef PTL_CILK
-        _technologies.push_back(std::make_shared<CilkTechnology>());
-#endif
-    }
-
-    //_singleStatistics.resize(_technologies.size());
-}
+//ParallelUtils::ParallelUtils(std::string iTag /*= "Settings.xml"*/) :_learning(false),_tag(iTag)
+//{
+//    if (!TryRead())
+//    {
+//        _statistics = std::make_shared<ParallelTimes>();
+//
+//        _technologies.push_back(std::make_shared<SerialTechnology>());
+//        _technologies.push_back(std::make_shared<OmpTechnology>());
+//
+//#ifdef PTL_PPL
+//        _technologies.push_back(std::make_shared<PPLTechnology>());
+//#endif
+//
+//#ifdef PTL_TBB
+//        _technologies.push_back(std::make_shared<TBBTechnology>());
+//#endif
+//
+//#ifdef PTL_BOOST
+//        _technologies.push_back(std::make_shared<BoostTechnology>());
+//#endif
+//
+//#ifdef PTL_CILK
+//        _technologies.push_back(std::make_shared<CilkTechnology>());
+//#endif
+//    }
+//
+//    //_singleStatistics.resize(_technologies.size());
+//}
 
 ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/) :
-                                _read(false),_index(0),_tag(iTag),_readButNew(false)
+                                _learning(false),_tag(iTag)
 {
-    if (!TryRead())
-    {
+    ReadSettingsFromFile();
+
+    if (!_statistics)
         _statistics = std::make_shared<ParallelTimes>();
 
-        for (std::size_t i=0; i<iTechnologies.size(); ++i)
-        {
-            _technologies.push_back( GetTechnologyByEnum(iTechnologies[i]) );
-        }
+    for (std::size_t i=0; i<iTechnologies.size(); ++i)
+    {
+        auto tech = GetTechnologyByEnum(iTechnologies[i]);
+        if (std::find_if(_technologies.begin(), _technologies.end(),
+            [tech](ParallelTechnologyPtr techno)
+            {return tech->GetEnum() == techno->GetEnum();}) == _technologies.end())
+            _technologies.push_back( tech );
     }
 }
 
@@ -309,21 +284,25 @@ void ParallelUtils::Synchronize( int index )
     _technologies[index]->Synchronize();
 }
 
-bool ParallelUtils::FileExists() const
+bool ParallelUtils::FileExists(const std::string& iName)
 {
-    return ! ( std::ifstream(_tag, std::ios::in | std::ios::_Nocreate) == NULL 
-            && std::ifstream( "single_" + _tag, std::ios::in | std::ios::_Nocreate) == NULL);
+    return ! std::ifstream(iName, std::ios::in | std::ios::_Nocreate) == NULL ;
 }
 
 void ParallelUtils::ReadCommonStatistics()
 {
+    if (!FileExists(_tag))
+    {
+        return;
+    }
+
     bool endTech = false;
     _statistics = std::make_shared<ParallelTimes>();
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(_tag.c_str());
     if (result)
-        std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
+        ;//std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
     else
     {
         std::cout << "XML parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
@@ -381,12 +360,17 @@ void ParallelUtils::ReadCommonStatistics()
 
 void ParallelUtils::ReadSingleStatistics()
 {
-    std::string singleName = "single_" + _tag;
+    std::string singleName = "single_" + _tag;    
+    
+    if (!FileExists(singleName))
+    {
+        return;
+    }
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(singleName.c_str());
     if (result)
-        std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
+        ;//std::cout << "XML parsed without errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n\n";
     else
     {
         std::cout << "XML parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
@@ -419,12 +403,6 @@ void ParallelUtils::ReadSingleStatistics()
 
 void ParallelUtils::ReadSettingsFromFile()
 {
-    if (!FileExists())
-    {
-        _read = false;
-        return;
-    }
-
     ReadCommonStatistics();
 
     ReadSingleStatistics();
@@ -486,7 +464,7 @@ void ParallelUtils::WriteSingleStatistics() const
     pugi::xml_node node = doc.append_child();
     node.set_name("technologies");
 
-    for (std::size_t i=0;i<_technologies.size();++i)
+    for (std::size_t i=0;i<_singleStatistics.size();++i)
     {
         // add description node with text child
         pugi::xml_node descr = node.append_child();
@@ -494,7 +472,16 @@ void ParallelUtils::WriteSingleStatistics() const
 
         pugi::xml_node name = descr.append_child();
         name.set_name("name");
-        name.append_child(pugi::node_pcdata).set_value(_technologies[i]->GetName().c_str());
+        if (i < _technologies.size())
+            name.append_child(pugi::node_pcdata).set_value(_technologies[i]->GetName().c_str());
+        else
+        {
+            std::ostringstream strs;
+            strs << "AddImpl" << i-_technologies.size();
+            std::string str = strs.str();
+
+            name.append_child(pugi::node_pcdata).set_value( str.c_str());
+        }
 
         pugi::xml_node cycles = descr.append_child();
         cycles.set_name("cycles");
@@ -532,12 +519,6 @@ void ParallelUtils::WriteToFile()
     WriteSingleStatistics();
 }
 
-bool ParallelUtils::TryRead()
-{
-    ReadSettingsFromFile();
-    return _read;
-}
-
 ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iName )
 {
     if (iName == "OpenMP")
@@ -571,10 +552,10 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByName( const std::string& iNa
 
 ParallelUtils::~ParallelUtils()
 {
-    if (_readButNew || ( !_read && !_statistics->_times.empty()) )
-    {
+    //if (_readButNew || ( !_read && !_statistics->_times.empty()) )
+    //{
         WriteToFile();
-    }
+    //}
 }
 
 ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iName )

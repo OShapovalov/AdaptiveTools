@@ -133,9 +133,9 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 
 	 const int N = 256;
 
-	 float* a = new float[N*N];
-	 float* b = new float[N*N];
-	 float* res = new float[N*N];
+	 float* a = new float[(N+900)*(N+900)];
+	 float* b = new float[(N+900)*(N+900)];
+	 float* res = new float[(N+900)*(N+900)];
 
      std::fill(a,&a[N*N], 1.0f);
      std::fill(b,&b[N*N], 2.0f);
@@ -176,6 +176,8 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     auto pUtils = baseParallel.AddNewParUtils(technologies, "test.xml");
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
+
+    for (int k=0;k<10;++k)
     pUtils->RunInParallel([&](int i)
     {
         for(int j=0;j<N;j++)
@@ -184,7 +186,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
             for (int k=0;k<N;k++) 
                 res[i*N+j]+=a[i*N+k]*b[k*N+j];
         }
-    } , 0, N, addImpls);
+    } , 0, N + 100*k, addImpls);
 
 	delete[] a;
 	delete[] b;
