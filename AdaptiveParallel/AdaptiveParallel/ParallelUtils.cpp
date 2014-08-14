@@ -31,7 +31,7 @@
 #include "ParallelUtilsBase.h"
 #include "pugixml.hpp"
 
-void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd )
 {    
     if (_baseUtils->IsTechnologySetted())
     {
@@ -44,7 +44,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
     return RunInParallel(f, iStart, iEnd, _technologiesName);
 }
 
-void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair< std::function<double (int,int)>, bool > >& iAddImpl )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector< std::pair< IManyFunction, bool > >& iAddImpl )
 {
     if (_baseUtils->IsTechnologySetted())
     {
@@ -66,17 +66,17 @@ void ParallelUtils::SynchronizeTechnologies()
     }
 }
 
-void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector<Technology>& iTechnologies )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector<Technology>& iTechnologies )
 {
     if (_baseUtils->IsTechnologySetted())
     {
         return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies());
     }
-    return RunInParallel(f, iStart, iEnd, std::vector<std::pair<std::function<double (int,int)> , bool>>(), iTechnologies);
+    return RunInParallel(f, iStart, iEnd, std::vector<std::pair<IManyFunction , bool>>(), iTechnologies);
 }
 
-void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-    const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+    const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
     const std::vector<Technology>& iTechnologies )
 {
     if (_baseUtils->IsTechnologySetted())
@@ -93,7 +93,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
     return RunInParallel(f, iStart, iEnd, iAddImpl, ptechs);
 }
 
-void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::vector<ParallelTechnologyPtr>& iTechnologies )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, const std::vector<ParallelTechnologyPtr>& iTechnologies )
 {
     if (_autoLearning)
     {
@@ -112,7 +112,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             // получаем ближайшее значение статистики
             auto vec = _singleStatistics[i];
             if (vec.empty())
-                mPi[i] = 10.0;
+                mPi[i] = (double)iterations * iterations * iterations;
             else
             {
                 auto it = std::min_element(vec.begin(),vec.end(), 
@@ -121,10 +121,15 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
                         return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
                     }
                     );
-                if ( (*it).first == iterations )
-                    mPi[i] = 1.0/iterations/(*it).second/vec.size();
-                else
-                    mPi[i] = 1.0/( (double)std::abs((*it).first-iterations) / iterations)/(*it).second/vec.size();
+                //if ( (*it).first == iterations )
+                //    mPi[i] = (double)iterations*(*it).first/iterations/(*it).second/vec.size();
+                //else
+                //    mPi[i] = iterations*(*it).first/ (double)std::abs((*it).first-iterations) /(*it).second/vec.size();
+
+                mPi[i] = exp( - pow( (double)std::abs( (*it).first - iterations ) / iterations, 2) )
+                            * (*it).first
+                            / (*it).second
+                            / vec.size();
             } 
         }
 
@@ -162,7 +167,7 @@ void ParallelUtils::RunInParallel( std::function<void (int)> f, int iStart, int 
             return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
         }
         );
-        if (it->first != iEnd-iStart)
+        if ( it == vec.end() || it->first != iEnd-iStart)
             _singleStatistics[index].push_back(pr);
         else
             it->second  = (it->second + time) * 0.5;
@@ -585,7 +590,7 @@ ParallelTechnologyPtr ParallelUtils::GetTechnologyByEnum( const Technology& iNam
     return nullptr;
 }
 
-void ParallelUtils::CompareRealizations( const std::vector< std::function<void (void)> >& iFunctions )
+void ParallelUtils::CompareRealizations( const std::vector< IVoidFunction >& iFunctions )
 {
     //TODO: надо что-то сделать для логичности этой функции
 

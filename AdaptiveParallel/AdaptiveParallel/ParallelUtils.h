@@ -50,22 +50,22 @@ public:
 
     ~ParallelUtils();
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd );
+    void RunInParallel( IAloneFunction f, int iStart, int iEnd );
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl);
+    void RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+        const std::vector< std::pair<IManyFunction , bool > >& iAddImpl);
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
+    void RunInParallel( IAloneFunction f, int iStart, int iEnd, 
         const std::vector<Technology>& iTechnologies);
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
+    void RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+        const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
         const std::vector<Technology>& iTechnologies);
 
     // для сравнения двух алгоритмов
-    void CompareRealizations( const std::vector< std::function<void (void)> >& iFunctions);
+    void CompareRealizations( const std::vector< IVoidFunction >& iFunctions);
 
-    int RunInAnotherThread( std::function<void (void)> f ); 
+    int RunInAnotherThread( IVoidFunction f ); 
 
     void Synchronize(int index);
 
@@ -84,10 +84,30 @@ public:
         return _tag;
     }
 
+    void SetLearning(bool iLearning)
+    {
+        _learning = iLearning;
+    }
+
+    bool GetLearning()
+    {
+        return _learning;
+    }
+
+    void SetAutoLearning(bool iLearning)
+    {
+        _autoLearning = iLearning;
+    }
+
+    bool GetAutoLearning()
+    {
+        return _autoLearning;
+    }
+
 protected:
 
-    void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-        const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, 
+    void RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+        const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
         const std::vector<ParallelTechnologyPtr>& iTechnologies );
 
     void SynchronizeTechnologies();

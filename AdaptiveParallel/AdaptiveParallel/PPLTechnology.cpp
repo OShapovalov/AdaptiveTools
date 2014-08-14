@@ -6,7 +6,7 @@
 #include <ppl.h>
 #include "AbstractParallel.h"
 
-double PPLTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
+double PPLTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
 
@@ -17,7 +17,7 @@ double PPLTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     return time;
 }
 
-void PPLTechnology::RunSpawn( std::function<void (void)> f )
+void PPLTechnology::RunSpawn( IVoidFunction f )
 {
     //#pragma omp task
     {

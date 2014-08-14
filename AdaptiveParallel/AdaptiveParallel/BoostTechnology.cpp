@@ -9,7 +9,7 @@
 using namespace boost;
 using namespace boost::this_thread;
 
-double BoostTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
+double BoostTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
 
@@ -32,7 +32,7 @@ double BoostTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     return time;
 }
 
-void BoostTechnology::RunSpawn( std::function<void (void)> f )
+void BoostTechnology::RunSpawn( IVoidFunction f )
 {
     //#pragma omp task
     {

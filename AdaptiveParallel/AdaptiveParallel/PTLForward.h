@@ -3,6 +3,10 @@
 #include <memory>
 #include <functional>
 
+typedef std::function<void (int)> IAloneFunction;
+typedef std::function<double (int, int)> IManyFunction;
+typedef std::function<void (void)> IVoidFunction;
+
 class TDoubleDoubleApproximation;
 typedef std::shared_ptr<TDoubleDoubleApproximation> ApproximationPtr;
 

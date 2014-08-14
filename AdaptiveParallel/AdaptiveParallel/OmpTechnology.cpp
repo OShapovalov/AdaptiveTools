@@ -1,7 +1,7 @@
 #include "OmpTechnology.h"
 #include "AbstractParallel.h"
 
-double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
+double OmpTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
     int i;
@@ -17,7 +17,7 @@ double OmpTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     return time;
 }
 
-void OmpTechnology::RunSpawn( std::function<void (void)> f )
+void OmpTechnology::RunSpawn( IVoidFunction f )
 {
 //#pragma omp task
     {

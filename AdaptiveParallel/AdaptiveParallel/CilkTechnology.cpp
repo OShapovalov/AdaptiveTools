@@ -8,7 +8,7 @@
 
 #include "AbstractParallel.h"
 
-double CilkTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
+double CilkTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
 
@@ -21,7 +21,7 @@ double CilkTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     return time;
 }
 
-void CilkTechnology::RunSpawn( std::function<void (void)> f )
+void CilkTechnology::RunSpawn( IVoidFunction f )
 {
     cilk_spawn f();
 }

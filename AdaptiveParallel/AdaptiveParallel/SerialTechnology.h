@@ -5,9 +5,9 @@ class SerialTechnology : public ParallelTechnology
 {
 public:
 
-    virtual double Run(std::function<void (int)> f, int iStart, int iEnd) override;
+    virtual double Run(IAloneFunction f, int iStart, int iEnd) override;
 
-    virtual void RunSpawn(std::function<void (void)> f) override; 
+    virtual void RunSpawn(IVoidFunction f) override; 
 
     virtual void Synchronize() override
     {

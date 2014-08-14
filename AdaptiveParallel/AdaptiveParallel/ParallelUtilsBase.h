@@ -33,10 +33,10 @@ public:
 
     const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 
-    //void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::string& iName);
+    //void RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::string& iName);
 
-    //void RunInParallel( std::function<void (int)> f, int iStart, int iEnd, 
-    //    const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::string& iName);
+    //void RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+    //    const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, const std::string& iName);
 
     ParallelUtilsPtr GetParUtilsByName(const std::string& iName);
 

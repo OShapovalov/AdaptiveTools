@@ -152,7 +152,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
          return AbstractParallel::GetTime() - timeStart;
      };
 
-    std::function<void (int)> f1, someMethod;
+    IAloneFunction f1, someMethod;
 
     int iterStart = 0;
     int iterEnd = 10;    
@@ -166,7 +166,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
  
     // перечисляем набор реализаций для сопроцессоров
     // в данном случае - умножение матриц на видеокарте
-    std::vector<std::pair<std::function<double (int,int)>,bool>> addImpls;
+    std::vector<std::pair<IManyFunction,bool>> addImpls;
     addImpls.push_back(std::make_pair(labmdaMul,true));
 
     // создаем класс, управляющий параллелизмом в проекте
@@ -174,6 +174,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     // добавляем обработку нового цикла
     //auto pUtils = baseParallel.AddNewParUtils(technologies, "MatrixMul.xml");
     auto pUtils = baseParallel.AddNewParUtils(technologies, "test.xml");
+    pUtils->SetAutoLearning(true);
 
     // запускаем умножение матриц с выбранными  параметрами распаралеливания
 

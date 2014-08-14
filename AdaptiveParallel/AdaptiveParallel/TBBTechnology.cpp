@@ -7,7 +7,7 @@
 #include "tbb/task_scheduler_init.h"
 #include "AbstractParallel.h"
 
-double TBBTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
+double TBBTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
 
@@ -18,7 +18,7 @@ double TBBTechnology::Run( std::function<void (int)> f, int iStart, int iEnd )
     return time;
 }
 
-void TBBTechnology::RunSpawn( std::function<void (void)> f )
+void TBBTechnology::RunSpawn( IVoidFunction f )
 {
     //#pragma omp task
     {

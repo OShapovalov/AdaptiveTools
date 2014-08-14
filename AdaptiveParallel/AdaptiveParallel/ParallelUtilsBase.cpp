@@ -51,7 +51,7 @@ const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( const std::vector<Tec
     return _allUtils.back();
 }
 
-//void ParallelUtilsBase::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::string& iName )
+//void ParallelUtilsBase::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::string& iName )
 //{
 //    auto utils = GetParUtilsByName(iName);
 //    if (!utils)
@@ -59,7 +59,7 @@ const ParallelUtilsPtr& ParallelUtilsBase::AddNewParUtils( const std::vector<Tec
 //    utils->RunInParallel(f,iStart,iEnd,_pTechnologies);
 //}
 
-//void ParallelUtilsBase::RunInParallel( std::function<void (int)> f, int iStart, int iEnd, const std::vector< std::pair<std::function<double (int,int)> , bool > >& iAddImpl, const std::string& iName )
+//void ParallelUtilsBase::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, const std::string& iName )
 //{
 //    auto utils = GetParUtilsByName(iName);
 //    if (!utils)
