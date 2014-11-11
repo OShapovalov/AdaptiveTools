@@ -33,6 +33,8 @@ public:
 
     const ParallelUtilsPtr& AddNewParUtils(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
 
+    const ParallelGraphPtr& AddNewGraph(const std::vector<Technology>& iTechnologies, std::string iTag /*= "Settings.xml"*/);
+
     //void RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::string& iName);
 
     //void RunInParallel( IAloneFunction f, int iStart, int iEnd, 

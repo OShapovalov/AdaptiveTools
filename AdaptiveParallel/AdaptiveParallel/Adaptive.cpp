@@ -137,9 +137,9 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
 	 float* b = new float[(N+900)*(N+900)];
 	 float* res = new float[(N+900)*(N+900)];
 
-     std::fill(a,&a[N*N], 1.0f);
-     std::fill(b,&b[N*N], 2.0f);
-     std::fill(res,&res[N*N], 0.0f);
+     std::fill(a, &a[N * N], 1.0f);
+     std::fill(b, &b[N * N], 2.0f);
+     std::fill(res, &res[N * N], 0.0f);
 
      // создаем обертку (лямбда-функцию) для умножения матриц
      // на графическом ускорителе с замером времени
@@ -147,7 +147,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
      {
          double timeStart = AbstractParallel::GetTime();
 
-         matrixMultiply(a,b,res,end);
+         matrixMultiply(a, b, res, end);
 
          return AbstractParallel::GetTime() - timeStart;
      };
@@ -159,15 +159,15 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     
     //technologies.push_back(ParallelUtils::BoostThreads);
 
-    // перечисляем технологии для ЦП
+    // перечисляем технологии для центрального процессора
     std::vector<Technology> technologies;
     technologies.push_back(Technology::Serial);
     technologies.push_back(Technology::PPL);
  
     // перечисляем набор реализаций для сопроцессоров
     // в данном случае - умножение матриц на видеокарте
-    std::vector<std::pair<IManyFunction,bool>> addImpls;
-    addImpls.push_back(std::make_pair(labmdaMul,true));
+    std::vector< std::pair<IManyFunction, bool> > addImpls;
+    addImpls.push_back( std::make_pair(labmdaMul, true) );
 
     // создаем класс, управляющий параллелизмом в проекте
     ParallelUtilsBase baseParallel; 
@@ -176,18 +176,19 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     auto pUtils = baseParallel.AddNewParUtils(technologies, "test.xml");
     pUtils->SetAutoLearning(true);
 
-    // запускаем умножение матриц с выбранными  параметрами распаралеливания
+    // запускаем умножение матриц с выбранными  параметрами распараллеливания
 
-    for (int k=0;k<10;++k)
+    for (int k = 0; k < 10; ++k)
     pUtils->RunInParallel([&](int i)
     {
-        for(int j=0;j<N;j++)
+        for(int j = 0; j < N; j++)
         {
-            res[i*N+j]=0;
-            for (int k=0;k<N;k++) 
-                res[i*N+j]+=a[i*N+k]*b[k*N+j];
+            res[i * N + j] = 0;
+
+            for (int k = 0; k < N; k++) 
+                res[i * N + j] += a[i * N + k] * b[k * N + j];
         }
-    } , 0, N + 100*k, addImpls);
+    } , 0, N + 100 * k, addImpls);
 
 	delete[] a;
 	delete[] b;

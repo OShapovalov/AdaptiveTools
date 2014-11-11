@@ -21,7 +21,7 @@ public:
 
     virtual enum Technology GetEnum() override
     {
-        return ParallelUtils::TBB;
+        return TBB;
     }
 };
 

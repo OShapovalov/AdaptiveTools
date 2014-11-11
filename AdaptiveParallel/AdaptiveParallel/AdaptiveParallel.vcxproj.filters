@@ -215,6 +215,9 @@
     <ClInclude Include="PTLInterval.h">
       <Filter>Header Files\Adaptive</Filter>
     </ClInclude>
+    <ClInclude Include="ParallelGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

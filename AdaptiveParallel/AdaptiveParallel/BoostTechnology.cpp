@@ -9,6 +9,8 @@
 using namespace boost;
 using namespace boost::this_thread;
 
+std::vector< IVoidFunction > _functions;
+
 double BoostTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
@@ -34,15 +36,19 @@ double BoostTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 
 void BoostTechnology::RunSpawn( IVoidFunction f )
 {
-    //#pragma omp task
-    {
-        f();
-    }
+    _functions.push_back(f);
 }
 
 void BoostTechnology::Synchronize()
 {
-    //#pragma omp taskwait
+    thread_group group;
+    for(std::size_t j = 0; j < _functions.size(); j++)
+    {        
+        group.create_thread(_functions[j]);
+    } 
+    group.join_all();
+
+    _functions.clear();
 }
 
 #endif

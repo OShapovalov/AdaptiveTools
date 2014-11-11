@@ -6,6 +6,8 @@
 #include <ppl.h>
 #include "AbstractParallel.h"
 
+Concurrency::structured_task_group tasks;
+
 double PPLTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 {
     double timeStart = AbstractParallel::GetTime();
@@ -19,15 +21,14 @@ double PPLTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 
 void PPLTechnology::RunSpawn( IVoidFunction f )
 {
-    //#pragma omp task
-    {
-        f();
-    }
+    auto task = Concurrency::make_task(f);
+    tasks.run(task);
 }
 
 void PPLTechnology::Synchronize()
 {
-    //#pragma omp taskwait
+    tasks.wait();
+    tasks.cancel();
 }
 
 #endif

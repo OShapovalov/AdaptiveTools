@@ -65,10 +65,6 @@ public:
     // для сравнения двух алгоритмов
     void CompareRealizations( const std::vector< IVoidFunction >& iFunctions);
 
-    int RunInAnotherThread( IVoidFunction f ); 
-
-    void Synchronize(int index);
-
     static bool FileExists(const std::string& iName);
 
     void ReadSettingsFromFile();

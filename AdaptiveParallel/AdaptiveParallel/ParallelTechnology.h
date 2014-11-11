@@ -3,9 +3,6 @@
 #include "ParallelUtils.h"
 #include "PTLForward.h"
 
-//#define BOOST
-//#define CILK
-
 class ParallelTechnology
 {
 public:

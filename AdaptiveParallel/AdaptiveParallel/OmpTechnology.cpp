@@ -19,7 +19,7 @@ double OmpTechnology::Run( IAloneFunction f, int iStart, int iEnd )
 
 void OmpTechnology::RunSpawn( IVoidFunction f )
 {
-//#pragma omp task
+    #pragma omp task
     {
         f();
     }
@@ -27,5 +27,5 @@ void OmpTechnology::RunSpawn( IVoidFunction f )
 
 void OmpTechnology::Synchronize()
 {
-//#pragma omp taskwait
+    #pragma omp taskwait
 }

@@ -260,6 +260,7 @@
     <ClInclude Include="Gravity.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="NonGrid.h" />
+    <ClInclude Include="ParallelGraph.h" />
     <ClInclude Include="ParallelUtilsBase.h" />
     <ClInclude Include="Puasson.h" />
     <ClInclude Include="pugiconfig.hpp" />

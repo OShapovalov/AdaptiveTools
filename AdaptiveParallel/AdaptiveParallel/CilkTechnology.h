@@ -13,7 +13,7 @@ public:
 
     virtual void RunSpawn(IVoidFunction f) override; 
 
-    virtual void Synchronize() override;;
+    virtual void Synchronize() override;
 
     virtual std::string GetName() override
     {

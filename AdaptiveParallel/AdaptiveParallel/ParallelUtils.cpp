@@ -284,11 +284,6 @@ ParallelUtils::ParallelUtils( const std::vector<Technology>& iTechnologies, std:
     }
 }
 
-void ParallelUtils::Synchronize( int index )
-{
-    _technologies[index]->Synchronize();
-}
-
 bool ParallelUtils::FileExists(const std::string& iName)
 {
     return ! std::ifstream(iName, std::ios::in | std::ios::_Nocreate) == NULL ;
