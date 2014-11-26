@@ -177,8 +177,6 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
     pUtils->SetAutoLearning(true);
 
     // запускаем умножение матриц с выбранными  параметрами распараллеливания
-
-    for (int k = 0; k < 10; ++k)
     pUtils->RunInParallel([&](int i)
     {
         for(int j = 0; j < N; j++)
@@ -188,7 +186,7 @@ void matrixMultiply(float *h_A, float *h_B, float *h_C, int N)
             for (int k = 0; k < N; k++) 
                 res[i * N + j] += a[i * N + k] * b[k * N + j];
         }
-    } , 0, N + 100 * k, addImpls);
+    } , 0, N, addImpls, 3);
 
 	delete[] a;
 	delete[] b;

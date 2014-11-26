@@ -31,30 +31,31 @@
 #include "ParallelUtilsBase.h"
 #include "pugixml.hpp"
 
-void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, double iComplexity )
 {    
     if (_baseUtils->IsTechnologySetted())
     {
-        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies());
+        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies(), iComplexity);
     }
 
     if (_technologiesName.size() != _technologies.size())
         SynchronizeTechnologies();
 
-    return RunInParallel(f, iStart, iEnd, _technologiesName);
+    return RunInParallel(f, iStart, iEnd, _technologiesName, iComplexity);
 }
 
-void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector< std::pair< IManyFunction, bool > >& iAddImpl )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+    const std::vector< std::pair< IManyFunction, bool > >& iAddImpl, double iComplexity )
 {
     if (_baseUtils->IsTechnologySetted())
     {
-        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies());
+        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies(), iComplexity);
     }
 
     if (_technologiesName.size() != _technologies.size())
         SynchronizeTechnologies();
 
-    return RunInParallel(f, iStart, iEnd, iAddImpl, _technologiesName);
+    return RunInParallel(f, iStart, iEnd, iAddImpl, _technologiesName, iComplexity);
 }
 
 void ParallelUtils::SynchronizeTechnologies()
@@ -66,113 +67,126 @@ void ParallelUtils::SynchronizeTechnologies()
     }
 }
 
-void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector<Technology>& iTechnologies )
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+    const std::vector<Technology>& iTechnologies, double iComplexity )
 {
     if (_baseUtils->IsTechnologySetted())
     {
-        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies());
+        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies(), iComplexity);
     }
-    return RunInParallel(f, iStart, iEnd, std::vector<std::pair<IManyFunction , bool>>(), iTechnologies);
+    return RunInParallel(f, iStart, iEnd, std::vector<std::pair<IManyFunction , bool>>(), iTechnologies, iComplexity);
 }
 
 void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, 
     const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
-    const std::vector<Technology>& iTechnologies )
+    const std::vector<Technology>& iTechnologies, double iComplexity )
 {
     if (_baseUtils->IsTechnologySetted())
     {
-        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies());
+        return RunInParallel(f, iStart, iEnd, _baseUtils->GetTechnologies(), iComplexity);
     }
 
     std::vector<ParallelTechnologyPtr> ptechs(iTechnologies.size());
-    for (std::size_t i=0;i<ptechs.size();++i)
+    for (std::size_t i = 0; i < ptechs.size(); ++i)
     {
         ptechs[i] = GetTechnologyByEnum(iTechnologies[i]);
     }
 
-    return RunInParallel(f, iStart, iEnd, iAddImpl, ptechs);
+    return RunInParallel(f, iStart, iEnd, iAddImpl, ptechs, iComplexity);
 }
 
-void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, const std::vector<ParallelTechnologyPtr>& iTechnologies )
+int ParallelUtils::GetNumberOfTechnology(int iStart, int iEnd, 
+    const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
+    const std::vector<ParallelTechnologyPtr>& iTechnologies, double iComplexity)
+{
+    std::vector<double> mPi(iAddImpl.size()+iTechnologies.size(),1);
+
+    if (_singleStatistics.size() != mPi.size())
+        _singleStatistics.clear();
+
+    if (_singleStatistics.empty())
+        _singleStatistics.resize(mPi.size());
+
+    int iterations = iEnd - iStart;
+
+    for (std::size_t i=0;i<_singleStatistics.size();++i)
+    {
+        // получаем ближайшее значение статистики
+        auto vec = _singleStatistics[i];
+        if (vec.empty())
+            mPi[i] = (double)iterations * iterations * iterations;
+        else
+        {
+            auto it = std::min_element(vec.begin(),vec.end(), 
+                [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
+            {
+                return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
+            }
+            );
+
+            mPi[i] = exp( - pow( (double)std::abs( (*it).first - iterations ) / iterations, 2) )
+                * pow( (double)(*it).first, iComplexity)
+                / (*it).second
+                / vec.size();
+        } 
+    }
+
+    double sum = 0.0;
+    for (std::size_t i=0;i<mPi.size();++i)
+    {
+        sum+=mPi[i];
+    }
+
+    for (std::size_t i=0;i<mPi.size();++i)
+    {
+        mPi[i]/=sum;
+    }
+
+    // строим частичные суммы
+    for (std::size_t i=1;i<mPi.size();++i)
+    {
+        mPi[i]+=mPi[i-1];
+    }
+
+    // обеспечить выбор технологии согласно высчитанным вероятностям
+    double randX = (double)rand()/RAND_MAX;
+    return std::upper_bound(mPi.begin(), mPi.end(), randX) - mPi.begin();
+}
+
+void ParallelUtils::ExecAutoLearning(IAloneFunction f, int iStart, int iEnd, 
+    const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
+    const std::vector<ParallelTechnologyPtr>& iTechnologies, double iComplexity)
+{
+    int index = GetNumberOfTechnology(iStart, iEnd, iAddImpl, iTechnologies, iComplexity);
+
+    auto time = ( index < (int)iTechnologies.size() ) ?  
+        iTechnologies[index]->Run(f, iStart, iEnd) : 
+    iAddImpl[index-iTechnologies.size()].first(iStart, iEnd);
+
+    auto pr = std::make_pair(iEnd-iStart, time);
+
+    int iterations = iEnd - iStart;
+
+    auto vec = _singleStatistics[index];
+    auto it = std::min_element(vec.begin(),vec.end(), 
+        [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
+    {
+        return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
+    }
+    );
+    if ( it == vec.end() || it->first != iEnd-iStart)
+        _singleStatistics[index].push_back(pr);
+    else
+        it->second  = (it->second + time) * 0.5;
+}
+
+void ParallelUtils::RunInParallel( IAloneFunction f, int iStart, int iEnd, 
+    const std::vector< std::pair<IManyFunction , bool > >& iAddImpl, 
+    const std::vector<ParallelTechnologyPtr>& iTechnologies, double iComplexity )
 {
     if (_autoLearning)
     {
-        std::vector<double> mPi(iAddImpl.size()+iTechnologies.size(),1);
-        
-        if (_singleStatistics.size() != mPi.size())
-            _singleStatistics.clear();
-
-        if (_singleStatistics.empty())
-            _singleStatistics.resize(mPi.size());
-
-        int iterations = iEnd - iStart;
-
-        for (std::size_t i=0;i<_singleStatistics.size();++i)
-        {
-            // получаем ближайшее значение статистики
-            auto vec = _singleStatistics[i];
-            if (vec.empty())
-                mPi[i] = (double)iterations * iterations * iterations;
-            else
-            {
-                auto it = std::min_element(vec.begin(),vec.end(), 
-                    [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
-                    {
-                        return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
-                    }
-                    );
-                //if ( (*it).first == iterations )
-                //    mPi[i] = (double)iterations*(*it).first/iterations/(*it).second/vec.size();
-                //else
-                //    mPi[i] = iterations*(*it).first/ (double)std::abs((*it).first-iterations) /(*it).second/vec.size();
-
-                mPi[i] = exp( - pow( (double)std::abs( (*it).first - iterations ) / iterations, 2) )
-                            * (*it).first
-                            / (*it).second
-                            / vec.size();
-            } 
-        }
-
-        double sum = 0.0;
-        for (std::size_t i=0;i<mPi.size();++i)
-        {
-            sum+=mPi[i];
-        }
-
-        for (std::size_t i=0;i<mPi.size();++i)
-        {
-            mPi[i]/=sum;
-        }
-
-        // строим частичные суммы
-        for (std::size_t i=1;i<mPi.size();++i)
-        {
-            mPi[i]+=mPi[i-1];
-        }
-
-        // обеспечить выбор технологии согласно высчитанным вероятностям
-        double randX = (double)rand()/RAND_MAX;
-        auto index = std::upper_bound(mPi.begin(), mPi.end(), randX) - mPi.begin();
-
-        auto time = ( index < (int)iTechnologies.size() ) ?  
-            iTechnologies[index]->Run(f, iStart, iEnd) : 
-        iAddImpl[index-iTechnologies.size()].first(iStart, iEnd);
-     
-        auto pr = std::make_pair(iEnd-iStart, time);
-
-        auto vec = _singleStatistics[index];
-        auto it = std::min_element(vec.begin(),vec.end(), 
-            [iterations](const std::pair<int, double>& stat1, const std::pair<int, double>& stat2) 
-        {
-            return std::abs(stat1.first - iterations) < std::abs(stat2.first - iterations);
-        }
-        );
-        if ( it == vec.end() || it->first != iEnd-iStart)
-            _singleStatistics[index].push_back(pr);
-        else
-            it->second  = (it->second + time) * 0.5;
-
-        return;
+        return ExecAutoLearning(f, iStart, iEnd, iAddImpl, iTechnologies, iComplexity);
     }
 
     auto it = std::min_element( _statistics->_times.begin(), _statistics->_times.end(), 
@@ -619,4 +633,59 @@ void ParallelUtils::ConvertCommonStatisticsToSingle()
                     _singleStatistics[i].push_back( par );
         }
     }
+}
+
+void ParallelUtils::AddSpawnFuction( IVoidFunction f )
+{
+    _spawnFunctions.push_back(f);
+}
+
+void ParallelUtils::RunSpawnFuctions( double iComplexity)
+{
+    return RunSpawnFuctions(_technologies, iComplexity);
+}
+
+void ParallelUtils::RunSpawnFuctions( const std::vector<ParallelTechnologyPtr>& iTechnologies, double iComplexity )
+{
+    std::vector<double> times( iTechnologies.size() );
+
+    for (std::size_t i = 0; i < iTechnologies.size(); ++i )
+    {
+        double timeStart = AbstractParallel::GetTime();
+
+        for (std::size_t k = 0; k < _spawnFunctions.size(); ++k )
+        {
+            iTechnologies[i]->RunSpawn( _spawnFunctions[k] );
+        }
+        iTechnologies[i]->Synchronize();
+
+        times[i] = AbstractParallel::GetTime() - timeStart;
+    }
+
+    _spawnFunctions.clear();
+}
+
+void ParallelUtils::SetLearning( bool iLearning )
+{
+    _learning = iLearning;
+}
+
+void ParallelUtils::SetAutoLearning( bool iLearning )
+{
+    _autoLearning = iLearning;
+}
+
+bool ParallelUtils::GetAutoLearning()
+{
+    return _autoLearning;
+}
+
+bool ParallelUtils::GetLearning()
+{
+    return _learning;
+}
+
+const std::string& ParallelUtils::GetName()
+{
+    return _tag;
 }

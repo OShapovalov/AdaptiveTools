@@ -93,6 +93,9 @@
     <ClCompile Include="PTLInterval.cpp">
       <Filter>Source Files\Adaptive</Filter>
     </ClCompile>
+    <ClCompile Include="Strassen_Mult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractParallel.h">

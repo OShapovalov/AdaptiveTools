@@ -244,6 +244,9 @@
     <ClCompile Include="PPLTechnology.cpp" />
     <ClCompile Include="SerialTechnology.cpp" />
     <ClCompile Include="Statistics.cpp" />
+    <ClCompile Include="Strassen_Mult.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="SurfaceFunctions.cpp" />
     <ClCompile Include="TBBTechnology.cpp" />
     <ClCompile Include="Vector2D.cpp" />
